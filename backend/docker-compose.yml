@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: to_osn_postgres
+    environment:
+      POSTGRES_DB: to_osn
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - to_osn_pgdata:/var/lib/postgresql/data
+
+volumes:
+  to_osn_pgdata:

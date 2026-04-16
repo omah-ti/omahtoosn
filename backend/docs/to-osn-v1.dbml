@@ -1,0 +1,157 @@
+Enum tryout_status {
+  draft
+  scheduled
+  ongoing
+  finished
+  archived
+}
+
+Enum question_type {
+  multiple_choice
+  short_text
+}
+
+Enum attempt_status {
+  ongoing
+  submitted
+  auto_submitted
+}
+
+Table users {
+  id uuid [pk]
+  email varchar [not null, unique]
+  full_name varchar [not null]
+  password_hash text [not null]
+  is_active boolean [not null, default: true]
+  last_login_at timestamptz
+  created_at timestamptz [not null]
+  updated_at timestamptz [not null]
+}
+
+Table auth_sessions {
+  id uuid [pk]
+  user_id uuid [not null, ref: > users.id]
+  refresh_token_hash text [not null, unique]
+  user_agent text
+  ip_address varchar
+  device_id text
+  expires_at timestamptz [not null]
+  revoked_at timestamptz
+  last_used_at timestamptz [not null]
+  created_at timestamptz [not null]
+}
+
+Table tryouts {
+  id uuid [pk]
+  slug varchar [not null, unique]
+  title varchar [not null]
+  description text
+  instructions text
+  status tryout_status [not null, default: 'draft']
+  duration_minutes int [not null]
+  starts_at timestamptz
+  ends_at timestamptz
+  results_published_at timestamptz
+  max_attempts int [not null, default: 1]
+  show_leaderboard boolean [not null, default: true]
+  created_at timestamptz [not null]
+  updated_at timestamptz [not null]
+}
+
+Table questions {
+  id uuid [pk]
+  tryout_id uuid [not null, ref: > tryouts.id]
+  code varchar [not null]
+  question_type question_type [not null]
+  prompt_html text [not null]
+  image_url text
+  display_order int [not null]
+  points numeric(10,2) [not null, default: 1.00]
+  explanation_html text
+  created_at timestamptz [not null]
+  updated_at timestamptz [not null]
+
+  Indexes {
+    (tryout_id, code) [unique]
+    (tryout_id, display_order) [unique]
+  }
+}
+
+Table question_options {
+  id uuid [pk]
+  question_id uuid [not null, ref: > questions.id]
+  option_key varchar [not null]
+  option_text text [not null]
+  display_order int [not null]
+
+  Indexes {
+    (question_id, option_key) [unique]
+    (question_id, display_order) [unique]
+  }
+}
+
+Table question_answer_keys {
+  question_id uuid [pk, ref: > questions.id]
+  correct_option_key varchar [not null]
+  created_at timestamptz [not null]
+  updated_at timestamptz [not null]
+}
+
+Table question_short_answer_variants {
+  id uuid [pk]
+  question_id uuid [not null, ref: > questions.id]
+  answer_text text [not null]
+  normalized_text text [not null]
+  created_at timestamptz [not null]
+
+  Indexes {
+    (question_id, normalized_text) [unique]
+  }
+}
+
+Table attempts {
+  id uuid [pk]
+  user_id uuid [not null, ref: > users.id]
+  tryout_id uuid [not null, ref: > tryouts.id]
+  status attempt_status [not null, default: 'ongoing']
+  started_at timestamptz [not null]
+  expires_at timestamptz [not null]
+  submitted_at timestamptz
+  last_synced_at timestamptz
+  version int [not null, default: 1]
+  total_questions int [not null, default: 0]
+  answered_questions int [not null, default: 0]
+  flagged_questions int [not null, default: 0]
+  correct_count int [not null, default: 0]
+  wrong_count int [not null, default: 0]
+  unanswered_count int [not null, default: 0]
+  final_score numeric(10,2)
+  created_at timestamptz [not null]
+  updated_at timestamptz [not null]
+
+  Indexes {
+    (user_id, tryout_id) [unique]
+  }
+}
+
+Table attempt_answers {
+  id uuid [pk]
+  attempt_id uuid [not null, ref: > attempts.id]
+  question_id uuid [not null, ref: > questions.id]
+  selected_option_key varchar
+  answer_text text
+  normalized_answer text
+  is_flagged boolean [not null, default: false]
+  answered_at timestamptz
+  last_saved_at timestamptz [not null]
+  client_updated_at timestamptz
+  server_version int [not null, default: 1]
+  is_correct boolean
+  awarded_points numeric(10,2)
+  created_at timestamptz [not null]
+  updated_at timestamptz [not null]
+
+  Indexes {
+    (attempt_id, question_id) [unique]
+  }
+}
