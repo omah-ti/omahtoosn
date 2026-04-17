@@ -12,10 +12,13 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
+	"github.com/omah-ti/omahtoosn/backend/internal/modules/auth"
 	"github.com/omah-ti/omahtoosn/backend/internal/platform/config"
 	"github.com/omah-ti/omahtoosn/backend/internal/platform/db"
 	"github.com/omah-ti/omahtoosn/backend/internal/platform/httpx"
 	"github.com/omah-ti/omahtoosn/backend/internal/platform/logx"
+	"github.com/omah-ti/omahtoosn/backend/internal/platform/middleware"
+	"github.com/omah-ti/omahtoosn/backend/internal/platform/security"
 )
 
 func main() {
@@ -49,6 +52,24 @@ func main() {
 			"timestamp": time.Now().UTC().Format(time.RFC3339),
 		})
 	})
+
+	tokenConfig := security.TokenConfig{
+		AccessSecret:    "rahasia-negara-jangan-bocor",
+		AccessTokenTTL:  15 * time.Minute,
+		RefreshTokenTTL: 7 * 24 * time.Hour,
+	}
+	tokenProvider := security.NewTokenProvider(tokenConfig)
+
+	authRepo := auth.NewRepository(pool)
+	authSvc := auth.NewService(authRepo, tokenProvider)
+	authHandler := auth.NewHandler(authSvc)
+
+	authMW := middleware.NewAuthMiddleware(tokenProvider)
+
+	api := app.Group("/api")
+	v1 := api.Group("/v1")
+
+	authHandler.RegisterRoutes(v1, authMW)
 
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
