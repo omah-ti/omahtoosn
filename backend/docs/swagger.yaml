@@ -1,0 +1,980 @@
+basePath: /
+definitions:
+  auth.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  auth.LoginResponse:
+    properties:
+      access_expires_at:
+        type: string
+      cookie_strategy:
+        type: string
+      refresh_expires_at:
+        type: string
+      user:
+        $ref: '#/definitions/auth.UserResponse'
+    type: object
+  auth.LoginSuccessResponse:
+    properties:
+      data:
+        $ref: '#/definitions/auth.LoginResponse'
+      message:
+        example: login successful
+        type: string
+      request_id:
+        example: 12cd4404-a385-47fb-bc1a-eea247de4516
+        type: string
+      success:
+        example: true
+        type: boolean
+    type: object
+  auth.RegisterRequest:
+    properties:
+      email:
+        type: string
+      full_name:
+        maxLength: 120
+        minLength: 2
+        type: string
+      password:
+        minLength: 8
+        type: string
+    required:
+    - email
+    - full_name
+    - password
+    type: object
+  auth.UserResponse:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      full_name:
+        type: string
+      id:
+        type: string
+      is_active:
+        type: boolean
+      last_login_at:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  auth.UserSuccessResponse:
+    properties:
+      data:
+        $ref: '#/definitions/auth.UserResponse'
+      message:
+        example: profile fetched
+        type: string
+      request_id:
+        example: 12cd4404-a385-47fb-bc1a-eea247de4516
+        type: string
+      success:
+        example: true
+        type: boolean
+    type: object
+  httpx.EmptySuccessResponse:
+    properties:
+      message:
+        example: logout successful
+        type: string
+      request_id:
+        example: 12cd4404-a385-47fb-bc1a-eea247de4516
+        type: string
+      success:
+        example: true
+        type: boolean
+    type: object
+  httpx.ErrorResponse:
+    properties:
+      fields:
+        additionalProperties:
+          type: string
+        type: object
+      message:
+        example: invalid request body
+        type: string
+      request_id:
+        example: 12cd4404-a385-47fb-bc1a-eea247de4516
+        type: string
+      success:
+        example: false
+        type: boolean
+    type: object
+  main.HealthData:
+    properties:
+      service:
+        example: to-osn-backend
+        type: string
+      timestamp:
+        example: "2026-04-17T11:43:45Z"
+        type: string
+      version:
+        example: dev
+        type: string
+    type: object
+  main.HealthResponse:
+    properties:
+      data:
+        $ref: '#/definitions/main.HealthData'
+      message:
+        example: service is healthy
+        type: string
+      request_id:
+        example: 12cd4404-a385-47fb-bc1a-eea247de4516
+        type: string
+      success:
+        example: true
+        type: boolean
+    type: object
+  tryout.AttemptAnswer:
+    properties:
+      answer_text:
+        type: string
+      answered_at:
+        type: string
+      attempt_id:
+        type: string
+      awarded_points:
+        type: number
+      client_updated_at:
+        type: string
+      id:
+        type: string
+      is_correct:
+        type: boolean
+      is_flagged:
+        type: boolean
+      last_saved_at:
+        type: string
+      question_id:
+        type: string
+      selected_option_key:
+        type: string
+      server_version:
+        type: integer
+    type: object
+  tryout.AttemptSummary:
+    properties:
+      answered_questions:
+        type: integer
+      correct_count:
+        type: integer
+      expires_at:
+        type: string
+      final_score:
+        type: number
+      flagged_questions:
+        type: integer
+      id:
+        type: string
+      last_synced_at:
+        type: string
+      started_at:
+        type: string
+      status:
+        type: string
+      submitted_at:
+        type: string
+      total_questions:
+        type: integer
+      unanswered_count:
+        type: integer
+      version:
+        type: integer
+      wrong_count:
+        type: integer
+    type: object
+  tryout.CurrentAttemptData:
+    properties:
+      answers:
+        items:
+          $ref: '#/definitions/tryout.AttemptAnswer'
+        type: array
+      attempt:
+        $ref: '#/definitions/tryout.AttemptSummary'
+      navigator:
+        items:
+          $ref: '#/definitions/tryout.NavigatorItem'
+        type: array
+      questions:
+        items:
+          $ref: '#/definitions/tryout.Question'
+        type: array
+      server_time:
+        type: string
+      tryout:
+        $ref: '#/definitions/tryout.Tryout'
+    type: object
+  tryout.CurrentAttemptSuccessResponse:
+    properties:
+      data:
+        $ref: '#/definitions/tryout.CurrentAttemptData'
+      message:
+        example: current attempt fetched
+        type: string
+      request_id:
+        example: 12cd4404-a385-47fb-bc1a-eea247de4516
+        type: string
+      success:
+        example: true
+        type: boolean
+    type: object
+  tryout.CurrentLeaderboardData:
+    properties:
+      entries:
+        items:
+          $ref: '#/definitions/tryout.LeaderboardEntry'
+        type: array
+      limit:
+        type: integer
+      me:
+        $ref: '#/definitions/tryout.ResultSummary'
+      offset:
+        type: integer
+      server_time:
+        type: string
+      total:
+        type: integer
+      tryout:
+        $ref: '#/definitions/tryout.Tryout'
+    type: object
+  tryout.CurrentLeaderboardSuccessResponse:
+    properties:
+      data:
+        $ref: '#/definitions/tryout.CurrentLeaderboardData'
+      message:
+        example: leaderboard fetched
+        type: string
+      request_id:
+        example: 12cd4404-a385-47fb-bc1a-eea247de4516
+        type: string
+      success:
+        example: true
+        type: boolean
+    type: object
+  tryout.CurrentResultData:
+    properties:
+      result:
+        $ref: '#/definitions/tryout.ResultSummary'
+      server_time:
+        type: string
+      tryout:
+        $ref: '#/definitions/tryout.Tryout'
+    type: object
+  tryout.CurrentResultSuccessResponse:
+    properties:
+      data:
+        $ref: '#/definitions/tryout.CurrentResultData'
+      message:
+        example: result fetched
+        type: string
+      request_id:
+        example: 12cd4404-a385-47fb-bc1a-eea247de4516
+        type: string
+      success:
+        example: true
+        type: boolean
+    type: object
+  tryout.CurrentTryoutData:
+    properties:
+      attempt:
+        $ref: '#/definitions/tryout.AttemptSummary'
+      server_time:
+        type: string
+      tryout:
+        $ref: '#/definitions/tryout.Tryout'
+    type: object
+  tryout.CurrentTryoutSuccessResponse:
+    properties:
+      data:
+        $ref: '#/definitions/tryout.CurrentTryoutData'
+      message:
+        example: current tryout fetched
+        type: string
+      request_id:
+        example: 12cd4404-a385-47fb-bc1a-eea247de4516
+        type: string
+      success:
+        example: true
+        type: boolean
+    type: object
+  tryout.LeaderboardEntry:
+    properties:
+      final_score:
+        type: number
+      full_name:
+        type: string
+      rank:
+        type: integer
+      submitted_at:
+        type: string
+      user_id:
+        type: string
+    type: object
+  tryout.NavigatorItem:
+    properties:
+      display_order:
+        type: integer
+      is_answered:
+        type: boolean
+      is_flagged:
+        type: boolean
+      question_id:
+        type: string
+    type: object
+  tryout.Question:
+    properties:
+      code:
+        type: string
+      display_order:
+        type: integer
+      id:
+        type: string
+      image_url:
+        type: string
+      options:
+        items:
+          $ref: '#/definitions/tryout.QuestionOption'
+        type: array
+      points:
+        type: number
+      prompt_html:
+        type: string
+      question_type:
+        type: string
+    type: object
+  tryout.QuestionOption:
+    properties:
+      display_order:
+        type: integer
+      key:
+        type: string
+      text:
+        type: string
+    type: object
+  tryout.ResultSummary:
+    properties:
+      attempt_id:
+        type: string
+      correct_count:
+        type: integer
+      final_score:
+        type: number
+      rank:
+        type: integer
+      status:
+        type: string
+      submitted_at:
+        type: string
+      total_participants:
+        type: integer
+      total_questions:
+        type: integer
+      unanswered_count:
+        type: integer
+      wrong_count:
+        type: integer
+    type: object
+  tryout.SaveAnswerItem:
+    properties:
+      answer_text:
+        type: string
+      client_updated_at:
+        type: string
+      is_flagged:
+        type: boolean
+      question_id:
+        type: string
+      selected_option_key:
+        type: string
+    type: object
+  tryout.SaveAnswersRequest:
+    properties:
+      answers:
+        items:
+          $ref: '#/definitions/tryout.SaveAnswerItem'
+        type: array
+      attempt_version:
+        type: integer
+    type: object
+  tryout.SaveCurrentAnswersData:
+    properties:
+      attempt:
+        $ref: '#/definitions/tryout.AttemptSummary'
+      server_time:
+        type: string
+    type: object
+  tryout.SaveCurrentAnswersSuccessResponse:
+    properties:
+      data:
+        $ref: '#/definitions/tryout.SaveCurrentAnswersData'
+      message:
+        example: answers saved
+        type: string
+      request_id:
+        example: 12cd4404-a385-47fb-bc1a-eea247de4516
+        type: string
+      success:
+        example: true
+        type: boolean
+    type: object
+  tryout.StartCurrentTryoutData:
+    properties:
+      attempt:
+        $ref: '#/definitions/tryout.AttemptSummary'
+      server_time:
+        type: string
+      tryout:
+        $ref: '#/definitions/tryout.Tryout'
+    type: object
+  tryout.StartCurrentTryoutSuccessResponse:
+    properties:
+      data:
+        $ref: '#/definitions/tryout.StartCurrentTryoutData'
+      message:
+        example: attempt prepared
+        type: string
+      request_id:
+        example: 12cd4404-a385-47fb-bc1a-eea247de4516
+        type: string
+      success:
+        example: true
+        type: boolean
+    type: object
+  tryout.SubmitAnswerItem:
+    properties:
+      answer_text:
+        type: string
+      is_flagged:
+        type: boolean
+      question_id:
+        type: string
+      selected_option_key:
+        type: string
+    type: object
+  tryout.SubmitAttemptRequest:
+    properties:
+      attempt_version:
+        type: integer
+      final_answers:
+        items:
+          $ref: '#/definitions/tryout.SubmitAnswerItem'
+        type: array
+    type: object
+  tryout.SubmitCurrentAttemptData:
+    properties:
+      attempt:
+        $ref: '#/definitions/tryout.AttemptSummary'
+      result:
+        $ref: '#/definitions/tryout.ResultSummary'
+      server_time:
+        type: string
+    type: object
+  tryout.SubmitCurrentAttemptSuccessResponse:
+    properties:
+      data:
+        $ref: '#/definitions/tryout.SubmitCurrentAttemptData'
+      message:
+        example: attempt submitted
+        type: string
+      request_id:
+        example: 12cd4404-a385-47fb-bc1a-eea247de4516
+        type: string
+      success:
+        example: true
+        type: boolean
+    type: object
+  tryout.Tryout:
+    properties:
+      description:
+        type: string
+      duration_minutes:
+        type: integer
+      ends_at:
+        type: string
+      id:
+        type: string
+      instructions:
+        type: string
+      question_count:
+        type: integer
+      results_published_at:
+        type: string
+      show_leaderboard:
+        type: boolean
+      slug:
+        type: string
+      starts_at:
+        type: string
+      status:
+        type: string
+      title:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: Dokumentasi API backend TO OSN.
+  title: TO OSN Backend API
+  version: "1.0"
+paths:
+  /api/v1/attempts/current:
+    get:
+      description: Mengembalikan detail tryout, ringkasan attempt, daftar soal, jawaban
+        tersimpan, dan navigator soal.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tryout.CurrentAttemptSuccessResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Ambil detail attempt aktif
+      tags:
+      - Tryout
+  /api/v1/attempts/current/answers:
+    put:
+      consumes:
+      - application/json
+      description: Menyimpan jawaban partial user untuk attempt aktif dan memperbarui
+        statistik attempt.
+      parameters:
+      - description: Save answers payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/tryout.SaveAnswersRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tryout.SaveCurrentAnswersSuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Simpan jawaban attempt aktif
+      tags:
+      - Tryout
+  /api/v1/attempts/current/submit:
+    post:
+      consumes:
+      - application/json
+      description: Menyimpan final answers opsional, menghitung skor, lalu menutup
+        attempt menjadi submitted atau auto_submitted.
+      parameters:
+      - description: Submit attempt payload
+        in: body
+        name: payload
+        schema:
+          $ref: '#/definitions/tryout.SubmitAttemptRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tryout.SubmitCurrentAttemptSuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Submit attempt aktif
+      tags:
+      - Tryout
+  /api/v1/auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Melakukan autentikasi user, membuat session, lalu menulis access
+        token dan refresh token ke cookie HTTP-only.
+      parameters:
+      - description: Login payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/auth.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.LoginSuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+      summary: Login user
+      tags:
+      - Auth
+  /api/v1/auth/logout:
+    post:
+      description: Mencabut session aktif berdasarkan `session_id` dari access token
+        lalu menghapus cookie auth.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpx.EmptySuccessResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Logout dari device saat ini
+      tags:
+      - Auth
+  /api/v1/auth/logout-all:
+    post:
+      description: Mencabut seluruh session milik user yang sedang login lalu menghapus
+        cookie auth saat ini.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpx.EmptySuccessResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Logout semua device
+      tags:
+      - Auth
+  /api/v1/auth/refresh:
+    post:
+      description: Membuat access token dan refresh token baru menggunakan cookie
+        `refresh_token` yang masih valid.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.LoginSuccessResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+      summary: Refresh session login
+      tags:
+      - Auth
+  /api/v1/auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Membuat akun user baru menggunakan email, nama lengkap, dan password.
+      parameters:
+      - description: Register payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/auth.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/auth.UserSuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+      summary: Register user baru
+      tags:
+      - Auth
+  /api/v1/leaderboard/current:
+    get:
+      description: Mengembalikan leaderboard current tryout berikut data ranking user
+        login bila tersedia.
+      parameters:
+      - default: 50
+        description: Jumlah data per halaman
+        in: query
+        maximum: 100
+        minimum: 1
+        name: limit
+        type: integer
+      - default: 0
+        description: Offset pagination
+        in: query
+        minimum: 0
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tryout.CurrentLeaderboardSuccessResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Ambil leaderboard tryout aktif
+      tags:
+      - Tryout
+  /api/v1/me:
+    get:
+      description: Mengembalikan profil user berdasarkan subject di access token.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.UserSuccessResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Ambil profil user login
+      tags:
+      - Auth
+  /api/v1/results/current:
+    get:
+      description: Mengembalikan ringkasan hasil current tryout untuk user login.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tryout.CurrentResultSuccessResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Ambil hasil tryout aktif
+      tags:
+      - Tryout
+  /api/v1/tryouts/current:
+    get:
+      description: Mengembalikan metadata tryout ongoing beserta ringkasan attempt
+        user bila sudah ada.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tryout.CurrentTryoutSuccessResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Ambil tryout aktif saat ini
+      tags:
+      - Tryout
+  /api/v1/tryouts/current/start:
+    post:
+      description: Membuat atau mengambil attempt ongoing user untuk tryout aktif
+        dan menyesuaikan expiry bila diperlukan.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tryout.StartCurrentTryoutSuccessResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Mulai attempt tryout aktif
+      tags:
+      - Tryout
+  /health:
+    get:
+      description: Mengembalikan status service, versi aplikasi, dan timestamp server
+        UTC.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.HealthResponse'
+      summary: Health check service
+      tags:
+      - System
+schemes:
+- http
+- https
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

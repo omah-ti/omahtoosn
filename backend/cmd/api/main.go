@@ -12,7 +12,9 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
+	swagger "github.com/gofiber/swagger"
 
+	docs "github.com/omah-ti/omahtoosn/backend/docs"
 	"github.com/omah-ti/omahtoosn/backend/internal/modules/auth"
 	"github.com/omah-ti/omahtoosn/backend/internal/modules/tryout"
 	"github.com/omah-ti/omahtoosn/backend/internal/platform/config"
@@ -23,8 +25,24 @@ import (
 	"github.com/omah-ti/omahtoosn/backend/internal/platform/security"
 )
 
+//go:generate swag init -g cmd/api/main.go -d ../.. -o ../../docs
+
+// @title TO OSN Backend API
+// @version 1.0
+// @description Dokumentasi API backend TO OSN.
+// @BasePath /
+// @schemes http https
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+
 func main() {
 	cfg := config.Load()
+
+	docs.SwaggerInfo.Title = cfg.AppName + " API"
+	docs.SwaggerInfo.Version = cfg.AppVersion
+	docs.SwaggerInfo.BasePath = "/"
+	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 
 	// db connection
 	pool, err := db.New(cfg.DatabaseURL)
@@ -69,13 +87,8 @@ func main() {
 		AllowMethods:     "GET,POST,PUT,OPTIONS",
 	}))
 
-	app.Get("/health", func(c *fiber.Ctx) error {
-		return httpx.Success(c, fiber.StatusOK, "service is healthy", fiber.Map{
-			"service":   cfg.AppName,
-			"version":   cfg.AppVersion,
-			"timestamp": time.Now().UTC().Format(time.RFC3339),
-		})
-	})
+	app.Get("/health", healthHandler(cfg))
+	app.Get("/swagger/*", swagger.HandlerDefault)
 
 	v1 := app.Group("/api/v1")
 
