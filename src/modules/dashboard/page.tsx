@@ -17,7 +17,7 @@ async function getUser() {
 export default async function DashboardPage() {
   const user = await getUser();
 
-  const testStatus = "COMPLETED";
+  const testStatus = "NOT_STARTED"; // "NOT_STARTED" | "COMPLETED"
   const variant = testStatus === "COMPLETED" ? "after" : "before";
 
   return (
