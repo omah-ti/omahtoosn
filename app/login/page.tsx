@@ -29,19 +29,11 @@ export default function Signup() {
             className="object-contain"
           />
           <h1 className="text-white font-semibold text-3xl sm:text-3xl text-center">
-            Daftar Akun Peserta
+            Masuk ke Akun
           </h1>
         </div>
 
         <div className="flex flex-col w-full items-center gap-3">
-          <div className="flex flex-col gap-1 w-full">
-            <label className="font-extralight text-white text-md">Nama Lengkap</label>
-            <input
-              type="text"
-              placeholder="Masukkan nama lengkap Anda"
-              className="w-full py-3 rounded-md bg-transparent border border-[#E4E4E7] px-3 text-sm text-[#71717A]"
-            />
-          </div>
 
           <div className="flex flex-col gap-1 w-full">
             <label className="font-extralight text-white text-md">Email</label>
@@ -53,7 +45,10 @@ export default function Signup() {
           </div>
 
           <div className="flex flex-col gap-1 w-full">
-            <label className="font-extralight text-white text-smd">Password</label>
+            <div className="flex justify-between items-center w-full">
+              <label className="font-extralight text-white text-md">Password</label>
+              <button className="text-white text-sm font-bold hover:underline">Lupa Password?</button>
+            </div>
             <input
               type="password"
               placeholder="Masukkan kata sandi Anda"
