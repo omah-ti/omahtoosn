@@ -57,10 +57,10 @@ export default function NavbarMenu() {
 
       {/* Underline */}
       <div
-        className="absolute bottom-0 h-[4px] bg-orange-500 rounded transition-all duration-300 ease-in-out"
+        className="absolute bottom-[-20.5px] h-[4px] bg-[var(--primary-700)] rounded transition-all duration-300 ease-in-out"
         style={{
           width: underlineWidth,
-          left: left,
+          left: left + 2,
         }}
       />
     </div>

@@ -1,13 +1,60 @@
 @import "tailwindcss";
 
+/* ================= ROOT ================= */
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* ================= PRIMARY/BLUE ================= */
+  --primary-100: #bbccf0;
+  --primary-200: #98b2e8;
+  --primary-300: #7698e0;
+  --primary-400: #547fd9;
+  --primary-500: #3265d1;
+  --primary-600: #2854b1;
+  --primary-700: #20448f;
+  --primary-800: #18346c;
+  --primary-900: #11234a;
+  --primary-1000: #091328;
+
+  /* ================= SECONDARY/ORANGE ================= */
+  --secondary-100: #fce7d1;
+  --secondary-200: #fcd99f;
+  --secondary-300: #fbc670;
+  --secondary-400: #f9b340;
+  --secondary-500: #f8a010;
+
+  /* ================= NEUTRAL ================= */
+  --neutral-100: #ffffff;
+  --neutral-200: #e8e8e8;
+  --neutral-300: #d2d2d2;
+  --neutral-400: #bbbbbb;
+  --neutral-500: #8e8e8e;
+  --neutral-600: #777777;
+  --neutral-700: #606060;
+  --neutral-800: #4a4a4a;
+  --neutral-900: #333333;
+  --neutral-1000: #000000;
+
+  /* ================= YELLOW ================= */
+  --yellow-100: #ffdb43;
+  --yellow-200: #dfb400;
 }
 
+/* ================= THEME INLINE ================= */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
+  /* Mapping ke Tailwind */
+  --color-primary: var(--primary-500);
+  --color-primary-hover: var(--primary-600);
+
+  --color-secondary: var(--secondary-500);
+
+  --color-muted: var(--neutral-500);
+  --color-border: var(--neutral-200);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
@@ -43,6 +90,7 @@
   --color-yellow-200: #DFB400;
 }
 
+/* ================= DARK MODE ================= */
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
@@ -50,8 +98,26 @@
   }
 }
 
+/* ================= BASE ================= */
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-jakarta);
 }
+
+/* ================= OPTIONAL UTILS ================= */
+/* .bg-primary {
+  background: var(--primary-500);
+}
+
+.text-primary {
+  color: var(--primary-500);
+}
+
+.bg-secondary {
+  background: var(--secondary-500);
+}
+
+.text-muted {
+  color: var(--neutral-500);
+} */
