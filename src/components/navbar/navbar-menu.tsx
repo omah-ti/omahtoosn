@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 
 export default function NavbarMenu() {
   const items = [
-    { name: "Dashboard", path: "/" },
+    { name: "Dashboard", path: "/dashboard" },
     { name: "Try Out", path: "/try-out" },
     { name: "Hasil Try Out", path: "/hasil-try-out" },
   ];
