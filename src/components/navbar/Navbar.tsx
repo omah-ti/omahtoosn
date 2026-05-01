@@ -3,9 +3,8 @@
 import { useState } from "react";
 import NavbarMenu from "./navbar-menu";
 import Hamburger from "./hamburger";
-import Link from "next/link";
-import Image from "next/image";
 import { Info, LogOut, Menu, User, X } from "lucide-react";
+import Logo from "@/components/ui/logo";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -14,25 +13,7 @@ export default function Navbar() {
   return (
     <nav className="bg-primary-1000 z-10 h-16 fixed w-full px-4 sm:px-6 md:px-10 flex items-center justify-between text-white border-b border-white/10">
       {/* Logo */}
-      <Link href="/">
-        <div className="flex items-center gap-2 sm:gap-3">
-          <Image
-            src="/navbar/logo.webp"
-            alt="OmahTI"
-            className="w-11 h-11 sm:w-11 sm:h-10 object-contain"
-            width={100}
-            height={100}
-          />
-
-          <Image
-            src="/navbar/omahtoosn.webp"
-            alt="OmahTOOSN"
-            className="h-9 w-auto object-contain"
-            width={200}
-            height={100}
-          />
-        </div>
-      </Link>
+      <Logo />
 
       {/* Desktop Menu */}
       <div className="hidden text-md  lg:block absolute left-1/2 -translate-x-1/2">
