@@ -1,0 +1,260 @@
+{
+  "info": {
+    "name": "TO-OSN Backend V1",
+    "description": "Collection for TO-OSN backend v1. The flow uses cookie-based auth.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "01 Health",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/health"
+      }
+    },
+    {
+      "name": "02 Register",
+      "request": {
+        "method": "POST",
+        "url": "{{base_url}}/api/v1/auth/register",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-Device-ID",
+            "value": "{{device_id}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{email}}\",\n  \"full_name\": \"{{full_name}}\",\n  \"password\": \"{{password}}\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('register status is 201 or 409', function () {",
+              "  pm.expect([201, 409]).to.include(pm.response.code);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 Login",
+      "request": {
+        "method": "POST",
+        "url": "{{base_url}}/api/v1/auth/login",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-Device-ID",
+            "value": "{{device_id}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('login status is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 Get Me",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/api/v1/me"
+      }
+    },
+    {
+      "name": "05 Get Current Tryout",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/api/v1/tryouts/current"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "if (pm.response.code === 200) {",
+              "  const json = pm.response.json();",
+              "  if (json?.data?.tryout?.id) { pm.environment.set('tryout_id', json.data.tryout.id); }",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 Start Current Tryout",
+      "request": {
+        "method": "POST",
+        "url": "{{base_url}}/api/v1/tryouts/current/start"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "if (pm.response.code === 200) {",
+              "  const json = pm.response.json();",
+              "  if (json?.data?.attempt?.id) { pm.environment.set('attempt_id', json.data.attempt.id); }",
+              "  if (json?.data?.tryout?.id) { pm.environment.set('tryout_id', json.data.tryout.id); }",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "07 Get Current Attempt",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/api/v1/attempts/current"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "if (pm.response.code === 200) {",
+              "  const json = pm.response.json();",
+              "  const questions = json?.data?.questions || [];",
+              "  questions.forEach((q, idx) => { pm.environment.set(`question_${idx + 1}_id`, q.id); });",
+              "  if (json?.data?.attempt?.id) { pm.environment.set('attempt_id', json.data.attempt.id); }",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "08 Save Answers",
+      "request": {
+        "method": "PUT",
+        "url": "{{base_url}}/api/v1/attempts/current/answers",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"answers\": [\n    {\n      \"question_id\": \"{{question_1_id}}\",\n      \"selected_option_key\": \"B\",\n      \"is_flagged\": false\n    },\n    {\n      \"question_id\": \"{{question_2_id}}\",\n      \"selected_option_key\": \"B\",\n      \"is_flagged\": true\n    },\n    {\n      \"question_id\": \"{{question_3_id}}\",\n      \"answer_text\": \"8\",\n      \"is_flagged\": false\n    }\n  ]\n}"
+        }
+      }
+    },
+    {
+      "name": "09 Get Current Attempt After Save",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/api/v1/attempts/current"
+      }
+    },
+    {
+      "name": "10 Submit Current Attempt",
+      "request": {
+        "method": "POST",
+        "url": "{{base_url}}/api/v1/attempts/current/submit",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"final_answers\": [\n    {\n      \"question_id\": \"{{question_1_id}}\",\n      \"selected_option_key\": \"B\",\n      \"is_flagged\": false\n    },\n    {\n      \"question_id\": \"{{question_2_id}}\",\n      \"selected_option_key\": \"B\",\n      \"is_flagged\": true\n    },\n    {\n      \"question_id\": \"{{question_3_id}}\",\n      \"answer_text\": \"8\",\n      \"is_flagged\": false\n    }\n  ]\n}"
+        }
+      }
+    },
+    {
+      "name": "11 Get Current Result",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/api/v1/results/current"
+      }
+    },
+    {
+      "name": "12 Get Current Leaderboard",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/api/v1/leaderboard/current?limit={{leaderboard_limit}}&offset={{leaderboard_offset}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "leaderboard",
+            "current"
+          ],
+          "query": [
+            {
+              "key": "limit",
+              "value": "{{leaderboard_limit}}"
+            },
+            {
+              "key": "offset",
+              "value": "{{leaderboard_offset}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "13 Refresh Session",
+      "request": {
+        "method": "POST",
+        "url": "{{base_url}}/api/v1/auth/refresh",
+        "header": [
+          {
+            "key": "X-Device-ID",
+            "value": "{{device_id}}"
+          }
+        ]
+      }
+    },
+    {
+      "name": "14 Logout",
+      "request": {
+        "method": "POST",
+        "url": "{{base_url}}/api/v1/auth/logout"
+      }
+    },
+    {
+      "name": "15 Get Me After Logout",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/api/v1/me"
+      }
+    }
+  ]
+}
