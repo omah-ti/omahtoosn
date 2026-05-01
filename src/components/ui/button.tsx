@@ -1,6 +1,6 @@
 import { ButtonHTMLAttributes, ReactNode } from "react";
 
-type Variant = "primary" | "neutral" | "disabled";
+type Variant = "primary" | "transparent" | "neutral" | "disabled";
 type Size = "sm" | "md" | "lg" | "xl" | "2xl";
 
 type Props = {
@@ -18,14 +18,13 @@ export default function Button({
   ...props
 }: Props) {
   const base =
-    "rounded-lg font-medium flex items-center justify-center transition-colors duration-200";
+    "rounded-lg flex items-center justify-center transition-colors duration-200";
 
   const variants = {
     primary:
       "bg-primary-600 text-white hover:bg-neutral-300 hover:text-white",
-
     neutral: "bg-neutral-300 text-neutral-100", 
-
+    transparent: "hover:bg-opacity-80",
     disabled: "bg-gray-200 text-gray-400 cursor-not-allowed",
   };
 
@@ -39,7 +38,7 @@ export default function Button({
 
   return (
     <button
-      className={`${base} ${variants[variant]} ${sizes[size]} ${className}`}
+      className={`${className} ${base} ${variants[variant]} ${sizes[size]}`}
       disabled={variant === "disabled"}
       {...props}
     >
