@@ -22,9 +22,9 @@ export default function Button({
 
   const variants = {
     primary:
-      "bg-[var(--primary-600)] text-white hover:bg-[var(--neutral-300)] hover:text-white",
+      "bg-primary-600 text-white hover:bg-neutral-300 hover:text-white",
 
-    neutral: "bg-[var(--neutral-300)] text-[var(--neutral-100)]", //hover:bg-[var(--neutral-300)]
+    neutral: "bg-neutral-300 text-neutral-100", 
 
     disabled: "bg-gray-200 text-gray-400 cursor-not-allowed",
   };

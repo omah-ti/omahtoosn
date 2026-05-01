@@ -18,18 +18,19 @@ export default function NavbarMenu() {
   const itemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
   const underlineWidth = 90;
 
-  useEffect(() => {
-    const activeIndex = items.findIndex((item) => pathname === item.path);
-    const currentIndex = activeIndex !== -1 ? activeIndex : 0;
+  const activeIndex = items.findIndex((item) => pathname === item.path);
 
-    const el = itemRefs.current[currentIndex];
+  useEffect(() => {
+    if (activeIndex === -1) return;
+
+    const el = itemRefs.current[activeIndex];
     const container = containerRef.current;
 
     if (el && container) {
       const center = el.offsetLeft + el.offsetWidth / 2;
       setLeft(center - underlineWidth / 2);
     }
-  }, [pathname]);
+  }, [pathname, activeIndex]);
 
   return (
     <div
@@ -56,13 +57,15 @@ export default function NavbarMenu() {
       })}
 
       {/* Underline */}
-      <div
-        className="absolute bottom-[-20.5px] h-[4px] bg-[var(--primary-700)] rounded transition-all duration-300 ease-in-out"
-        style={{
-          width: underlineWidth,
-          left: left + 2,
-        }}
-      />
+      {activeIndex !== -1 && (
+        <div
+          className="absolute bottom-[-20.5px] h-[4px] bg-primary-700 rounded transition-all duration-300 ease-in-out"
+          style={{
+            width: underlineWidth,
+            left: left + 2,
+          }}
+        />
+      )}
     </div>
   );
 }

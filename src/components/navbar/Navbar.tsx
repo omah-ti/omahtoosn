@@ -12,7 +12,7 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <nav className="bg-(--primary-1000) z-10 h-16 fixed w-full px-4 sm:px-6 md:px-10 flex items-center justify-between text-white border-b border-white/10">
+    <nav className="bg-primary-1000 z-10 h-16 fixed w-full px-4 sm:px-6 md:px-10 flex items-center justify-between text-white border-b border-white/10">
       {/* Logo */}
       <Link href="/">
         <div className="flex items-center gap-2 sm:gap-3">
@@ -48,7 +48,7 @@ export default function Navbar() {
           </button>
 
           {open && (
-            <div className="absolute pt-[12] right-0 mt-3 bg-(--primary-1000) rounded-xl p-4 w-40 shadow-lg border border-white/10">
+            <div className="absolute pt-[12] right-0 mt-3 bg-primary-1000 rounded-xl p-4 w-40 shadow-lg border border-white/10">
               <button className="ml-5 flex items-center gap-3 w-full text-left hover:opacity-80">
                 <LogOut/>
                 Keluar

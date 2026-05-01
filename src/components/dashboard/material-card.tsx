@@ -6,8 +6,8 @@ type Props = {
 
 export default function MaterialCard({ title, desc, img }: Props) {
   return (
-    <div className="bg-[var(--primary-100)] rounded-lg p-4 shadow-sm w-full">
-      <div className="w-full aspect-[2/1] rounded mb-4 overflow-hidden">
+    <div className="bg-primary-100 rounded-lg p-4 shadow-sm w-full">
+      <div className="w-full aspect-2/1 rounded mb-4 overflow-hidden">
         <img src={img} alt={title} className="w-full h-full object-cover" />
       </div>
 

@@ -2,9 +2,9 @@ import React from 'react'
 
 const KonfirmasiCard = () => {
     return (
-        <div className='bg-[#DCE5F9] box-border flex flex-col w-full w-max-[398px] h-[190px] md:w-[264px] md:h-[294px] rounded-[20px] shadow-[0_2px_10px_0_rgba(0,0,0,0.25)] justify-center p-6 gap-3'>
-            <p className='--font-plus size text-[26px] font-bold text-center'>Konfirmasi Test</p>
-            <hr className='w-full h-[1px] bg-neutral-100'/>
+        <div className='bg-primary-background box-border flex flex-col w-full w-max-[398px] h-[190px] md:w-[264px] md:h-[294px] rounded-[20px] shadow-[0_2px_10px_0_rgba(0,0,0,0.25)] justify-center p-6 gap-3'>
+            <p className='font-plus size text-[26px] font-bold text-center'>Konfirmasi Test</p>
+            <hr className='w-full h-px bg-neutral-100'/>
             <div className='flex-col gap-px'>
                 <p className='text-base font-normal'>Waktu Tes</p>
                 <div className='flex justify-between'>

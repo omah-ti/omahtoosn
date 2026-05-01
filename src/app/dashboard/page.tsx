@@ -44,12 +44,12 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        <div className="bg-[#DCE5F9] rounded-xl p-4 sm:p-6">
-          <h2 className="text-lg sm:text-xl font-semibold mb-1 text-[#0a0a0a]">
+        <div className="bg-primary-background rounded-xl p-4 sm:p-6">
+          <h2 className="text-lg sm:text-xl font-semibold mb-1 text-neutral-1000">
             Materi
           </h2>
 
-          <p className="text-xs sm:text-sm text-[#0a0a0a] mb-4 sm:mb-6">
+          <p className="text-xs sm:text-sm text-neutral-1000 mb-4 sm:mb-6">
             Materi try out disusun berdasarkan silabus TOKI untuk OSN-K
             Informatika
           </p>

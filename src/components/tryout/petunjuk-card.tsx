@@ -12,10 +12,10 @@ const PetunjukCard = () => {
         "<b>6. Tes ini hanya dapat dikerjakan satu kali. </b> Tes tidak dapat diulang setelah dimulai."
     ]
     return (
-        <div className='bg-[#DCE5F9] flex flex-col box-border w-full w-max-[398px] h-auto md:w-[840px] rounded-[20px] p-6 gap-[44px]'>
+        <div className='bg-primary-background flex flex-col box-border w-full w-max-[398px] h-auto md:w-[840px] rounded-[20px] p-6 gap-[44px]'>
             <div className='flex flex-col gap-3'>
                 <p className='size text-[26px] font-bold text-center'>Petunjuk Try Out OSN-K Informatika</p>
-                <hr className=' w-full h-[1px] bg-black'/>
+                <hr className=' w-full h-px bg-black'/>
                 {instruksiList.map((instruksi, index) => (
                     <p 
                     key={index} className='text-base font-normal' 

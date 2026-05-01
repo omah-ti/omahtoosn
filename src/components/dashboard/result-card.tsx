@@ -12,19 +12,19 @@ export default function ResultCard({ variant = "before" }: Props) {
   return (
     <div
       className={`relative rounded-xl p-6 h-full overflow-hidden
-      ${isAfter ? "bg-gradient-to-b from-[var(--primary-600)] to-[var(--primary-1000)]" : "bg-[#DCE5F9]"}`}
+      ${isAfter ? "bg-linear-to-b from-primary-600 to-primary-1000" : "bg-primary-background"}`}
     >
       <div className="relative z-10">
         <h2
           className={`text-2xl font-semibold mb-2
-          ${isAfter ? "text-[var(--neutral-100)]" : "text-[var(--neutral-1000)]"}`}
+          ${isAfter ? "text-neutral-100" : "text-neutral-1000"}`}
         >
           {isAfter ? "Hasil Tes" : "Hasil Tes"}
         </h2>
 
         <p
           className={`text-md mb-6
-          ${isAfter ? "text-[var(--neutral-100)]" : "text-[var(--neutral-1000)]"}`}
+          ${isAfter ? "text-neutral-100" : "text-neutral-1000"}`}
         >
           {isAfter
             ? "Ketahui peringkatmu dan pahami solusi dari setiap soal"
