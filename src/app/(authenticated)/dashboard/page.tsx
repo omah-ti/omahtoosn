@@ -1,6 +1,6 @@
-import TryOutCard from "@/components/dashboard/tryout-card";
-import ResultCard from "@/components/dashboard/result-card";
-import MaterialCard from "@/components/dashboard/material-card";
+import TryOutCard from "@/components/authenticated/dashboard/tryout-card";
+import ResultCard from "@/components/authenticated/dashboard/result-card";
+import MaterialCard from "@/components/authenticated/dashboard/material-card";
 
 async function getUser() {
   const res = await fetch("http://localhost:3000/api/me", {

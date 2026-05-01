@@ -24,7 +24,7 @@ export default function Logo({
         height={100}
       />
 
-      <div className="flex flex-col">
+      <div className="flex flex-col justify-center">
         <p className="font-bold text-base leading-none">Omah<span className="text-[#F0861A]">TOOSN</span></p>
         <p className="text-[10px]">Computer Science UGM</p>
       </div>
