@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import NavbarMenu from "./NavbarMenu";
-import Hamburger from "./Hamburger";
+import NavbarMenu from "./navbar-menu";
+import Hamburger from "./hamburger";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);

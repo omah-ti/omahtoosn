@@ -1,5 +1,5 @@
 import Image from "next/image";
-export { default } from "@/modules/dashboard/page";
+export { default } from "@/app/dashboard/page";
 
 // export default function Home() {
 //   return (

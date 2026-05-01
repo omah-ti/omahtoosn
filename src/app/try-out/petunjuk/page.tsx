@@ -1,5 +1,5 @@
-import KonfirmasiCard from '@/components/tryout/KonfirmasiCard'
-import PetunjukCard from '@/components/tryout/PetunjukCard'
+import KonfirmasiCard from '@/components/tryout/konfirmasi-card'
+import PetunjukCard from '@/components/tryout/petunjuk-card'
 import React from 'react'
 
 const Petunjuk = () => {
