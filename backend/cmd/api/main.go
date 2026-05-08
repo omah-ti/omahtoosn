@@ -89,6 +89,7 @@ func main() {
 
 	app.Get("/health", healthHandler(cfg))
 	app.Get("/swagger/*", swagger.HandlerDefault)
+	app.Static("/question-assets", "./assets/questions")
 
 	v1 := app.Group("/api/v1")
 
