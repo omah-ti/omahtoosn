@@ -1,0 +1,1476 @@
+{
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "swagger": "2.0",
+    "info": {
+        "description": "Dokumentasi API backend TO OSN.",
+        "title": "TO OSN Backend API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "basePath": "/",
+    "paths": {
+        "/api/v1/attempts/current": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Mengembalikan detail tryout, ringkasan attempt, daftar soal, jawaban tersimpan, dan navigator soal.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Tryout"
+                ],
+                "summary": "Ambil detail attempt aktif",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tryout.CurrentAttemptSuccessResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/attempts/current/answers": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Menyimpan jawaban partial user untuk attempt aktif dan memperbarui statistik attempt.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Tryout"
+                ],
+                "summary": "Simpan jawaban attempt aktif",
+                "parameters": [
+                    {
+                        "description": "Save answers payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/tryout.SaveAnswersRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tryout.SaveCurrentAnswersSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/attempts/current/submit": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Menyimpan final answers opsional, menghitung skor, lalu menutup attempt menjadi submitted atau auto_submitted.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Tryout"
+                ],
+                "summary": "Submit attempt aktif",
+                "parameters": [
+                    {
+                        "description": "Submit attempt payload",
+                        "name": "payload",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/tryout.SubmitAttemptRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tryout.SubmitCurrentAttemptSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/login": {
+            "post": {
+                "description": "Melakukan autentikasi user, membuat session, lalu menulis access token dan refresh token ke cookie HTTP-only.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login user",
+                "parameters": [
+                    {
+                        "description": "Login payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/auth.LoginRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/auth.LoginSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/logout": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Mencabut session aktif berdasarkan `session_id` dari access token lalu menghapus cookie auth.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout dari device saat ini",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.EmptySuccessResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/logout-all": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Mencabut seluruh session milik user yang sedang login lalu menghapus cookie auth saat ini.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout semua device",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.EmptySuccessResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/refresh": {
+            "post": {
+                "description": "Membuat access token dan refresh token baru menggunakan cookie `refresh_token` yang masih valid.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Refresh session login",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/auth.LoginSuccessResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/register": {
+            "post": {
+                "description": "Membuat akun user baru menggunakan email, nama lengkap, dan password.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Register user baru",
+                "parameters": [
+                    {
+                        "description": "Register payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/auth.RegisterRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/auth.UserSuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/leaderboard/current": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Mengembalikan leaderboard current tryout berikut data ranking user login bila tersedia.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Tryout"
+                ],
+                "summary": "Ambil leaderboard tryout aktif",
+                "parameters": [
+                    {
+                        "maximum": 100,
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 50,
+                        "description": "Jumlah data per halaman",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 0,
+                        "type": "integer",
+                        "default": 0,
+                        "description": "Offset pagination",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tryout.CurrentLeaderboardSuccessResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/me": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Mengembalikan profil user berdasarkan subject di access token.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Ambil profil user login",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/auth.UserSuccessResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/results/current": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Mengembalikan ringkasan hasil current tryout untuk user login.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Tryout"
+                ],
+                "summary": "Ambil hasil tryout aktif",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tryout.CurrentResultSuccessResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/tryouts/current": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Mengembalikan metadata tryout ongoing beserta ringkasan attempt user bila sudah ada.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Tryout"
+                ],
+                "summary": "Ambil tryout aktif saat ini",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tryout.CurrentTryoutSuccessResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/tryouts/current/start": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Membuat atau mengambil attempt ongoing user untuk tryout aktif dan menyesuaikan expiry bila diperlukan.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Tryout"
+                ],
+                "summary": "Mulai attempt tryout aktif",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tryout.StartCurrentTryoutSuccessResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httpx.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/health": {
+            "get": {
+                "description": "Mengembalikan status service, versi aplikasi, dan timestamp server UTC.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "System"
+                ],
+                "summary": "Health check service",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.HealthResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "auth.LoginRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "auth.LoginResponse": {
+            "type": "object",
+            "properties": {
+                "access_expires_at": {
+                    "type": "string"
+                },
+                "cookie_strategy": {
+                    "type": "string"
+                },
+                "refresh_expires_at": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/auth.UserResponse"
+                }
+            }
+        },
+        "auth.LoginSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/auth.LoginResponse"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "login successful"
+                },
+                "request_id": {
+                    "type": "string",
+                    "example": "12cd4404-a385-47fb-bc1a-eea247de4516"
+                },
+                "success": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "auth.RegisterRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "full_name",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "full_name": {
+                    "type": "string",
+                    "maxLength": 120,
+                    "minLength": 2
+                },
+                "password": {
+                    "type": "string",
+                    "minLength": 8
+                }
+            }
+        },
+        "auth.UserResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "full_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "is_active": {
+                    "type": "boolean"
+                },
+                "last_login_at": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "auth.UserSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/auth.UserResponse"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "profile fetched"
+                },
+                "request_id": {
+                    "type": "string",
+                    "example": "12cd4404-a385-47fb-bc1a-eea247de4516"
+                },
+                "success": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "httpx.EmptySuccessResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "logout successful"
+                },
+                "request_id": {
+                    "type": "string",
+                    "example": "12cd4404-a385-47fb-bc1a-eea247de4516"
+                },
+                "success": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "httpx.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "fields": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "message": {
+                    "type": "string",
+                    "example": "invalid request body"
+                },
+                "request_id": {
+                    "type": "string",
+                    "example": "12cd4404-a385-47fb-bc1a-eea247de4516"
+                },
+                "success": {
+                    "type": "boolean",
+                    "example": false
+                }
+            }
+        },
+        "main.HealthData": {
+            "type": "object",
+            "properties": {
+                "service": {
+                    "type": "string",
+                    "example": "to-osn-backend"
+                },
+                "timestamp": {
+                    "type": "string",
+                    "example": "2026-04-17T11:43:45Z"
+                },
+                "version": {
+                    "type": "string",
+                    "example": "dev"
+                }
+            }
+        },
+        "main.HealthResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/main.HealthData"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "service is healthy"
+                },
+                "request_id": {
+                    "type": "string",
+                    "example": "12cd4404-a385-47fb-bc1a-eea247de4516"
+                },
+                "success": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "tryout.AttemptAnswer": {
+            "type": "object",
+            "properties": {
+                "answer_text": {
+                    "type": "string"
+                },
+                "answered_at": {
+                    "type": "string"
+                },
+                "attempt_id": {
+                    "type": "string"
+                },
+                "awarded_points": {
+                    "type": "number"
+                },
+                "client_updated_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "is_correct": {
+                    "type": "boolean"
+                },
+                "is_flagged": {
+                    "type": "boolean"
+                },
+                "last_saved_at": {
+                    "type": "string"
+                },
+                "question_id": {
+                    "type": "string"
+                },
+                "selected_option_key": {
+                    "type": "string"
+                },
+                "server_version": {
+                    "type": "integer"
+                }
+            }
+        },
+        "tryout.AttemptSummary": {
+            "type": "object",
+            "properties": {
+                "answered_questions": {
+                    "type": "integer"
+                },
+                "correct_count": {
+                    "type": "integer"
+                },
+                "expires_at": {
+                    "type": "string"
+                },
+                "final_score": {
+                    "type": "number"
+                },
+                "flagged_questions": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "last_synced_at": {
+                    "type": "string"
+                },
+                "started_at": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "submitted_at": {
+                    "type": "string"
+                },
+                "total_questions": {
+                    "type": "integer"
+                },
+                "unanswered_count": {
+                    "type": "integer"
+                },
+                "version": {
+                    "type": "integer"
+                },
+                "wrong_count": {
+                    "type": "integer"
+                }
+            }
+        },
+        "tryout.CurrentAttemptData": {
+            "type": "object",
+            "properties": {
+                "answers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/tryout.AttemptAnswer"
+                    }
+                },
+                "attempt": {
+                    "$ref": "#/definitions/tryout.AttemptSummary"
+                },
+                "navigator": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/tryout.NavigatorItem"
+                    }
+                },
+                "questions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/tryout.Question"
+                    }
+                },
+                "server_time": {
+                    "type": "string"
+                },
+                "tryout": {
+                    "$ref": "#/definitions/tryout.Tryout"
+                }
+            }
+        },
+        "tryout.CurrentAttemptSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/tryout.CurrentAttemptData"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "current attempt fetched"
+                },
+                "request_id": {
+                    "type": "string",
+                    "example": "12cd4404-a385-47fb-bc1a-eea247de4516"
+                },
+                "success": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "tryout.CurrentLeaderboardData": {
+            "type": "object",
+            "properties": {
+                "entries": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/tryout.LeaderboardEntry"
+                    }
+                },
+                "limit": {
+                    "type": "integer"
+                },
+                "me": {
+                    "$ref": "#/definitions/tryout.ResultSummary"
+                },
+                "offset": {
+                    "type": "integer"
+                },
+                "server_time": {
+                    "type": "string"
+                },
+                "total": {
+                    "type": "integer"
+                },
+                "tryout": {
+                    "$ref": "#/definitions/tryout.Tryout"
+                }
+            }
+        },
+        "tryout.CurrentLeaderboardSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/tryout.CurrentLeaderboardData"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "leaderboard fetched"
+                },
+                "request_id": {
+                    "type": "string",
+                    "example": "12cd4404-a385-47fb-bc1a-eea247de4516"
+                },
+                "success": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "tryout.CurrentResultData": {
+            "type": "object",
+            "properties": {
+                "result": {
+                    "$ref": "#/definitions/tryout.ResultSummary"
+                },
+                "server_time": {
+                    "type": "string"
+                },
+                "tryout": {
+                    "$ref": "#/definitions/tryout.Tryout"
+                }
+            }
+        },
+        "tryout.CurrentResultSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/tryout.CurrentResultData"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "result fetched"
+                },
+                "request_id": {
+                    "type": "string",
+                    "example": "12cd4404-a385-47fb-bc1a-eea247de4516"
+                },
+                "success": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "tryout.CurrentTryoutData": {
+            "type": "object",
+            "properties": {
+                "attempt": {
+                    "$ref": "#/definitions/tryout.AttemptSummary"
+                },
+                "server_time": {
+                    "type": "string"
+                },
+                "tryout": {
+                    "$ref": "#/definitions/tryout.Tryout"
+                }
+            }
+        },
+        "tryout.CurrentTryoutSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/tryout.CurrentTryoutData"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "current tryout fetched"
+                },
+                "request_id": {
+                    "type": "string",
+                    "example": "12cd4404-a385-47fb-bc1a-eea247de4516"
+                },
+                "success": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "tryout.LeaderboardEntry": {
+            "type": "object",
+            "properties": {
+                "final_score": {
+                    "type": "number"
+                },
+                "full_name": {
+                    "type": "string"
+                },
+                "rank": {
+                    "type": "integer"
+                },
+                "submitted_at": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "tryout.NavigatorItem": {
+            "type": "object",
+            "properties": {
+                "display_order": {
+                    "type": "integer"
+                },
+                "is_answered": {
+                    "type": "boolean"
+                },
+                "is_flagged": {
+                    "type": "boolean"
+                },
+                "question_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "tryout.Question": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "display_order": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "image_url": {
+                    "type": "string"
+                },
+                "options": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/tryout.QuestionOption"
+                    }
+                },
+                "points": {
+                    "type": "number"
+                },
+                "prompt_html": {
+                    "type": "string"
+                },
+                "question_type": {
+                    "type": "string"
+                }
+            }
+        },
+        "tryout.QuestionOption": {
+            "type": "object",
+            "properties": {
+                "display_order": {
+                    "type": "integer"
+                },
+                "key": {
+                    "type": "string"
+                },
+                "text": {
+                    "type": "string"
+                }
+            }
+        },
+        "tryout.ResultSummary": {
+            "type": "object",
+            "properties": {
+                "attempt_id": {
+                    "type": "string"
+                },
+                "correct_count": {
+                    "type": "integer"
+                },
+                "final_score": {
+                    "type": "number"
+                },
+                "rank": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "submitted_at": {
+                    "type": "string"
+                },
+                "total_participants": {
+                    "type": "integer"
+                },
+                "total_questions": {
+                    "type": "integer"
+                },
+                "unanswered_count": {
+                    "type": "integer"
+                },
+                "wrong_count": {
+                    "type": "integer"
+                }
+            }
+        },
+        "tryout.SaveAnswerItem": {
+            "type": "object",
+            "properties": {
+                "answer_text": {
+                    "type": "string"
+                },
+                "client_updated_at": {
+                    "type": "string"
+                },
+                "is_flagged": {
+                    "type": "boolean"
+                },
+                "question_id": {
+                    "type": "string"
+                },
+                "selected_option_key": {
+                    "type": "string"
+                }
+            }
+        },
+        "tryout.SaveAnswersRequest": {
+            "type": "object",
+            "properties": {
+                "answers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/tryout.SaveAnswerItem"
+                    }
+                },
+                "attempt_version": {
+                    "type": "integer"
+                }
+            }
+        },
+        "tryout.SaveCurrentAnswersData": {
+            "type": "object",
+            "properties": {
+                "attempt": {
+                    "$ref": "#/definitions/tryout.AttemptSummary"
+                },
+                "server_time": {
+                    "type": "string"
+                }
+            }
+        },
+        "tryout.SaveCurrentAnswersSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/tryout.SaveCurrentAnswersData"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "answers saved"
+                },
+                "request_id": {
+                    "type": "string",
+                    "example": "12cd4404-a385-47fb-bc1a-eea247de4516"
+                },
+                "success": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "tryout.StartCurrentTryoutData": {
+            "type": "object",
+            "properties": {
+                "attempt": {
+                    "$ref": "#/definitions/tryout.AttemptSummary"
+                },
+                "server_time": {
+                    "type": "string"
+                },
+                "tryout": {
+                    "$ref": "#/definitions/tryout.Tryout"
+                }
+            }
+        },
+        "tryout.StartCurrentTryoutSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/tryout.StartCurrentTryoutData"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "attempt prepared"
+                },
+                "request_id": {
+                    "type": "string",
+                    "example": "12cd4404-a385-47fb-bc1a-eea247de4516"
+                },
+                "success": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "tryout.SubmitAnswerItem": {
+            "type": "object",
+            "properties": {
+                "answer_text": {
+                    "type": "string"
+                },
+                "is_flagged": {
+                    "type": "boolean"
+                },
+                "question_id": {
+                    "type": "string"
+                },
+                "selected_option_key": {
+                    "type": "string"
+                }
+            }
+        },
+        "tryout.SubmitAttemptRequest": {
+            "type": "object",
+            "properties": {
+                "attempt_version": {
+                    "type": "integer"
+                },
+                "final_answers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/tryout.SubmitAnswerItem"
+                    }
+                }
+            }
+        },
+        "tryout.SubmitCurrentAttemptData": {
+            "type": "object",
+            "properties": {
+                "attempt": {
+                    "$ref": "#/definitions/tryout.AttemptSummary"
+                },
+                "result": {
+                    "$ref": "#/definitions/tryout.ResultSummary"
+                },
+                "server_time": {
+                    "type": "string"
+                }
+            }
+        },
+        "tryout.SubmitCurrentAttemptSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/tryout.SubmitCurrentAttemptData"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "attempt submitted"
+                },
+                "request_id": {
+                    "type": "string",
+                    "example": "12cd4404-a385-47fb-bc1a-eea247de4516"
+                },
+                "success": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "tryout.Tryout": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "duration_minutes": {
+                    "type": "integer"
+                },
+                "ends_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "instructions": {
+                    "type": "string"
+                },
+                "question_count": {
+                    "type": "integer"
+                },
+                "results_published_at": {
+                    "type": "string"
+                },
+                "show_leaderboard": {
+                    "type": "boolean"
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "starts_at": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}
