@@ -1,5 +1,12 @@
 basePath: /
 definitions:
+  auth.ForgotPasswordRequest:
+    properties:
+      email:
+        type: string
+    required:
+    - email
+    type: object
   auth.LoginRequest:
     properties:
       email:
@@ -50,6 +57,17 @@ definitions:
     - email
     - full_name
     - password
+    type: object
+  auth.ResetPasswordRequest:
+    properties:
+      new_password:
+        minLength: 8
+        type: string
+      token:
+        type: string
+    required:
+    - new_password
+    - token
     type: object
   auth.UserResponse:
     properties:
@@ -644,6 +662,38 @@ paths:
       summary: Submit attempt aktif
       tags:
       - Tryout
+  /api/v1/auth/forgot-password:
+    post:
+      consumes:
+      - application/json
+      description: Membuat token reset password untuk email yang terdaftar dan mengirim
+        link reset melalui email. Response selalu generik agar tidak membocorkan status
+        registrasi email.
+      parameters:
+      - description: Forgot password payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/auth.ForgotPasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpx.EmptySuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+      summary: Request email reset password
+      tags:
+      - Auth
   /api/v1/auth/login:
     post:
       consumes:
@@ -789,6 +839,37 @@ paths:
           schema:
             $ref: '#/definitions/httpx.ErrorResponse'
       summary: Register user baru
+      tags:
+      - Auth
+  /api/v1/auth/reset-password:
+    post:
+      consumes:
+      - application/json
+      description: Mengganti password menggunakan token reset password yang masih
+        valid, lalu mencabut seluruh session login user.
+      parameters:
+      - description: Reset password payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/auth.ResetPasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpx.EmptySuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpx.ErrorResponse'
+      summary: Reset password
       tags:
       - Auth
   /api/v1/leaderboard/current:

@@ -3,9 +3,12 @@ package auth
 import (
 	"context"
 	"errors"
+	"net/url"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/omah-ti/omahtoosn/backend/internal/platform/email"
 	"github.com/omah-ti/omahtoosn/backend/internal/platform/security"
 )
 
@@ -15,12 +18,15 @@ var (
 	ErrAccountInactive    = errors.New("account is inactive")
 	ErrSessionExpired     = errors.New("session has expired")
 	ErrSessionRevoked     = errors.New("session has been revoked")
+	ErrPasswordTooWeak    = errors.New("password must be at least 8 characters")
 )
 
 // interface
 type Service interface {
 	Register(ctx context.Context, req *RegisterRequest) (*UserResponse, error)
 	Login(ctx context.Context, req *LoginRequest, meta SessionMeta) (*LoginResponse, string, string, error)
+	ForgotPassword(ctx context.Context, req *ForgotPasswordRequest) (*ForgotPasswordResponse, error)
+	ResetPassword(ctx context.Context, req *ResetPasswordRequest) error
 	RefreshToken(ctx context.Context, refreshToken string) (*LoginResponse, string, string, error)
 	Logout(ctx context.Context, sessionID string) error
 	LogoutAll(ctx context.Context, userID string) error
@@ -33,15 +39,34 @@ type SessionMeta struct {
 	DeviceID  string
 }
 
-type service struct {
-	repo   Repository
-	tokens security.TokenProvider
+type PasswordResetConfig struct {
+	FrontendURL string
+	ResetPath   string
+	TokenTTL    time.Duration
 }
 
-func NewService(repo Repository, tokens security.TokenProvider) Service {
+type service struct {
+	repo              Repository
+	tokens            security.TokenProvider
+	emailSender       email.Sender
+	passwordResetConf PasswordResetConfig
+}
+
+func NewService(repo Repository, tokens security.TokenProvider, emailSender email.Sender, passwordResetConf PasswordResetConfig) Service {
+	if passwordResetConf.FrontendURL == "" {
+		passwordResetConf.FrontendURL = "http://localhost:3000"
+	}
+	if passwordResetConf.ResetPath == "" {
+		passwordResetConf.ResetPath = "/reset-password"
+	}
+	if passwordResetConf.TokenTTL <= 0 {
+		passwordResetConf.TokenTTL = 30 * time.Minute
+	}
 	return &service{
-		repo:   repo,
-		tokens: tokens,
+		repo:              repo,
+		tokens:            tokens,
+		emailSender:       emailSender,
+		passwordResetConf: passwordResetConf,
 	}
 }
 
@@ -101,6 +126,95 @@ func (s *service) Login(ctx context.Context, req *LoginRequest, meta SessionMeta
 		User:             *toUserResponse(user),
 	}
 	return resp, accToken, refToken, nil
+}
+
+func (s *service) ForgotPassword(ctx context.Context, req *ForgotPasswordRequest) (*ForgotPasswordResponse, error) {
+	emailAddress := strings.TrimSpace(req.Email)
+	if emailAddress == "" {
+		return nil, ErrUserNotFound
+	}
+
+	user, err := s.repo.GetUserByEmail(ctx, emailAddress)
+	if err != nil {
+		if errors.Is(err, ErrUserNotFound) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	if !user.IsActive {
+		return nil, nil
+	}
+
+	resetToken, err := s.tokens.GenerateRefreshToken()
+	if err != nil {
+		return nil, err
+	}
+
+	expiresAt := time.Now().Add(s.passwordResetConf.TokenTTL)
+	token := &PasswordResetToken{
+		ID:        uuid.New(),
+		UserID:    user.ID,
+		TokenHash: s.tokens.HashToken(resetToken),
+		ExpiresAt: expiresAt,
+	}
+	if err := s.repo.CreatePasswordResetToken(ctx, token); err != nil {
+		return nil, err
+	}
+
+	resetURL, err := s.buildPasswordResetURL(resetToken)
+	if err != nil {
+		return nil, err
+	}
+	if s.emailSender == nil {
+		return nil, email.ErrNotConfigured
+	}
+	if err := s.emailSender.SendPasswordReset(ctx, email.PasswordResetMessage{
+		To:        user.Email,
+		FullName:  user.FullName,
+		ResetURL:  resetURL,
+		ExpiresAt: expiresAt,
+	}); err != nil {
+		return nil, err
+	}
+
+	return &ForgotPasswordResponse{}, nil
+}
+
+func (s *service) ResetPassword(ctx context.Context, req *ResetPasswordRequest) error {
+	token := strings.TrimSpace(req.Token)
+	if token == "" {
+		return ErrPasswordResetTokenInvalid
+	}
+	if len(req.NewPassword) < 8 {
+		return ErrPasswordTooWeak
+	}
+
+	hash, err := security.HashPassword(req.NewPassword)
+	if err != nil {
+		return err
+	}
+
+	return s.repo.ResetPasswordWithToken(ctx, s.tokens.HashToken(token), hash)
+}
+
+func (s *service) buildPasswordResetURL(token string) (string, error) {
+	base, err := url.Parse(strings.TrimRight(s.passwordResetConf.FrontendURL, "/"))
+	if err != nil {
+		return "", err
+	}
+	path := s.passwordResetConf.ResetPath
+	if !strings.HasPrefix(path, "/") {
+		path = "/" + path
+	}
+	rel, err := url.Parse(path)
+	if err != nil {
+		return "", err
+	}
+	resetURL := base.ResolveReference(rel)
+	query := resetURL.Query()
+	query.Set("token", token)
+	resetURL.RawQuery = query.Encode()
+	return resetURL.String(), nil
 }
 
 func (s *service) RefreshToken(ctx context.Context, refreshToken string) (*LoginResponse, string, string, error) {

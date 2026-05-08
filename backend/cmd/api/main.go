@@ -19,6 +19,7 @@ import (
 	"github.com/omah-ti/omahtoosn/backend/internal/modules/tryout"
 	"github.com/omah-ti/omahtoosn/backend/internal/platform/config"
 	"github.com/omah-ti/omahtoosn/backend/internal/platform/db"
+	"github.com/omah-ti/omahtoosn/backend/internal/platform/email"
 	"github.com/omah-ti/omahtoosn/backend/internal/platform/httpx"
 	"github.com/omah-ti/omahtoosn/backend/internal/platform/logx"
 	appmiddleware "github.com/omah-ti/omahtoosn/backend/internal/platform/middleware"
@@ -61,7 +62,17 @@ func main() {
 
 	// auth module
 	authRepo := auth.NewRepository(pool)
-	authService := auth.NewService(authRepo, tokenProvider)
+	emailSender := email.NewResendSender(email.ResendConfig{
+		APIKey:  cfg.ResendAPIKey,
+		From:    cfg.EmailFrom,
+		ReplyTo: cfg.EmailReplyTo,
+		AppName: cfg.AppName,
+	})
+	authService := auth.NewService(authRepo, tokenProvider, emailSender, auth.PasswordResetConfig{
+		FrontendURL: cfg.FrontendURL,
+		ResetPath:   cfg.PasswordResetPath,
+		TokenTTL:    cfg.PasswordResetTTL,
+	})
 	authHandler := auth.NewHandler(authService)
 
 	// tryout module
@@ -96,6 +107,8 @@ func main() {
 	authGroup := v1.Group("/auth")
 	authGroup.Post("/register", authHandler.Register)
 	authGroup.Post("/login", authHandler.Login)
+	authGroup.Post("/forgot-password", authHandler.ForgotPassword)
+	authGroup.Post("/reset-password", authHandler.ResetPassword)
 	authGroup.Post("/refresh", authHandler.RefreshToken)
 
 	authRequired := appmiddleware.NewAuthMiddleware(tokenProvider)

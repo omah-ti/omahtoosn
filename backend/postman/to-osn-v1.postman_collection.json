@@ -250,7 +250,48 @@
       }
     },
     {
-      "name": "15 Get Me After Logout",
+      "name": "15 Logout All",
+      "request": {
+        "method": "POST",
+        "url": "{{base_url}}/api/v1/auth/logout-all"
+      }
+    },
+    {
+      "name": "16 Forgot Password",
+      "request": {
+        "method": "POST",
+        "url": "{{base_url}}/api/v1/auth/forgot-password",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{email}}\"\n}"
+        }
+      }
+    },
+    {
+      "name": "17 Reset Password",
+      "request": {
+        "method": "POST",
+        "url": "{{base_url}}/api/v1/auth/reset-password",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"token\": \"{{reset_token}}\",\n  \"new_password\": \"{{new_password}}\"\n}"
+        }
+      }
+    },
+    {
+      "name": "18 Get Me After Logout",
       "request": {
         "method": "GET",
         "url": "{{base_url}}/api/v1/me"

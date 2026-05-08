@@ -14,6 +14,15 @@ type LoginRequest struct {
 	Password string `json:"password" validate:"required"`
 }
 
+type ForgotPasswordRequest struct {
+	Email string `json:"email" validate:"required,email"`
+}
+
+type ResetPasswordRequest struct {
+	Token       string `json:"token" validate:"required"`
+	NewPassword string `json:"new_password" validate:"required,min=8"`
+}
+
 // response
 type UserResponse struct {
 	ID          string     `json:"id"`
@@ -31,3 +40,5 @@ type LoginResponse struct {
 	RefreshExpiresAt time.Time    `json:"refresh_expires_at"`
 	User             UserResponse `json:"user"`
 }
+
+type ForgotPasswordResponse struct{}

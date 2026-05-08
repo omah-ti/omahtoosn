@@ -2,11 +2,14 @@ package auth
 
 import (
 	"errors"
+	"strings"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/omah-ti/omahtoosn/backend/internal/platform/email"
 	"github.com/omah-ti/omahtoosn/backend/internal/platform/httpx"
 	"github.com/omah-ti/omahtoosn/backend/internal/platform/middleware"
+	"github.com/omah-ti/omahtoosn/backend/internal/platform/security"
 )
 
 type Handler struct {
@@ -22,6 +25,8 @@ func (h *Handler) RegisterRoutes(router fiber.Router, authMW fiber.Handler) {
 
 	authGroup.Post("/register", h.Register)
 	authGroup.Post("/login", h.Login)
+	authGroup.Post("/forgot-password", h.ForgotPassword)
+	authGroup.Post("/reset-password", h.ResetPassword)
 	authGroup.Post("/refresh", h.RefreshToken)
 
 	protectedAuth := authGroup.Group("/", authMW)
@@ -213,6 +218,76 @@ func (h *Handler) Me(c *fiber.Ctx) error {
 	}
 
 	return httpx.Success(c, fiber.StatusOK, "profile fetched", resp)
+}
+
+// ForgotPassword godoc
+// @Summary Request email reset password
+// @Description Membuat token reset password untuk email yang terdaftar dan mengirim link reset melalui email. Response selalu generik agar tidak membocorkan status registrasi email.
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param payload body ForgotPasswordRequest true "Forgot password payload"
+// @Success 200 {object} httpx.EmptySuccessResponse
+// @Failure 400 {object} httpx.ErrorResponse
+// @Failure 500 {object} httpx.ErrorResponse
+// @Router /api/v1/auth/forgot-password [post]
+func (h *Handler) ForgotPassword(c *fiber.Ctx) error {
+	var req ForgotPasswordRequest
+	if err := c.BodyParser(&req); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"success": false, "message": "invalid request body"})
+	}
+	if strings.TrimSpace(req.Email) == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"success": false, "message": "email is required"})
+	}
+
+	_, err := h.svc.ForgotPassword(c.UserContext(), &req)
+	if err != nil {
+		if errors.Is(err, email.ErrNotConfigured) {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"success": false, "message": "email service is not configured"})
+		}
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"success": false, "message": "failed to send password reset email"})
+	}
+
+	return httpx.Success(c, fiber.StatusOK, "if email is registered, password reset instructions will be sent", nil)
+}
+
+// ResetPassword godoc
+// @Summary Reset password
+// @Description Mengganti password menggunakan token reset password yang masih valid, lalu mencabut seluruh session login user.
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param payload body ResetPasswordRequest true "Reset password payload"
+// @Success 200 {object} httpx.EmptySuccessResponse
+// @Failure 400 {object} httpx.ErrorResponse
+// @Failure 500 {object} httpx.ErrorResponse
+// @Router /api/v1/auth/reset-password [post]
+func (h *Handler) ResetPassword(c *fiber.Ctx) error {
+	var req ResetPasswordRequest
+	if err := c.BodyParser(&req); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"success": false, "message": "invalid request body"})
+	}
+	if strings.TrimSpace(req.Token) == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"success": false, "message": "reset token is required"})
+	}
+	if len(req.NewPassword) < 8 {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"success": false, "message": "password must be at least 8 characters"})
+	}
+
+	if err := h.svc.ResetPassword(c.UserContext(), &req); err != nil {
+		switch {
+		case errors.Is(err, ErrPasswordResetTokenInvalid), errors.Is(err, ErrPasswordResetTokenExpired):
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"success": false, "message": "reset token is invalid or expired"})
+		case errors.Is(err, ErrPasswordTooWeak):
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"success": false, "message": "password must be at least 8 characters"})
+		case errors.Is(err, security.ErrPasswordTooLong):
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"success": false, "message": "password exceeds maximum length of 72 characters"})
+		default:
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"success": false, "message": err.Error()})
+		}
+	}
+
+	return httpx.Success(c, fiber.StatusOK, "password reset successful", nil)
 }
 
 func (h *Handler) setAuthCookies(c *fiber.Ctx, access string, refresh string, accExp time.Time, refExp time.Time) {

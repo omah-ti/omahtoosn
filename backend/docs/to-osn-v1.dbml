@@ -41,6 +41,19 @@ Table auth_sessions {
   created_at timestamptz [not null]
 }
 
+Table password_reset_tokens {
+  id uuid [pk]
+  user_id uuid [not null, ref: > users.id]
+  token_hash text [not null, unique]
+  expires_at timestamptz [not null]
+  used_at timestamptz
+  created_at timestamptz [not null]
+
+  Indexes {
+    token_hash
+  }
+}
+
 Table tryouts {
   id uuid [pk]
   slug varchar [not null, unique]
