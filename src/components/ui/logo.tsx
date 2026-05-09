@@ -17,7 +17,7 @@ export default function Logo({
   const content = (
     <div className={`flex items-center gap-2 sm:gap-3 ${className}`}>
       <Image
-        src="/navbar/logo.webp"
+        src="/logo/omahti.png"
         alt="OmahTI"
         className={`${logoSize} object-contain`}
         width={100}
