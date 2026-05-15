@@ -1,11 +1,13 @@
 import Hero from "@/modules/landing/hero";
 import Statistics from "@/modules/landing/statistics";
+import Explore from "@/modules/landing/explore";
 
 export default function Home() {
   return (
     <>
       <Hero />
       <Statistics />
+      <Explore />
     </>
   );
 }

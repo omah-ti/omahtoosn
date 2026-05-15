@@ -3,7 +3,7 @@ import Image from "next/image";
 
 const Statistics = () => {
   return (
-    <Container>
+    <Container className="pb-9 md:pb-25">
       <div className="w-full flex flex-row py-23 items-center justify-center md:gap-x-10 gap-x-5">
         <div className="flex flex-col items-center w-full max-w-89 gap-1">
           <h2 className="md:text-[68px] text-[26px] text-primary-500 font-bold">75%</h2>
