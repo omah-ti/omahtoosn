@@ -1,6 +1,6 @@
 import { ButtonHTMLAttributes, ReactNode } from "react";
 
-type Variant = "primary" | "transparent" | "neutral" | "disabled";
+type Variant = "primary" | "transparent" | "neutral" | "disabled" | "outline";
 type Size = "sm" | "md" | "lg" | "xl" | "2xl";
 
 type Props = {
