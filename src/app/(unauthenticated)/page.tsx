@@ -4,6 +4,7 @@ import Explore from "@/modules/landing/explore";
 import Kemampuan from "@/modules/landing/kemampuan";
 import Alumni from "@/modules/landing/alumni";
 import About from "@/modules/landing/about";
+import CTA from "@/modules/landing/cta";
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
       <Kemampuan />
       <Alumni />
       <About />
+      <CTA />
     </>
   );
 }
