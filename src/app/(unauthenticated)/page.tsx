@@ -3,6 +3,7 @@ import Statistics from "@/modules/landing/statistics";
 import Explore from "@/modules/landing/explore";
 import Kemampuan from "@/modules/landing/kemampuan";
 import Alumni from "@/modules/landing/alumni";
+import About from "@/modules/landing/about";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <Explore />
       <Kemampuan />
       <Alumni />
+      <About />
     </>
   );
 }
