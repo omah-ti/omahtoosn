@@ -8,9 +8,7 @@ export default function AuthenticatedLayout({
 }) {
   return (
     <>
-      <Navbar />
-      <div className="pt-16">{children}</div>
-      <Footer />
+      {children}
     </>
   );
 }
