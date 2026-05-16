@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 export default function Signup() {
+  //comment untuk commit
   return (
     <main className="flex w-full min-h-screen items-center justify-center bg-gradient-to-t from-primary-900 to-primary-1000 text-black font-(Plus Jakarta Sans) px-4 py-16">
 
