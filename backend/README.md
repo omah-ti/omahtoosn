@@ -179,6 +179,98 @@ Import dua file ini:
 
 Selama halaman frontend reset password belum ada, token dari email bisa dipakai langsung di Postman.
 
+## Deploy Backend ke Railway
+
+Backend ini siap dideploy sebagai service terpisah dari folder `backend`. File `railway.json` mengatur Docker build, pre-deploy migration, start command, healthcheck, dan restart policy. File `Dockerfile` membangun tiga binary:
+
+- `api` untuk service utama
+- `migrate` untuk menjalankan migration SQL sebelum deploy aktif
+- `seed_questions` untuk seed soal OmahTOOSN sekali saja jika diperlukan
+
+### 1. Buat service
+
+Di Railway:
+
+1. Buat project dari repository GitHub monorepo ini.
+2. Tambahkan PostgreSQL service: `+ New` -> `Database` -> `PostgreSQL`.
+3. Tambahkan backend service dari repository yang sama.
+4. Pada backend service, buka `Settings` lalu set:
+
+```txt
+Root Directory: /backend
+Railway Config File: /backend/railway.json
+Watch Paths: /backend/**
+```
+
+`Root Directory` wajib supaya Railway tidak membangun Next.js frontend di root repo. `Railway Config File` wajib karena config file Railway tidak otomatis mengikuti root directory.
+
+5. Pada tab `Networking`, buat public domain untuk backend agar endpoint `/health` dan `/swagger/index.html` bisa diakses dari internet.
+
+### 2. Set variable backend
+
+Di backend service, buka `Variables` lalu isi:
+
+```env
+APP_ENV=production
+APP_NAME=to-osn-backend
+APP_VERSION=1.0.0
+DATABASE_URL=${{Postgres.DATABASE_URL}}
+JWT_SECRET=isi_dengan_secret_panjang_random
+ACCESS_TOKEN_TTL_MINUTES=15
+REFRESH_TOKEN_TTL_HOURS=168
+CORS_ALLOW_ORIGINS=https://domain-frontend-kamu
+FRONTEND_URL=https://domain-frontend-kamu
+PASSWORD_RESET_PATH=/reset-password
+PASSWORD_RESET_TTL_MINUTES=30
+COOKIE_SECURE=true
+COOKIE_SAME_SITE=None
+COOKIE_DOMAIN=
+RESEND_API_KEY=isi_jika_fitur_lupa_password_dipakai
+EMAIL_FROM=TO OSN <noreply@domain-terverifikasi-kamu>
+EMAIL_REPLY_TO=
+```
+
+Catatan variable:
+
+- `APP_PORT` tidak perlu diisi. Railway menyediakan `PORT`, dan backend sudah membaca `PORT` otomatis.
+- `DATABASE_URL` harus memakai reference variable dari PostgreSQL service, biasanya `${{Postgres.DATABASE_URL}}`. Jika nama service PostgreSQL berbeda, sesuaikan `Postgres`.
+- `JWT_SECRET` jangan pakai default. Gunakan string random panjang.
+- Jika frontend dan backend berada di domain berbeda, gunakan `COOKIE_SECURE=true` dan `COOKIE_SAME_SITE=None`.
+- Jika memakai custom domain satu parent domain, misalnya `app.example.com` dan `api.example.com`, `COOKIE_DOMAIN` boleh diisi `.example.com`. Kalau memakai domain Railway/Vercel terpisah, biarkan kosong.
+- `RESEND_API_KEY` dan `EMAIL_FROM` wajib hanya untuk fitur forgot password. Domain pengirim harus sudah verified di Resend untuk production.
+
+### 3. Deploy dan cek
+
+Setelah variable disimpan, deploy backend. Pada deploy pertama:
+
+1. Docker image dibangun dari `backend/Dockerfile`.
+2. Railway menjalankan pre-deploy command `./migrate`.
+3. Jika migration sukses, Railway menjalankan `./api`.
+4. Healthcheck memanggil `/health`.
+
+Endpoint yang perlu dicek:
+
+```txt
+https://domain-backend-kamu/health
+https://domain-backend-kamu/swagger/index.html
+```
+
+### 4. Seed soal OmahTOOSN
+
+Migration hanya membuat schema. Untuk mengisi soal, jalankan sekali dari shell/one-off command backend service setelah deploy sukses:
+
+```sh
+TRYOUT_STATUS=ongoing ./seed_questions
+```
+
+Jika belum mau tryout aktif, jalankan tanpa status ongoing:
+
+```sh
+./seed_questions
+```
+
+Jangan jadikan seed sebagai pre-deploy command permanen, karena setelah user mulai mengerjakan tryout, seed ulang bisa ditolak oleh proteksi `ALLOW_SEED_WITH_ATTEMPTS`.
+
 ## Command Cepat Lain
 
 Setup tanpa menjalankan API:

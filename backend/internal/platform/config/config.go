@@ -36,7 +36,7 @@ func Load() *Config {
 	return &Config{
 		AppName:           getString("APP_NAME", "to-osn-backend"),
 		AppEnv:            getString("APP_ENV", "development"),
-		AppPort:           getString("APP_PORT", "8081"),
+		AppPort:           getString("APP_PORT", getString("PORT", "8081")),
 		AppVersion:        getString("APP_VERSION", "dev"),
 		DatabaseURL:       getString("DATABASE_URL", "postgres://postgres:postgres@localhost:5433/to_osn?sslmode=disable"),
 		JWTSecret:         getString("JWT_SECRET", "change-this-secret"),

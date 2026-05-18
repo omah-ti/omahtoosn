@@ -73,7 +73,11 @@ func main() {
 		ResetPath:   cfg.PasswordResetPath,
 		TokenTTL:    cfg.PasswordResetTTL,
 	})
-	authHandler := auth.NewHandler(authService)
+	authHandler := auth.NewHandler(authService, auth.CookieConfig{
+		Domain:   cfg.CookieDomain,
+		Secure:   cfg.CookieSecure,
+		SameSite: cfg.CookieSameSite,
+	})
 
 	// tryout module
 	tryoutRepo := tryout.NewRepository()

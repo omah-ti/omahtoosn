@@ -13,11 +13,25 @@ import (
 )
 
 type Handler struct {
-	svc Service
+	svc    Service
+	cookie CookieConfig
 }
 
-func NewHandler(svc Service) *Handler {
-	return &Handler{svc: svc}
+type CookieConfig struct {
+	Domain   string
+	Secure   bool
+	SameSite string
+}
+
+func NewHandler(svc Service, cookieConfig ...CookieConfig) *Handler {
+	cfg := CookieConfig{
+		Secure:   true,
+		SameSite: "Strict",
+	}
+	if len(cookieConfig) > 0 {
+		cfg = cookieConfig[0]
+	}
+	return &Handler{svc: svc, cookie: cfg}
 }
 
 func (h *Handler) RegisterRoutes(router fiber.Router, authMW fiber.Handler) {
@@ -296,16 +310,18 @@ func (h *Handler) setAuthCookies(c *fiber.Ctx, access string, refresh string, ac
 		Value:    access,
 		Expires:  accExp,
 		HTTPOnly: true,
-		Secure:   true,
-		SameSite: "Strict",
+		Secure:   h.cookie.Secure,
+		SameSite: h.cookie.SameSite,
+		Domain:   h.cookie.Domain,
 	})
 	c.Cookie(&fiber.Cookie{
 		Name:     "refresh_token",
 		Value:    refresh,
 		Expires:  refExp,
 		HTTPOnly: true,
-		Secure:   true,
-		SameSite: "Strict",
+		Secure:   h.cookie.Secure,
+		SameSite: h.cookie.SameSite,
+		Domain:   h.cookie.Domain,
 	})
 }
 
@@ -315,12 +331,18 @@ func (h *Handler) clearAuthCookies(c *fiber.Ctx) {
 		Value:    "",
 		Expires:  time.Now().Add(-1 * time.Hour),
 		HTTPOnly: true,
+		Secure:   h.cookie.Secure,
+		SameSite: h.cookie.SameSite,
+		Domain:   h.cookie.Domain,
 	})
 	c.Cookie(&fiber.Cookie{
 		Name:     "refresh_token",
 		Value:    "",
 		Expires:  time.Now().Add(-1 * time.Hour),
 		HTTPOnly: true,
+		Secure:   h.cookie.Secure,
+		SameSite: h.cookie.SameSite,
+		Domain:   h.cookie.Domain,
 	})
 }
 
