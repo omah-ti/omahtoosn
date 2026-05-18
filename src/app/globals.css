@@ -11,7 +11,7 @@
   --color-primary-600: #2854B1;
   --color-primary-700: #20448F;
   --color-primary-800: #18346C;
-  --color-primary-900: #11234A;
+  --color-primary-900: #0A152B;
   --color-primary-1000: #091328;
   --color-primary-background: #DCE5F9;
 
@@ -42,3 +42,18 @@ body {
   font-family: var(--font-jakarta);
 }
 
+.hero {
+  height: 100vh;
+
+  background: linear-gradient(
+    to bottom,
+    #3265D1 0%,
+    #11234A 100%
+  );
+}
+
+@media (min-width: 768px) {
+  .hero {
+    clip-path: ellipse(100% 100% at 50% 0%);
+  }
+}

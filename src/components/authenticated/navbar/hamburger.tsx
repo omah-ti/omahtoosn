@@ -44,14 +44,14 @@ export default function Hamburger({ open, onClose }: Props) {
               Dashboard
             </Link>
             <Link
-              href="/try-out"
+              href="/tryout"
               className="hover:opacity-80"
               onClick={handleClose}
             >
               Try Out
             </Link>
             <Link
-              href="/hasil-try-out"
+              href="/result"
               className="hover:opacity-80"
               onClick={handleClose}
             >

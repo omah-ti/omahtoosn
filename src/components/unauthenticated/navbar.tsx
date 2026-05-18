@@ -26,7 +26,7 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`z-10 h-16 fixed w-full px-4 sm:px-6 md:px-10 flex items-center justify-between text-white transition-colors duration-300
+      className={`z-999 h-16 fixed w-full px-4 sm:px-6 md:px-10 flex items-center justify-between text-white transition-colors duration-300
       ${isSolid ? "bg-primary-600" : "bg-transparent"}`}
     >
       {/* Logo */}

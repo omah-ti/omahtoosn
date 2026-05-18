@@ -1,4 +1,5 @@
 import LandingNavbar from "@/components/unauthenticated/navbar";
+import Footer from "@/components/ui/footer";
 
 export default function UnauthenticatedLayout({
   children,
@@ -9,6 +10,7 @@ export default function UnauthenticatedLayout({
     <>
       <LandingNavbar />
       {children}
+      <Footer />
     </>
   );
 }

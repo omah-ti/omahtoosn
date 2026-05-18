@@ -17,15 +17,15 @@ export default function Logo({
   const content = (
     <div className={`flex items-center gap-2 sm:gap-3 ${className}`}>
       <Image
-        src="/navbar/logo.webp"
+        src="/logo/omahti.png"
         alt="OmahTI"
         className={`${logoSize} object-contain`}
         width={100}
         height={100}
       />
 
-      <div className="flex flex-col justify-center">
-        <p className="font-bold text-base leading-none">Omah<span className="text-[#F0861A]">TOOSN</span></p>
+      <div className="flex flex-col justify-center text-white">
+        <p className="font-bold text-base leading-none ">Omah<span className="text-[#F0861A]">TOOSN</span></p>
         <p className="text-[10px]">Computer Science UGM</p>
       </div>
     </div>

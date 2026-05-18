@@ -1,6 +1,6 @@
 import { ButtonHTMLAttributes, ReactNode } from "react";
 
-type Variant = "primary" | "transparent" | "neutral" | "disabled";
+type Variant = "primary" | "transparent" | "neutral" | "disabled" | "outline";
 type Size = "sm" | "md" | "lg" | "xl" | "2xl";
 
 type Props = {
@@ -25,6 +25,7 @@ export default function Button({
       "bg-primary-600 text-white hover:bg-neutral-300 hover:text-white",
     neutral: "bg-neutral-300 text-neutral-100", 
     transparent: "hover:bg-opacity-80",
+    outline: "border border-primary-100 bg-primary-800 font-bold text-primary-100",
     disabled: "bg-gray-200 text-gray-400 cursor-not-allowed",
   };
 
