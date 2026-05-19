@@ -2,6 +2,7 @@
 
 import { Info, LogOut, User } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type Props = {
@@ -10,12 +11,20 @@ type Props = {
 };
 
 export default function Hamburger({ open, onClose }: Props) {
+  const router = useRouter();
   const [userOpen, setUserOpen] = useState(false);
 
   const handleClose = () => {
     setUserOpen(false);
     onClose();
   };
+
+  async function handleLogout() {
+    await fetch("/api/v1/auth/logout", { method: "POST" }).catch(() => null);
+    handleClose();
+    router.push("/login");
+    router.refresh();
+  }
 
   return (
     <>
@@ -80,7 +89,7 @@ export default function Hamburger({ open, onClose }: Props) {
               onClick={(e) => e.stopPropagation()}
               className="flex flex-col gap-3 pl-4"
             >
-              <button className="flex items-center gap-3 hover:opacity-80">
+              <button onClick={handleLogout} className="flex items-center gap-3 hover:opacity-80">
                 <LogOut />
                 Keluar
               </button>

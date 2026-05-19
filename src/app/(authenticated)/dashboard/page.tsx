@@ -1,31 +1,31 @@
 import TryOutCard from "@/components/authenticated/dashboard/tryout-card";
 import ResultCard from "@/components/authenticated/dashboard/result-card";
 import MaterialCard from "@/components/authenticated/dashboard/material-card";
+import { displayName, type BackendUser } from "@/lib/auth";
+import { backendJson } from "@/lib/backend";
 
 async function getUser() {
-  const res = await fetch("http://localhost:3000/api/me", {
-    cache: "no-store",
-  });
+  return backendJson<BackendUser>("/api/v1/me");
+}
 
-  if (!res.ok) {
-    return { name: "User" };
-  }
-
-  return res.json();
+async function getCurrentTryout() {
+  return backendJson<{ attempt: { status: string } | null }>("/api/v1/tryouts/current");
 }
 
 export default async function DashboardPage() {
-  const user = await getUser();
+  const [user, currentTryout] = await Promise.all([getUser(), getCurrentTryout()]);
 
-  const testStatus = "COMPLETED"; // "NOT_STARTED" | "COMPLETED"
-  const variant = testStatus === "COMPLETED" ? "after" : "before";
+  const isCompleted =
+    currentTryout?.attempt?.status === "submitted" ||
+    currentTryout?.attempt?.status === "auto_submitted";
+  const variant = isCompleted ? "after" : "before";
 
   return (
     <div className="w-full min-h-screen pt-5 bg-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         <div className="mb-6 sm:mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold text-[#0a0a0a] mb-3">
-            Hi, {user.name || "User"}!
+            Hi, {displayName(user)}!
           </h1>
 
           <p className="text-sm mb-[-15] sm:text-base text-[#0a0a0a]">

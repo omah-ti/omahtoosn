@@ -1,14 +1,22 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import NavbarMenu from "./navbar-menu";
 import Hamburger from "./hamburger";
 import { Info, LogOut, Menu, User, X } from "lucide-react";
 import Logo from "@/components/ui/logo";
 
 export default function Navbar() {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  async function handleLogout() {
+    await fetch("/api/v1/auth/logout", { method: "POST" }).catch(() => null);
+    router.push("/login");
+    router.refresh();
+  }
 
   return (
     <nav className="bg-primary-1000 z-10 h-16 fixed w-full px-4 sm:px-6 md:px-10 flex items-center justify-between text-white border-b border-white/10">
@@ -30,7 +38,7 @@ export default function Navbar() {
 
           {open && (
             <div className="absolute pt-[12] right-0 mt-3 bg-primary-1000 rounded-xl p-4 w-40 shadow-lg border border-white/10">
-              <button className="ml-5 flex items-center gap-3 w-full text-left hover:opacity-80">
+              <button onClick={handleLogout} className="ml-5 flex items-center gap-3 w-full text-left hover:opacity-80">
                 <LogOut/>
                 Keluar
               </button>

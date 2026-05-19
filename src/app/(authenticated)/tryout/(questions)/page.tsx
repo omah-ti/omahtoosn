@@ -1,22 +1,59 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Grid, ChevronLeft, ChevronRight, CheckSquare, Square, X } from "lucide-react";
 import Container from "@/components/ui/container";
 import Button from "@/components/ui/button";
 
-const dummySoal = Array.from({ length: 40 }).map((_, i) => ({
-  id: i + 1,
-  type: i === 1 ? "isian" : "pilihan_ganda",
-  text_soal: "Pak Dengklek memiliki N ekor bebek yang dinomori dari Bebek ke-1 hingga Bebek ke-N. Karena hari ini adalah Hari Mandi Nasional, Pak Dengklek ingin memandikan seluruh bebek-bebeknya. Diketahui bahwa Pak Dengklek memiliki dua buah gayung. Dengan gayung pertama, Pak Dengklek dapat secara tepat mengambil X liter; sedangkan dengan gayung kedua, Pak Dengklek dapat secara tepat mengambil Y liter. Perhatikan bahwa Pak Dengklek tidak bisa mengira-ngira bagian dari gayung tersebut, sehingga Pak Dengklek tidak dapat mengambil tepat separuh dari X liter atau sepertiga dari Y liter misalnya. Bebek-bebek Pak Dengklek sebenarnya tidak suka mandi. Sehingga, mereka memberikan dua persyaratan kepada Pak Dengklek agar mereka mau mandi sebagai berikut: 1. Sekali Pak Dengklek mengambil air dengan gayung, maka air tersebut harus langsung digunakan.",
-  pertanyaan: "Berapakah banyak kemungkinan posisi awal Kwak sedemikian sehingga tidak ada satu pun instruksi yang menyebabkan Kwak keluar pekarangan?",
-  options: ["Option A", "Option B", "Option C", "Option D", "Option E"]
-}));
+type ApiEnvelope<T> = {
+  success: boolean;
+  message: string;
+  data?: T;
+};
+
+type TryoutQuestion = {
+  id: string;
+  code: string;
+  question_type: "multiple_choice" | "short_text";
+  prompt_html: string;
+  display_order: number;
+  options?: {
+    key: string;
+    text: string;
+    display_order: number;
+  }[];
+};
+
+type Attempt = {
+  id: string;
+  status: string;
+  expires_at: string;
+  version: number;
+};
+
+type AttemptAnswer = {
+  question_id: string;
+  selected_option_key?: string;
+  answer_text?: string;
+  is_flagged: boolean;
+};
+
+type AttemptPayload = {
+  attempt: Attempt;
+  questions: TryoutQuestion[];
+  answers: AttemptAnswer[];
+};
 
 export default function TryoutPage() {
+  const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [answers, setAnswers] = useState<Record<number, string | number>>({});
+  const [questions, setQuestions] = useState<TryoutQuestion[]>([]);
+  const [attempt, setAttempt] = useState<Attempt | null>(null);
+  const [answers, setAnswers] = useState<Record<number, string>>({});
   const [raguRagu, setRaguRagu] = useState<Record<number, boolean>>({});
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
 
   const [timeLeft, setTimeLeft] = useState(601);
   const [showToast, setShowToast] = useState(false);
@@ -25,9 +62,69 @@ export default function TryoutPage() {
   const [showTimeoutModal, setShowTimeoutModal] = useState(false);
   const [showDaftarSoal, setShowDaftarSoal] = useState(false);
 
+  const loadAttempt = useCallback(async () => {
+    setLoading(true);
+    setLoadError("");
+
+    let res = await fetch("/api/v1/attempts/current", { cache: "no-store" });
+    if (res.status === 404) {
+      const startRes = await fetch("/api/v1/tryouts/current/start", { method: "POST" });
+      if (startRes.status === 401) {
+        router.push("/login");
+        return;
+      }
+      if (!startRes.ok) {
+        const payload = await startRes.json().catch(() => null);
+        setLoadError(payload?.message || "Gagal memulai tryout");
+        setLoading(false);
+        return;
+      }
+      res = await fetch("/api/v1/attempts/current", { cache: "no-store" });
+    }
+
+    if (res.status === 401) {
+      router.push("/login");
+      return;
+    }
+    if (!res.ok) {
+      const payload = await res.json().catch(() => null);
+      setLoadError(payload?.message || "Gagal memuat tryout");
+      setLoading(false);
+      return;
+    }
+
+    const payload = (await res.json()) as ApiEnvelope<AttemptPayload>;
+    if (!payload.success || !payload.data) {
+      setLoadError(payload.message || "Gagal memuat tryout");
+      setLoading(false);
+      return;
+    }
+
+    const answerByQuestion = new Map(payload.data.answers.map((answer) => [answer.question_id, answer]));
+    const nextAnswers: Record<number, string> = {};
+    const nextFlags: Record<number, boolean> = {};
+    payload.data.questions.forEach((question, index) => {
+      const answer = answerByQuestion.get(question.id);
+      if (!answer) return;
+      if (answer.selected_option_key) nextAnswers[index] = answer.selected_option_key;
+      if (answer.answer_text) nextAnswers[index] = answer.answer_text;
+      if (answer.is_flagged) nextFlags[index] = true;
+    });
+
+    setQuestions(payload.data.questions);
+    setAttempt(payload.data.attempt);
+    setAnswers(nextAnswers);
+    setRaguRagu(nextFlags);
+    setTimeLeft(Math.max(0, Math.floor((new Date(payload.data.attempt.expires_at).getTime() - Date.now()) / 1000)));
+    setLoading(false);
+  }, [router]);
+
+  useEffect(() => {
+    void Promise.resolve().then(loadAttempt);
+  }, [loadAttempt]);
+
   useEffect(() => {
     if (timeLeft <= 0) {
-      setShowTimeoutModal(true);
       return;
     }
 
@@ -43,22 +140,57 @@ export default function TryoutPage() {
     return () => clearInterval(timer);
   }, [timeLeft]);
 
-  const currentSoal = dummySoal[currentIndex];
+  const currentSoal = questions[currentIndex];
 
   const handleNext = () => {
-    if (currentIndex < dummySoal.length - 1) setCurrentIndex(currentIndex + 1);
+    if (currentIndex < questions.length - 1) setCurrentIndex(currentIndex + 1);
   };
 
   const handlePrev = () => {
     if (currentIndex > 0) setCurrentIndex(currentIndex - 1);
   };
 
-  const handleSelectOption = (value: string | number) => {
+  const saveAnswer = async (index: number, value: string, isFlagged: boolean) => {
+    const question = questions[index];
+    if (!question || !attempt) return;
+
+    const isShortText = question.question_type === "short_text";
+    const res = await fetch("/api/v1/attempts/current/answers", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        attempt_version: attempt.version,
+        answers: [
+          {
+            question_id: question.id,
+            selected_option_key: isShortText || value === "" ? null : value,
+            answer_text: isShortText && value !== "" ? value : null,
+            is_flagged: isFlagged,
+            client_updated_at: new Date().toISOString(),
+          },
+        ],
+      }),
+    });
+
+    if (res.ok) {
+      const payload = (await res.json().catch(() => null)) as ApiEnvelope<{ attempt: Attempt }> | null;
+      if (payload?.data?.attempt) {
+        setAttempt(payload.data.attempt);
+      }
+    }
+  };
+
+  const handleSelectOption = (value: string) => {
     setAnswers(prev => ({ ...prev, [currentIndex]: value }));
+    saveAnswer(currentIndex, value, raguRagu[currentIndex] === true);
   };
 
   const handleToggleRagu = () => {
-    setRaguRagu(prev => ({ ...prev, [currentIndex]: !prev[currentIndex] }));
+    const nextFlag = !raguRagu[currentIndex];
+    setRaguRagu(prev => ({ ...prev, [currentIndex]: nextFlag }));
+    saveAnswer(currentIndex, answers[currentIndex] || "", nextFlag);
   };
 
   const handleSubmitClick = () => {
@@ -71,11 +203,35 @@ export default function TryoutPage() {
   };
 
   const handleFinalSubmit = () => {
-    // Final submission logic
-    console.log("Answers Submitted:", answers);
-    setShowConfirmModal(false);
-    setShowTimeoutModal(false);
-    // e.g. redirect to success page
+    if (!attempt) return;
+    fetch("/api/v1/attempts/current/submit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        attempt_version: attempt.version,
+        final_answers: questions.map((question, index) => {
+          const value = answers[index] || "";
+          const isShortText = question.question_type === "short_text";
+          return {
+            question_id: question.id,
+            selected_option_key: isShortText || value === "" ? null : value,
+            answer_text: isShortText && value !== "" ? value : null,
+            is_flagged: raguRagu[index] === true,
+          };
+        }),
+      }),
+    }).then(async (res) => {
+      if (!res.ok) {
+        const payload = await res.json().catch(() => null);
+        alert(payload?.message || "Gagal mengirim jawaban");
+        return;
+      }
+      setShowConfirmModal(false);
+      setShowTimeoutModal(false);
+      router.push("/dashboard");
+    });
   };
 
   const formatTime = (seconds: number) => {
@@ -84,6 +240,24 @@ export default function TryoutPage() {
     const s = seconds % 60;
     return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   };
+
+  if (loading) {
+    return (
+      <main className="relative min-h-[calc(100vh-64px)] w-full bg-white flex flex-col items-center justify-center py-10">
+        <p className="text-neutral-1000">Memuat tryout...</p>
+      </main>
+    );
+  }
+
+  if (loadError || !currentSoal) {
+    return (
+      <main className="relative min-h-[calc(100vh-64px)] w-full bg-white flex flex-col items-center justify-center py-10">
+        <p className="text-neutral-1000">{loadError || "Tryout tidak tersedia"}</p>
+      </main>
+    );
+  }
+
+  const shouldShowTimeoutModal = showTimeoutModal || timeLeft <= 0;
 
   return (
     <main className="relative min-h-[calc(100vh-64px)] w-full bg-white flex flex-col items-center justify-center py-10">
@@ -114,7 +288,7 @@ export default function TryoutPage() {
             </div>
             <div className="p-10">
               <div className="grid grid-cols-10 max-w-[640px] w-full gap-3 md:gap-4 justify-center items-center">
-                {dummySoal.map((soal, idx) => {
+                {questions.map((soal, idx) => {
                   const isRagu = raguRagu[idx];
                   const isAnswered = answers[idx] !== undefined && answers[idx] !== '';
                   let bgColor = 'bg-white';
@@ -203,7 +377,7 @@ export default function TryoutPage() {
       )}
 
       {/* Timeout Modal */}
-      {showTimeoutModal && (
+      {shouldShowTimeoutModal && (
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg w-[370px] h-[196px] p-6 flex flex-col items-start gap-[10px] shrink-0 shadow-2xl">
             <h3 className="text-xl font-bold text-neutral-1000">Waktu Pengerjaan Telah Habis</h3>
@@ -242,38 +416,42 @@ export default function TryoutPage() {
 
           <div className="flex flex-col lg:flex-row gap-6">
             <div className="flex-1 bg-white rounded-xl p-6 md:p-8 shadow-sm min-h-[400px] max-h-[60vh] overflow-y-auto">
-              <p className="text-neutral-800 leading-relaxed text-sm md:text-base text-justify whitespace-pre-line">
-                {currentSoal.text_soal}
-              </p>
+              <div
+                className="text-neutral-800 leading-relaxed text-sm md:text-base text-justify whitespace-pre-line"
+                dangerouslySetInnerHTML={{ __html: currentSoal.prompt_html }}
+              />
             </div>
 
             <div className="w-full lg:w-[450px] bg-white rounded-xl p-6 md:p-8 shadow-sm flex flex-col gap-6 max-h-[60vh] overflow-y-auto">
               <p className="text-neutral-800 leading-relaxed text-sm md:text-base whitespace-pre-line">
-                {currentSoal.pertanyaan}
+                Jawaban untuk {currentSoal.code}
               </p>
 
               <div className="flex flex-col gap-4">
                 <p className="font-medium text-neutral-1000 text-sm md:text-base">Jawaban</p>
                 <div className="flex flex-col gap-3">
-                  {currentSoal.type === "isian" ? (
+                  {currentSoal.question_type === "short_text" ? (
                     <input
                       type="text"
-                      value={(answers[currentIndex] as string) || ''}
+                      value={answers[currentIndex] || ''}
                       onChange={(e) => handleSelectOption(e.target.value)}
                       placeholder="Masukkan jawaban bilangan bulat"
                       className="w-full px-4 py-3 rounded-lg border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-primary-600 bg-white text-neutral-800 text-sm md:text-base"
                     />
                   ) : (
-                    currentSoal.options.map((opt, idx) => (
+                    currentSoal.options?.map((opt, idx) => (
                       <label key={idx} className="flex items-center gap-3 cursor-pointer group">
                         <input 
                           type="radio" 
                           name={`answer-${currentIndex}`} 
                           className="w-4 h-4 accent-neutral-1000 cursor-pointer" 
-                          checked={answers[currentIndex] === idx}
-                          onChange={() => handleSelectOption(idx)}
+                          checked={answers[currentIndex] === opt.key}
+                          onChange={() => handleSelectOption(opt.key)}
                         />
-                        <span className="text-sm md:text-base text-neutral-800 group-hover:text-neutral-1000 transition-colors">{opt}</span>
+                        <span
+                          className="text-sm md:text-base text-neutral-800 group-hover:text-neutral-1000 transition-colors"
+                          dangerouslySetInnerHTML={{ __html: `${opt.key}. ${opt.text}` }}
+                        />
                       </label>
                     ))
                   )}
@@ -298,7 +476,7 @@ export default function TryoutPage() {
               {raguRagu[currentIndex] ? <CheckSquare className="w-5 h-5" /> : <Square className="w-5 h-5" />}
               Ragu-ragu
             </button>
-            {currentIndex === dummySoal.length - 1 ? (
+            {currentIndex === questions.length - 1 ? (
               <button 
                 onClick={handleSubmitClick}
                 className="w-full py-3 rounded-xl bg-[#2563EB] flex items-center justify-center gap-2 text-white font-semibold hover:bg-blue-700 transition-colors cursor-pointer"
