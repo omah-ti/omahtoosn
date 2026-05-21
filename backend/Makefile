@@ -1,5 +1,5 @@
 APP_NAME=to-osn-backend
-DB_URL?=postgres://postgres:postgres@localhost:5432/to_osn?sslmode=disable
+DB_URL?=postgres://postgres:postgres@localhost:5433/to_osn?sslmode=disable
 MIGRATIONS_PATH?=./migrations
 
 run:
@@ -16,3 +16,6 @@ migrate-force:
 
 seed-demo:
 	psql "$(DB_URL)" -f ./seeds/demo_seed.sql
+
+seed-omahtoosn:
+	DATABASE_URL="$(DB_URL)" go run ./cmd/seed_questions

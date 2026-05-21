@@ -1,0 +1,516 @@
+{
+  "questions": [
+    {
+      "code": "INF-A-LADANG",
+      "question_type": "short_text",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 1. Bebek di Ladang Berpetak</h3><p>Pak Dengklek memiliki ladang berbentuk petak 7×7. Beberapa petak berisi lumpur (gelap) dan sisanya kosong (putih), seperti gambar berikut.</p><p>Seekor bebek ditempatkan di salah satu petak kosong, lalu diberikan perintah berturut-turut:</p><ul><li>Maju 2 petak ke arah Utara.</li><li>Putar 90° kanan.</li><li>Maju 3 petak.</li><li>Putar 90° kiri.</li><li>Maju 1 petak.</li></ul><p>Bebek tidak boleh keluar dari ladang maupun menginjak lumpur saat menjalankan semua perintah. Bebek selalu menghadap ke arah <strong>Utara</strong> saat ditempatkan.</p><p>Berapa banyak petak berbeda yang mungkin sebagai tempat awal peletakan bebek dengan gambar ladang seperti berikut?</p><p><em>Tuliskan jawaban dalam bentuk ANGKA.</em></p><div style=\"text-align: center; margin-top: 15px;\"><img src=\"soal1-1.png\" alt=\"Gambar Ladang 7x7\" style=\"max-width: 100%; height: auto; margin-bottom: 10px;\" /><br><img src=\"soal1-2.png\" alt=\"Gambar Petunjuk Arah\" style=\"max-width: 200px; height: auto;\" /></div>",
+      "display_order": 1,
+      "points": 1,
+      "short_answer_variants": [
+        "3"
+      ]
+    },
+    {
+      "code": "INF-A-KODE_RAHASIA",
+      "question_type": "short_text",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 2. Kode Rahasia Bebek</h3><p>Bebek-bebek Pak Dengklek ingin membuat nama samaran untuk bermain peran. Sebuah nama samaran yang valid harus memenuhi minimal satu dari dua aturan berikut:</p><ul><li><strong>Aturan 1:</strong> Nama dimulai dengan 0 hingga 2 huruf kapital ('A'–'Z'), lalu diikuti dengan 2 hingga 4 digit ('0'–'9'). Contoh: \"AB12\", \"007\", \"Z999\".</li><li><strong>Aturan 2:</strong> Nama dimulai dengan 1 hingga 3 digit ('0'–'9'), lalu diikuti dengan 1 hingga 2 huruf kapital ('A'–'Z'). Contoh: \"12AB\", \"9Z\", \"007BB\".</li></ul><div style=\"text-align: center; margin-top: 15px; margin-bottom: 15px;\"><img src=\"soal2.png\" alt=\"Ilustrasi Aturan Kode Rahasia\" style=\"max-width: 100%; height: auto;\" /></div><p>Berapa banyak nama samaran yang valid dan unik yang bisa dibuat?</p><p><em>Tuliskan jawaban dalam bentuk ANGKA.</em></p>",
+      "display_order": 2,
+      "points": 1,
+      "short_answer_variants": [
+        "8582520"
+      ]
+    },
+    {
+      "code": "INF-A-TUMPUKAN_BATU",
+      "question_type": "multiple_choice",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 3. Tumpukan Batu Ajaib</h3><p>Pak Dengklek memiliki sebuah tumpukan batu dengan <em>N</em> batu yang dinomori 1 sampai <em>N</em> dari bawah ke atas. Ia menerapkan operasi berikut secara berulang:</p><ol><li>Ambil batu paling atas dari tumpukan, lalu sisipkan ke posisi tepat di bawah batu bernomor ganjil pertama di bawahnya.</li><li>Jika di bawahnya bukan batu bernomor ganjil, letakkan di paling bawah tumpukan.</li></ol><p>Sebagai contoh untuk <em>N</em> = 5, ilustrasi berikut menunjukkan perubahan tumpukan batu dari urutan awal hingga langkah ke-3.</p><div style=\"text-align: center; margin-top: 15px; margin-bottom: 15px;\"><img src=\"soal3.png\" alt=\"Ilustrasi Tumpukan Batu N=5\" style=\"max-width: 100%; height: auto;\" /></div><p>Untuk <em>N</em> = 8, setelah berapa langkah tumpukan kembali ke urutan awal?",
+      "display_order": 3,
+      "points": 1,
+      "options": [
+        { "key": "A", "text": "3", "display_order": 1 },
+        { "key": "B", "text": "4", "display_order": 2 },
+        { "key": "C", "text": "5", "display_order": 3 },
+        { "key": "D", "text": "6", "display_order": 4 },
+        { "key": "E", "text": "7", "display_order": 5 }
+      ],
+      "answer_key": {
+        "correct_option_key": "D"
+      }
+    },
+    {
+      "code": "INF-A-RUTE_BUS_1",
+      "question_type": "short_text",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 4. Rute Bus</h3><p>Dali sedang berada di halte <strong>A</strong> dan ingin pergi ke halte <strong>E</strong> menggunakan bus sekolah. Terdapat tiga pilihan rute bus yang beroperasi, yaitu Bus <strong>BCP</strong>, Bus <strong>DEQ</strong>, dan Bus <strong>FGR</strong>.</p><p>Peta jaringan rute perjalanan ketiga bus beserta titik-titik halte pemberhentiannya diilustrasikan pada gambar di bawah ini.</p><div style=\"text-align: center; margin-top: 15px; margin-bottom: 15px;\"><img src=\"soal4.png\" alt=\"Gambar Peta Rute Bus A-P\" style=\"max-width: 100%; height: auto;\" /></div><p>Berdasarkan peta tersebut, bus rute apakah yang harus dinaiki oleh Dali agar ia bisa mencapai titik E dengan melewati halte pemberhentian <strong>sesedikit mungkin</strong> (rute tercepat)?</p><p><em>Tuliskan jawaban dengan nama rute bus (contoh: BCP, DEQ, atau FGR).</em></p>",
+      "display_order": 4,
+      "points": 1,
+      "short_answer_variants": [
+        "FGR"
+      ]
+    },
+    {
+      "code": "INF-A-CATUR-1",
+      "question_type": "short_text",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 5. Kuda</h3><p>Kwak dan Kwik sedang bermain sebuah variasi permainan catur di atas papan yang berukuran 4 &times; 4 petak. Pada mulanya, papan tersebut kosong. Mereka berdua hanya menggunakan satu buah bidak Kuda.</p><p>Kwak selalu mendapat giliran pertama dengan cara bebas meletakkan bidak Kuda tersebut di petak mana pun yang ia mau. Setelah itu, giliran berganti ke Kwik. Kwik harus melompatkan Kuda tersebut sesuai dengan aturan langkah Kuda pada catur konvensional (berbentuk huruf L). Kemudian Kwak melompatkan Kuda itu lagi, dan seterusnya secara bergantian. Berikut merupakan ilustrasi langkah Kuda dalam catur.</p><div style=\"text-align: center; margin-top: 15px; margin-bottom: 15px;\"><img src=\"soal5.png\" alt=\"Ilustrasi Langkah Kuda Catur\" style=\"max-width: 100%; height: auto;\" /></div><p>Aturan utama dari permainan ini adalah: <strong>Kuda hanya boleh mendarat di petak yang belum pernah dikunjungi sebelumnya</strong>. Pemain yang pada gilirannya kehabisan petak (tidak bisa lagi melompatkan Kuda ke petak kosong yang sah) akan langsung dinyatakan kalah.</p><p>Jika keduanya bermain secara cerdas dan optimal, siapakah bebek yang dapat berstrategi untuk selalu memenangkan permainan ini terlepas dari cara lawannya bermain?</p><p><em>Tuliskan jawaban berupa nama bebek tersebut (KWAK atau KWIK).</em></p>",
+      "display_order": 5,
+      "points": 1,
+      "short_answer_variants": [
+        "KWIK"
+      ]
+    },
+    {
+      "code": "INF-A-MINUM-1",
+      "question_type": "multiple_choice",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 6. Minum</h3><p>Dua ekor bebek, Kwak dan Kwik, bangun sangat pagi untuk bersiap-siap mengikuti olimpiade. Pada pukul <strong>05:00</strong>, mereka berdua bertemu di depan dispenser untuk mengisi botol minum mereka bersama-sama untuk yang pertama kalinya.</p><div style=\"text-align: center; margin-top: 15px; margin-bottom: 15px;\"><img src=\"soal6.png\" alt=\"Ilustrasi Jam 5 Pagi\" style=\"max-width: 100%; height: auto;\" /></div><p>Kwak rutin meminum airnya dan selalu kembali mengisi botol minumnya secara tepat waktu setiap <strong>30 menit</strong> sekali. Sementara itu, Kwik meminum airnya lebih lambat sehingga ia hanya kembali mengisi botol minumnya setiap <strong>45 menit</strong> sekali.</p><p>Asumsikan waktu yang dibutuhkan untuk mengisi air sangat cepat sehingga bisa diabaikan. Pada pukul berapakah Kwak dan Kwik akan kembali bertemu di depan dispenser untuk mengisi air bersama-sama untuk yang <strong>ke-6 kalinya</strong>?</p>",
+      "display_order": 6,
+      "points": 1,
+      "options": [
+        { "key": "A", "text": "11:00", "display_order": 1 },
+        { "key": "B", "text": "12:30", "display_order": 2 },
+        { "key": "C", "text": "13:00", "display_order": 3 },
+        { "key": "D", "text": "14:00", "display_order": 4 },
+        { "key": "E", "text": "14:30", "display_order": 5 }
+      ],
+      "answer_key": {
+        "correct_option_key": "B"
+      }
+    },
+    {
+      "code": "INF-A-SHURIKEN-1",
+      "question_type": "multiple_choice",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 7. Bilah Shuriken</h3><p>Kwek, seekor bebek ninja yang berumur panjang, yaitu <strong>36 tahun</strong>, ingin membeli senjata shuriken untuk berlatih. Berikut adalah contoh ilustrasi shuriken yang memiliki 3 bilah (ujung):</p><div style=\"text-align: center; margin-top: 15px; margin-bottom: 15px;\"><img src=\"soal7-1.png\" alt=\"Ilustrasi Shuriken 3 Bilah\" style=\"max-width: 150px; height: auto;\" /></div><p>Kwek bingung harus membeli shuriken dengan berapa bilah. Sang penjual senjata yang sudah ahli memberitahunya bahwa shuriken yang paling ideal bagi seorang ninja adalah yang memiliki bilah tepat <strong>sebanyak faktor pembagi positif dari umurnya</strong>.</p><p>Sebagai contoh, Untuk seorang ninja berumur 4 tahun, shuriken yang paling ideal memiliki 3 bilah karena umur 4 memiliki 3 faktor pembagi positif (yaitu 1, 2, dan 4).</p><p>Berdasarkan aturan dari sang penjual, manakah dari pilihan gambar berikut yang merupakan shuriken ideal yang harus didapatkan oleh Kwek?</p>",
+      "display_order": 7,
+      "points": 1,
+      "options": [
+        { "key": "A", "text": "<img src=\"soal7-2.png\" alt=\"6 Bilah\" style=\"height: 80px;\" />", "display_order": 1 },
+        { "key": "B", "text": "<img src=\"soal7-3.png\" alt=\"8 Bilah\" style=\"height: 80px;\" />", "display_order": 2 },
+        { "key": "C", "text": "<img src=\"soal7-4.png\" alt=\"9 Bilah\" style=\"height: 80px;\" />", "display_order": 3 },
+        { "key": "D", "text": "<img src=\"soal7-5.png\" alt=\"10 Bilah\" style=\"height: 80px;\" />", "display_order": 4 },
+        { "key": "E", "text": "<img src=\"soal7-6.png\" alt=\"12 Bilah\" style=\"height: 80px;\" />", "display_order": 5 }
+      ],
+      "answer_key": {
+        "correct_option_key": "C"
+      }
+    },
+    {
+      "code": "INF-A-CATUR_BAIK",
+      "question_type": "multiple_choice",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 8. Papan Baik</h3><p>Di kerajaan Bebek, terdapat sebuah papan ajaib berbentuk persegi berukuran 6 &times; 6. Setiap petak di papan ini dapat diisi dengan sebuah penjaga <strong>G</strong>.</p><p>Penjaga G memiliki kemampuan unik. Jika seorang penjaga ditempatkan di suatu petak, ia akan memancarkan energi ke semua petak di kanan dan bawahnya (termasuk baris dan kolomnya), kecuali petaknya sendiri. Setiap petak akan menerima energi dari beberapa penjaga.</p><div style=\"text-align: center; margin-top: 15px; margin-bottom: 15px;\"><img src=\"soal8.png\" alt=\"Gambar Papan Penjaga G 6x6\" style=\"max-width: 100%; height: auto;\" /></div><p>Sebuah petak dianggap stabil jika jumlah energi yang diterima petak tersebut adalah <strong>bilangan genap</strong>. Jika ada satu saja petak yang tidak stabil, seluruh papan akan kehilangan kekuatannya.</p><p>Berapa penjaga terbanyak yang dapat diletakkan pada petak 6 &times; 6 tersebut agar memenuhi kestabilan?</p>",
+      "display_order": 8,
+      "points": 1,
+      "options": [
+        { "key": "A", "text": "12", "display_order": 1 },
+        { "key": "B", "text": "15", "display_order": 2 },
+        { "key": "C", "text": "18", "display_order": 3 },
+        { "key": "D", "text": "21", "display_order": 4 },
+        { "key": "E", "text": "24", "display_order": 5 }
+      ],
+      "answer_key": {
+        "correct_option_key": "B"
+      }
+    },
+    {
+      "code": "INF-A-DICE_TOWER",
+      "question_type": "short_text",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 9. Dice Tower</h3><p>Kwik sedang bermain dadu dengan Kwuk. Kwuk diminta menyebutkan sebuah bilangan bulat positif <em>n</em>, lalu Kwik membangun sebuah menara dadu (<em>dice tower</em>) dengan cara menumpuk dadu satu di atas yang lain. Setiap dadu memiliki angka 1 sampai 6 pada sisinya (seperti dadu biasa) dan setiap sisi yang berlawanan memiliki jumlah sama dengan 7.</p><div style=\"text-align: center; margin-top: 15px; margin-bottom: 15px;\"><img src=\"soal9.png\" alt=\"Ilustrasi Dadu\" style=\"max-width: 100%; height: auto;\" /></div><p>Menara dibangun sebagai berikut:</p><ul><li>Kwik meletakkan satu dadu di atas meja.</li><li>Kemudian, jika ia mau, ia dapat menambahkan dadu lain di atasnya.</li><li>Setiap dadu ditumpuk dengan rapi sehingga seluruh menara membentuk balok persegi panjang.</li><li>Saat dadu ditumpuk, sisi atas dari dadu di bawah harus cocok dengan sisi bawah dadu di atasnya. Artinya, angka pada sisi yang saling bersentuhan harus sama.</li></ul><p>Kwik harus membangun menara dengan jumlah total <em>outer</em> (jumlah angka pada sisi yang terlihat dari atas dan samping) sebanyak <em>n</em>. Jika jumlah angka yang terbentuk menjadi menara tidak bisa tepat sama dengan <em>n</em>, Kwik hanya akan menyusun 1 dadu di meja.</p><p>Berapakah jumlah dadu yang harus disusun jika Kwuk menyebutkan bilangan <strong>365</strong>?</p><p><em>Tuliskan jawaban dalam bentuk ANGKA.</em></p>",
+      "display_order": 9,
+      "points": 1,
+      "short_answer_variants": [
+        "26"
+      ]
+    },
+    {
+      "code": "INF-A-TANGO",
+      "question_type": "short_text",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 10. Tango</h3><p>Pak Dengklek sedang bermain permainan “Tango”. Pak Dengklek mencoba menguji bebek-bebeknya untuk menyelesaikan permainan tersebut. Cara bermain “Tango” sangat mudah:</p><ol><li>pemain harus mengisi sel yang kosong dengan huruf <strong>M</strong> atau <strong>S</strong> hingga penuh,</li><li>dalam satu baris dan kolom, hanya boleh berisi 4 M dan 4 S,</li><li>hanya diperbolehkan mengisi dengan huruf yang sama berturut-turut sebanyak 2 kali,</li><li>Tanda <strong>=</strong> menandakan huruf yang sama dan tanda <strong>x</strong> menandakan huruf yang berbeda.</li></ol><p>Kali ini Pak Dengklek tidak mengharuskan bebek-bebeknya mengisi semua sel, tetapi hanya yang memiliki tanda bintang (★). Bantu bebek-bebeknya Pak Dengklek untuk mencari huruf yang tersembunyi di balik tanda bintang tersebut.</p><p><em>Tulis jawaban dengan HURUF KAPITAL dan TANPA SPASI (jawaban urut dari baris pertama ke bawah)</em>.</p><div style=\"text-align: center;\"><img src=\"soal10.png\" alt=\"Gambar Papan Tango\" style=\"max-width: 100%; height: auto;\" /></div>",
+      "display_order": 10,
+      "points": 1,
+      "short_answer_variants": [
+        "MSMSS"
+      ]
+    },
+    {
+      "code": "INF-B-MBG-1",
+      "question_type": "short_text",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 11—13. Makan Bergizi Gratis</h3><p><em>Narasi berikut ini digunakan untuk menjawab soal nomor 11 hingga 13.</em></p><p>Pak Budi merupakan kepala sekolah dari Sekolah Sejahtera Indonesia. Ia memesan berbagai tipe MBG (Makan Bergizi Gratis). Setiap tipe memiliki menu yang berbeda-beda. Setiap tipe MBG hanya dipesan kepada satu pengelola MBG sehingga masing-masing pengelola bertanggung jawab atas tipe menu tertentu.</p><p>Selain itu, didapati bahwa semua pengelola MBG memberikan produk susu khas mereka secara gratis untuk setiap pembelian menu. Karena setiap pengelola memiliki produk susu yang berbeda, varian susu yang tersedia pun beragam tergantung pengelolanya.</p><p>Pak Budi mengundang seluruh siswa untuk bebas mengambil satu tipe menu MBG dan satu produk susu sesuai keinginan masing-masing. Pak Budi ingin mengetahui lebih lanjut tentang pola pilihan para siswa tersebut.</p><hr /><p><strong>Soal 11.</strong> Asumsikan Pak Budi memesan dari 7 pengelola MBG yang berbeda. Masing-masing pengelola menyediakan 1 tipe MBG dengan stok 10 kotak dan setiap pengelola memiliki 1 varian susu khas dengan stok 10 kotak pula. Sebuah makanan/minuman dikatakan favorit jika habis duluan.</p><p>Jika Pak Budi ingin memastikan bahwa pasti ada setidaknya 1 tipe MBG favorit atau 1 varian susu favorit, berapakah banyak minimal siswa yang harus hadir?</p><p><em>Tuliskan jawaban dalam bentuk ANGKA.</em></p>",
+      "display_order": 11,
+      "points": 1,
+      "short_answer_variants": [
+        "64"
+      ]
+    },
+    {
+      "code": "INF-B-MBG-2",
+      "question_type": "multiple_choice",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 11—13. Makan Bergizi Gratis</h3><p><em>Narasi berikut ini digunakan untuk menjawab soal nomor 11 hingga 13.</em></p><p>Pak Budi merupakan kepala sekolah dari Sekolah Sejahtera Indonesia. Ia memesan berbagai tipe MBG (Makan Bergizi Gratis). Setiap tipe memiliki menu yang berbeda-beda. Setiap tipe MBG hanya dipesan kepada satu pengelola MBG sehingga masing-masing pengelola bertanggung jawab atas tipe menu tertentu.</p><p>Selain itu, didapati bahwa semua pengelola MBG memberikan produk susu khas mereka secara gratis untuk setiap pembelian menu. Karena setiap pengelola memiliki produk susu yang berbeda, varian susu yang tersedia pun beragam tergantung pengelolanya.</p><p>Pak Budi mengundang seluruh siswa untuk bebas mengambil satu tipe menu MBG dan satu produk susu sesuai keinginan masing-masing. Pak Budi ingin mengetahui lebih lanjut tentang pola pilihan para siswa tersebut.</p><hr /><p><strong>Soal 12.</strong> Asumsikan Pak Budi memesan dari 7 pengelola MBG yang berbeda dan setiap pengelola menyediakan kombinasi susu yang sama sebanyak 7 varian.<p>Jika Pak Budi ingin memastikan bahwa pasti ada setidaknya dua siswa yang memilih kombinasi tipe MBG dan varian susu yang sama persis, berapakah banyak minimal siswa yang harus hadir?</p>",
+      "display_order": 12,
+      "points": 1,
+      "options": [
+        { "key": "A", "text": "48", "display_order": 1 },
+        { "key": "B", "text": "49", "display_order": 2 },
+        { "key": "C", "text": "50", "display_order": 3 },
+        { "key": "D", "text": "51", "display_order": 4 },
+        { "key": "E", "text": "52", "display_order": 5 }
+      ],
+      "answer_key": {
+        "correct_option_key": "C"
+      }
+    },
+    {
+      "code": "INF-B-MBG-3",
+      "question_type": "short_text",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 11—13. Makan Bergizi Gratis</h3><p><em>Narasi berikut ini digunakan untuk menjawab soal nomor 11 hingga 13.</em></p><p>Pak Budi merupakan kepala sekolah dari Sekolah Sejahtera Indonesia. Ia memesan berbagai tipe MBG (Makan Bergizi Gratis). Setiap tipe memiliki menu yang berbeda-beda. Setiap tipe MBG hanya dipesan kepada satu pengelola MBG sehingga masing-masing pengelola bertanggung jawab atas tipe menu tertentu.</p><p>Selain itu, didapati bahwa semua pengelola MBG memberikan produk susu khas mereka secara gratis untuk setiap pembelian menu. Karena setiap pengelola memiliki produk susu yang berbeda, varian susu yang tersedia pun beragam tergantung pengelolanya.</p><p>Pak Budi mengundang seluruh siswa untuk bebas mengambil satu tipe menu MBG dan satu produk susu sesuai keinginan masing-masing. Pak Budi ingin mengetahui lebih lanjut tentang pola pilihan para siswa tersebut.</p><hr /><p><strong>Soal 13.</strong> Asumsikan Pak Budi memesan dari 50 pengelola MBG yang berbeda. Pemesanan pada pengelola pertama sebanyak 4 menu, pemesanan pada pengelola kedua sebanyak 8 menu, dan seterusnya hingga pengelola ke-50. Setiap pengelola memberikan susu secara gratis sebanyak 50% dari jumlah menu yang dipesan.</p><p>Pak Budi menyimpan uang sekolah di brankas di ruangannya dan menyetel password berbentuk XXXX-XXXX. Pak Budi ternyata melakukan tindak korupsi, dan di dalam brankas tersebut terdapat uang serta bukti korupsinya. Seorang detektif ditugaskan untuk membongkar kasus ini dan berhasil menemukan catatan rahasia milik Pak Budi. Catatan tersebut berisi A-B, di mana:</p><ul><li>A = minimal siswa yang harus hadir agar pasti ada 1 tipe MBG favorit</li><li>B = minimal siswa yang harus hadir agar pasti ada 1 varian susu favorit</li></ul><p>Bantulah Detektif menentukan password brankas Pak Budi!</p><p><em>Tuliskan jawaban dalam bentuk XXXX-XXXX.</em></p>",
+      "display_order": 13,
+      "points": 1,
+      "short_answer_variants": [
+        "5051-2501"
+      ]
+    },
+    {
+      "code": "INF-B-PORTAL-1",
+      "question_type": "short_text",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 14—16. Portal Antargalaksi</h3><p><em>Narasi berikut ini digunakan untuk menjawab soal nomor 14 hingga 16.</em></p><p>Pak Dengklek baru saja menemukan sebuah Galaksi Bebek yang terdiri dari 12 planet bernomor 1 hingga 12. Pada mulanya, setiap planet dihuni tepat satu ekor bebek: Bebek ke-<em>i</em> menghuni Planet ke-<em>i</em> untuk setiap <em>i</em> = 1, 2, ..., 12.</p><p>Di pusat galaksi terdapat sebuah tombol portal ajaib. Setiap kali tombol ini ditekan, seluruh bebek berpindah planet secara serentak melalui portal antargalaksi sesuai tabel berikut.</p><table border=\"1\" cellpadding=\"5\" cellspacing=\"0\" style=\"margin: 15px auto; border-collapse: collapse; text-align: center;\"><tr><td style=\"font-weight: bold; background-color: #f2f2f2;\">Planet asal</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td></tr><tr><td style=\"font-weight: bold; background-color: #f2f2f2;\">Planet tujuan</td><td>4</td><td>6</td><td>1</td><td>9</td><td>2</td><td>11</td><td>3</td><td>5</td><td>12</td><td>7</td><td>8</td><td>10</td></tr></table><p>Artinya, bebek yang sedang berada di Planet 1 akan berpindah ke Planet 4, bebek di Planet 2 berpindah ke Planet 6, dan seterusnya. Seluruh bebek berpindah secara serentak dalam satu penekanan tombol.</p><p><strong>Contoh:</strong> Misalkan hanya ada 4 planet dengan tabel portal: 1 &rarr; 2, 2 &rarr; 4, 3 &rarr; 1, 4 &rarr; 3. Ilustrasi posisi bebek setelah 0, 1, dan 2 kali penekanan tombol dapat dilihat pada gambar berikut.</p><div style=\"text-align: center; margin-top: 15px; margin-bottom: 15px;\"><img src=\"soal14.png\" alt=\"Gambar Ilustrasi Portal 4 Planet\" style=\"max-width: 100%; height: auto;\" /></div><hr /><p><strong>Soal 14.</strong> Tombol portal ditekan sebanyak 50 kali. Bebek yang semula menghuni Planet 7 kini berada di planet nomor berapa?</p><p><em>Tuliskan jawaban dalam bentuk ANGKA.</em></p>",
+      "display_order": 14,
+      "points": 1,
+      "short_answer_variants": [
+        "3"
+      ]
+    },
+    {
+      "code": "INF-B-PORTAL-2",
+      "question_type": "multiple_choice",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 14—16. Portal Antargalaksi</h3><p><em>Narasi berikut ini digunakan untuk menjawab soal nomor 14 hingga 16.</em></p><p>Pak Dengklek baru saja menemukan sebuah Galaksi Bebek yang terdiri dari 12 planet bernomor 1 hingga 12. Pada mulanya, setiap planet dihuni tepat satu ekor bebek: Bebek ke-<em>i</em> menghuni Planet ke-<em>i</em> untuk setiap <em>i</em> = 1, 2, ..., 12.</p><p>Di pusat galaksi terdapat sebuah tombol portal ajaib. Setiap kali tombol ini ditekan, seluruh bebek berpindah planet secara serentak melalui portal antargalaksi sesuai tabel berikut.</p><table border=\"1\" cellpadding=\"5\" cellspacing=\"0\" style=\"margin: 15px auto; border-collapse: collapse; text-align: center;\"><tr><td style=\"font-weight: bold; background-color: #f2f2f2;\">Planet asal</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td></tr><tr><td style=\"font-weight: bold; background-color: #f2f2f2;\">Planet tujuan</td><td>4</td><td>6</td><td>1</td><td>9</td><td>2</td><td>11</td><td>3</td><td>5</td><td>12</td><td>7</td><td>8</td><td>10</td></tr></table><p>Artinya, bebek yang sedang berada di Planet 1 akan berpindah ke Planet 4, bebek di Planet 2 berpindah ke Planet 6, dan seterusnya. Seluruh bebek berpindah secara serentak dalam satu penekanan tombol.</p><p><strong>Contoh:</strong> Misalkan hanya ada 4 planet dengan tabel portal: 1 &rarr; 2, 2 &rarr; 4, 3 &rarr; 1, 4 &rarr; 3. Ilustrasi posisi bebek setelah 0, 1, dan 2 kali penekanan tombol dapat dilihat pada gambar berikut.</p><div style=\"text-align: center; margin-top: 15px; margin-bottom: 15px;\"><img src=\"soal15.png\" alt=\"Gambar Ilustrasi Portal 4 Planet\" style=\"max-width: 100%; height: auto;\" /></div><hr /><p><strong>Soal 15.</strong> Tombol portal ditekan sebanyak 14 kali. Berapa banyak planet yang kembali dihuni oleh bebek aslinya—yaitu bebek yang menempati planet tersebut sebelum tombol pertama kali ditekan?</p>",
+      "display_order": 15,
+      "points": 1,
+      "options": [
+        { "key": "A", "text": "6", "display_order": 1 },
+        { "key": "B", "text": "7", "display_order": 2 },
+        { "key": "C", "text": "8", "display_order": 3 },
+        { "key": "D", "text": "9", "display_order": 4 },
+        { "key": "E", "text": "10", "display_order": 5 }
+      ],
+      "answer_key": {
+        "correct_option_key": "B"
+      }
+    },
+    {
+      "code": "INF-B-PORTAL-3",
+      "question_type": "short_text",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 14—16. Portal Antargalaksi</h3><p><em>Narasi berikut ini digunakan untuk menjawab soal nomor 14 hingga 16.</em></p><p>Pak Dengklek baru saja menemukan sebuah Galaksi Bebek yang terdiri dari 12 planet bernomor 1 hingga 12. Pada mulanya, setiap planet dihuni tepat satu ekor bebek: Bebek ke-<em>i</em> menghuni Planet ke-<em>i</em> untuk setiap <em>i</em> = 1, 2, ..., 12.</p><p>Di pusat galaksi terdapat sebuah tombol portal ajaib. Setiap kali tombol ini ditekan, seluruh bebek berpindah planet secara serentak melalui portal antargalaksi sesuai tabel berikut.</p><table border=\"1\" cellpadding=\"5\" cellspacing=\"0\" style=\"margin: 15px auto; border-collapse: collapse; text-align: center;\"><tr><td style=\"font-weight: bold; background-color: #f2f2f2;\">Planet asal</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td></tr><tr><td style=\"font-weight: bold; background-color: #f2f2f2;\">Planet tujuan</td><td>4</td><td>6</td><td>1</td><td>9</td><td>2</td><td>11</td><td>3</td><td>5</td><td>12</td><td>7</td><td>8</td><td>10</td></tr></table><p>Artinya, bebek yang sedang berada di Planet 1 akan berpindah ke Planet 4, bebek di Planet 2 berpindah ke Planet 6, dan seterusnya. Seluruh bebek berpindah secara serentak dalam satu penekanan tombol.</p><p><strong>Contoh:</strong> Misalkan hanya ada 4 planet dengan tabel portal: 1 &rarr; 2, 2 &rarr; 4, 3 &rarr; 1, 4 &rarr; 3. Ilustrasi posisi bebek setelah 0, 1, dan 2 kali penekanan tombol dapat dilihat pada gambar berikut.</p><div style=\"text-align: center; margin-top: 15px; margin-bottom: 15px;\"><img src=\"soal16.png\" alt=\"Gambar Ilustrasi Portal 4 Planet\" style=\"max-width: 100%; height: auto;\" /></div><hr /><p><strong>Soal 16.</strong> Berapakah nilai <em>K</em> > 0 terkecil sedemikian sehingga setelah tombol portal ditekan tepat <em>K</em> kali, seluruh 12 bebek kembali menghuni planet asalnya masing-masing?</p><p><em>Tuliskan jawaban dalam bentuk ANGKA.</em></p>",
+      "display_order": 16,
+      "points": 1,
+      "short_answer_variants": [
+        "35"
+      ]
+    },
+    {
+      "code": "INF-B-GOJO-1",
+      "question_type": "short_text",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 17—19. Kalung Gojo</h3><p><em>Narasi berikut ini digunakan untuk menjawab soal nomor 17 hingga 19.</em></p><p>Gojo memiliki sihir bernama <em>Murasaki</em>. Teknik ini memiliki 3 variasi warna yaitu merah, biru, atau ungu. Gojo mengimplementasikan sihirnya pada sebuah kalung permata untuk dihadiahkan kepada Shoko. Terdapat 5 tipe permata (A, B, C, D, E) dengan aturan resonansi teknik sihir sebagai berikut:</p><ul><li>Pasangan permata berikut, jika diletakkan berdekatan (bersebelahan) akan beresonansi memancarkan warna <strong>merah</strong>: (A,B), (A,C), (A,D), (A,E), (B,C).</li><li>Pasangan permata berikut, jika diletakkan berdekatan akan beresonansi memancarkan warna <strong>biru</strong>: (B,D), (B,E), (C,D), (C,E), (D,E).</li><li>Jika sebuah permata diapit oleh dua permata di kiri dan kanannya, maka warna permata di tengah tersebut adalah campuran dari resonansinya:<ul><li>Menerima dua warna merah &rarr; <strong>Merah</strong></li><li>Menerima warna merah dan biru &rarr; <strong>Ungu</strong></li><li>Menerima dua warna biru &rarr; <strong>Biru</strong></li></ul></li><li><em>Kelemahan sihir:</em> Pasangan permata yang bertipe sama tidak bisa didekatkan. Sebagai contoh, susunan (A,A) atau (B,B) tidak diperbolehkan.</li></ul><p>Sebagai contoh, untaian susunan permata <strong>(A)-(C)-(D)-(E)</strong> akan memiliki warna berturut-turut adalah <strong>merah, ungu, biru, biru</strong>.</p><hr /><p><strong>Soal 17.</strong> Gojo merencanakan hadiah kalung dengan 8 slot permata seperti gambar di bawah ini.</p><div style=\"text-align: center; margin-top: 15px; margin-bottom: 15px;\"><img src=\"soal17.png\" alt=\"Gambar Kalung 8 Slot Kosong\" style=\"max-width: 100%; height: auto;\" /></div><p>Jika ia ingin merangkai permata sehingga pada akhirnya menghasilkan tepat <strong>2 warna ungu dan 6 warna merah</strong>, apakah mungkin kedua permata berwarna ungu tersebut diletakkan pada posisi yang terpisah? (Terpisah berarti terdapat permata bukan ungu di antara keduanya, misal: <em>ungu - bukan ungu - ungu</em>).</p><p><em>Tuliskan jawaban dalam bentuk kata \"YA\" atau \"TIDAK\" (tanpa tanda kutip).</em></p>",
+      "display_order": 17,
+      "points": 1,
+      "short_answer_variants": [
+        "TIDAK"
+      ]
+    },
+    {
+      "code": "INF-B-GOJO-2",
+      "question_type": "short_text",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 17—19. Kalung Gojo</h3><p><em>Narasi berikut ini digunakan untuk menjawab soal nomor 17 hingga 19.</em></p><p>Gojo memiliki sihir bernama <em>Murasaki</em>. Teknik ini memiliki 3 variasi warna yaitu merah, biru, atau ungu. Gojo mengimplementasikan sihirnya pada sebuah kalung permata (untaian berderet) untuk dihadiahkan kepada Shoko. Terdapat 5 tipe permata (A, B, C, D, E) dengan aturan resonansi teknik sihir sebagai berikut:</p><ul><li>Pasangan permata berikut, jika diletakkan berdekatan (bersebelahan) akan beresonansi memancarkan warna <strong>merah</strong>: (A,B), (A,C), (A,D), (A,E), (B,C).</li><li>Pasangan permata berikut, jika diletakkan berdekatan akan beresonansi memancarkan warna <strong>biru</strong>: (B,D), (B,E), (C,D), (C,E), (D,E).</li><li>Jika sebuah permata diapit oleh dua permata di kiri dan kanannya, maka warna permata di tengah tersebut adalah campuran dari resonansinya:<ul><li>Menerima dua warna merah &rarr; <strong>Merah</strong></li><li>Menerima warna merah dan biru &rarr; <strong>Ungu</strong></li><li>Menerima dua warna biru &rarr; <strong>Biru</strong></li></ul></li><li><em>Kelemahan sihir:</em> Pasangan permata yang bertipe sama tidak bisa didekatkan. Sebagai contoh, susunan (A,A) atau (B,B) tidak diperbolehkan.</li></ul><p>Sebagai contoh, untaian susunan permata <strong>(A)-(C)-(D)-(E)</strong> akan memiliki warna berturut-turut adalah <strong>merah, ungu, biru, biru</strong>.</p><hr /><p><strong>Soal 18.</strong> Karena Gojo tidak suka versi warna ungu yang letaknya terpisah, ia memutuskan agar 2 permata warna ungu tersebut harus didekatkan (bersebelahan). Gojo saat ini memiliki stok permata tipe A, B, C, D, dan E masing-masing sebanyak 2 buah.</p><p>Harga setiap butir permata tipe A, B, C, D, dan E secara berturut-turut adalah &#36;2, &#36;2, &#36;3, &#36;1, dan &#36;1. Tentukan total harga keseluruhan (dalam dollar) dari susunan kalung (8 permata) yang ia buat dengan target warna: 6 merah dan 2 ungu bersebelahan!</p><p><em>Tuliskan jawaban dalam bentuk ANGKA.</em></p>",
+      "display_order": 18,
+      "points": 1,
+      "short_answer_variants": [
+        "16"
+      ]
+    },
+    {
+      "code": "INF-B-GOJO-3",
+      "question_type": "short_text",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 17—19. Kalung Gojo</h3><p><em>Narasi berikut ini digunakan untuk menjawab soal nomor 17 hingga 19.</em></p><p>Gojo memiliki sihir bernama <em>Murasaki</em>. Teknik ini memiliki 3 variasi warna yaitu merah, biru, atau ungu. Gojo mengimplementasikan sihirnya pada sebuah kalung permata (untaian berderet) untuk dihadiahkan kepada Shoko. Terdapat 5 tipe permata (A, B, C, D, E) dengan aturan resonansi teknik sihir sebagai berikut:</p><ul><li>Pasangan permata berikut, jika diletakkan berdekatan (bersebelahan) akan beresonansi memancarkan warna <strong>merah</strong>: (A,B), (A,C), (A,D), (A,E), (B,C).</li><li>Pasangan permata berikut, jika diletakkan berdekatan akan beresonansi memancarkan warna <strong>biru</strong>: (B,D), (B,E), (C,D), (C,E), (D,E).</li><li>Jika sebuah permata diapit oleh dua permata di kiri dan kanannya, maka warna permata di tengah tersebut adalah campuran dari resonansinya:<ul><li>Menerima dua warna merah &rarr; <strong>Merah</strong></li><li>Menerima warna merah dan biru &rarr; <strong>Ungu</strong></li><li>Menerima dua warna biru &rarr; <strong>Biru</strong></li></ul></li><li><em>Kelemahan sihir:</em> Pasangan permata yang bertipe sama tidak bisa didekatkan. Sebagai contoh, susunan (A,A) atau (B,B) tidak diperbolehkan.</li></ul><p>Sebagai contoh, untaian susunan permata <strong>(A)-(C)-(D)-(E)</strong> akan memiliki warna berturut-turut adalah <strong>merah, ungu, biru, biru</strong>.</p><hr /><p><strong>Soal 19.</strong> Setelah menerima hadiah kalung dengan susunan 6 permata merah dan 2 ungu yang bersebelahan tersebut, Shoko yang juga sangat paham dengan teknik sihir Gojo secara sengaja menyisipkan <strong>tepat satu permata tambahan</strong> ke sela-sela kalung tersebut.</p><p>Ajaibnya, penambahan satu permata itu membuat seluruh warna permata di kalung kini berubah menjadi <strong>warna merah semua</strong>. Permata tipe apakah yang disisipkan oleh Shoko tersebut?</p><p><em>Tuliskan jawaban dalam bentuk SATU HURUF KAPITAL (A, B, C, D, atau E).</em></p>",
+      "display_order": 19,
+      "points": 1,
+      "short_answer_variants": [
+        "A"
+      ]
+    },
+    {
+      "code": "INF-B-SLIDER-1",
+      "question_type": "short_text",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 20—22. Slider Angka</h3><p><em>Narasi berikut ini digunakan untuk menjawab soal nomor 20 hingga 22.</em></p><p>Bu Dangklik ingin melakukan eksperimen matematika. Ia membuat sebuah <em>slider</em> angka tanpa batas yang pada teorinya dapat menjangkau seluruh bilangan bulat. Untuk berpindah posisi angka pada <em>slider</em> tersebut, hanya terdapat dua fungsi operasi (pembesar dan pengecil) dengan aturan sebagai berikut:</p><ul><li><strong>Geser Kanan (Pembesar):</strong> Menggeser posisi dari angka <em>x</em> ke posisi <strong>2<em>x</em> + 1</strong>.</li><li><strong>Geser Kiri (Pengecil):</strong> Menggeser posisi dari angka <em>x</em> ke posisi $\\frac{x - 3}{2}$, asalkan pembagian tersebut menghasilkan bilangan bulat.</li></ul><hr /><p><strong>Soal 20.</strong> Bu Dangklik memulai eksperimennya dengan posisi awal di angka 5. Berapakah panjang urutan langkah (operasi fungsi) terpendek yang diperlukan oleh <em>slider</em> untuk mencapai angka 41?</p><p><em>Tuliskan jawaban dalam bentuk ANGKA.</em></p>",
+      "display_order": 20,
+      "points": 1,
+      "short_answer_variants": [
+        "7"
+      ]
+    },
+    {
+      "code": "INF-B-SLIDER-2",
+      "question_type": "short_text",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 20—22. Slider Angka</h3><p><em>Narasi berikut ini digunakan untuk menjawab soal nomor 20 hingga 22.</em></p><p>Bu Dangklik ingin melakukan eksperimen matematika. Ia membuat sebuah <em>slider</em> angka tanpa batas yang pada teorinya dapat menjangkau seluruh bilangan bulat. Untuk berpindah posisi angka pada <em>slider</em> tersebut, hanya terdapat dua fungsi operasi (pembesar dan pengecil) dengan aturan sebagai berikut:</p><ul><li><strong>Geser Kanan (Pembesar):</strong> Menggeser posisi dari angka <em>x</em> ke posisi <strong>2<em>x</em> + 1</strong>.</li><li><strong>Geser Kiri (Pengecil):</strong> Menggeser posisi dari angka <em>x</em> ke posisi $\\frac{x - 3}{2}$, asalkan pembagian tersebut menghasilkan bilangan bulat.</li></ul><hr /><p><strong>Soal 21.</strong> Apabila Bu Dangklik memulai <em>slider</em> dari angka 0, apakah semua bilangan bulat pada akhirnya dapat dicapai hanya dengan menggunakan kombinasi kedua fungsi tersebut?</p><p><em>Tuliskan jawaban dalam bentuk kata \"BENAR\" atau \"SALAH\" (tanpa tanda kutip).</em></p>",
+      "display_order": 21,
+      "points": 1,
+      "short_answer_variants": [
+        "BENAR"
+      ]
+    },
+    {
+      "code": "INF-B-SLIDER-3",
+      "question_type": "multiple_choice",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 20—22. Slider Angka</h3><p><em>Narasi berikut ini digunakan untuk menjawab soal nomor 20 hingga 22.</em></p><p>Bu Dangklik ingin melakukan eksperimen matematika. Ia membuat sebuah <em>slider</em> angka tanpa batas yang pada teorinya dapat menjangkau seluruh bilangan bulat. Untuk berpindah posisi angka pada <em>slider</em> tersebut, hanya terdapat dua fungsi operasi (pembesar dan pengecil) dengan aturan sebagai berikut:</p><ul><li><strong>Geser Kanan (Pembesar):</strong> Menggeser posisi dari angka <em>x</em> ke posisi <strong>2<em>x</em> + 1</strong>.</li><li><strong>Geser Kiri (Pengecil):</strong> Menggeser posisi dari angka <em>x</em> ke posisi $\\frac{x - 3}{2}$, asalkan pembagian tersebut menghasilkan bilangan bulat.</li></ul><hr /><p><strong>Soal 22.</strong> Bu Dangklik kemudian menguji <em>slider</em> tersebut dengan memberikan pembatas. Ia memotong <em>slider</em> sehingga ruang geraknya dibatasi secara mutlak hanya dari 0 hingga 2020 (artinya <em>slider</em> tidak dapat bergeser sedikit pun ke angka yang lebih besar dari 2020 atau ke angka negatif). Dimulai dari angka 0, berapakah banyak bilangan yang <strong>tidak dapat dilalui</strong> oleh <em>slider</em> yang terpotong tersebut?</p>",
+      "display_order": 22,
+      "points": 1,
+      "options": [
+        { "key": "A", "text": "503", "display_order": 1 },
+        { "key": "B", "text": "504", "display_order": 2 },
+        { "key": "C", "text": "505", "display_order": 3 },
+        { "key": "D", "text": "506", "display_order": 4 },
+        { "key": "E", "text": "507", "display_order": 5 }
+      ],
+      "answer_key": {
+        "correct_option_key": "D"
+      }
+    },
+    {
+      "code": "INF-B-GAME-1",
+      "question_type": "short_text",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 23—25. Batu Loncatan</h3><p><em>Narasi berikut ini digunakan untuk menjawab soal nomor 23 hingga 25.</em></p><p>Kwak (Pemain A) dan Kwik (Pemain B) sedang bermain sebuah permainan bernama \"Batu Loncatan\". Terdapat sederet batu di atas sungai yang diberi nomor urut 1, 2, 3, dan seterusnya. Pada mulanya, Kwak dan Kwik masih berdiri bersama di tepi sungai (batu nomor 0).</p><p>Pada setiap gilirannya, seekor bebek bebas melompat maju sejauh <strong>maksimal 2 batu</strong> (artinya boleh melompat maju 1 batu atau 2 batu sekaligus). Mereka harus melompat secara bergantian, dan <strong>Kwik (Pemain B) selalu mendapat giliran melompat pertama.</strong></p><p>Permainan ini sangat menegangkan karena mereka berlomba-lomba untuk mencapai Batu Mahkota.</p><hr /><p><strong>Soal 23.</strong> Diketahui bahwa batu nomor 20 adalah letak Batu Mahkota. Bebek yang pertama kali <strong>berhasil mendarat tepat di batu nomor 20</strong> akan dinyatakan sebagai <strong>pemenang</strong>.</p><p>Jika Kwik dan Kwak sama-sama bermain cerdas dan optimal, siapakah bebek yang dapat berstrategi untuk selalu menang terlepas dari bagaimana lawannya bermain?</p><p><em>Tuliskan jawaban berupa nama bebek tersebut (KWAK atau KWIK).</em></p>",
+      "display_order": 23,
+      "points": 1,
+      "short_answer_variants": [
+        "KWIK"
+      ]
+    },
+    {
+      "code": "INF-B-GAME-2",
+      "question_type": "multiple_choice",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 23—25. Batu Loncatan</h3><p><em>Narasi berikut ini digunakan untuk menjawab soal nomor 23 hingga 25.</em></p><p>Kwak (Pemain A) dan Kwik (Pemain B) sedang bermain sebuah permainan bernama \"Batu Loncatan\". Terdapat sederet batu di atas sungai yang diberi nomor urut 1, 2, 3, dan seterusnya. Pada mulanya, Kwak dan Kwik masih berdiri bersama di tepi sungai (batu nomor 0).</p><p>Pada setiap gilirannya, seekor bebek bebas melompat maju sejauh <strong>maksimal 2 batu</strong> (artinya boleh melompat maju 1 batu atau 2 batu sekaligus). Mereka harus melompat secara bergantian, dan <strong>Kwik (Pemain B) selalu mendapat giliran melompat pertama.</strong></p><p>Permainan ini sangat menegangkan karena mereka berlomba-lomba untuk mencapai Batu Mahkota.</p><hr /><p><strong>Soal 24.</strong> Jika letak Batu Mahkota dipindahkan, dan aturan permainan kini berbunyi: \"Bebek yang pertama kali <strong>berhasil mendarat tepat di batu nomor 21</strong> akan dinyatakan sebagai <strong>pemenang</strong>.\" Kwik tetap melompat pertama.</p><p>Manakah dari pernyataan berikut yang paling tepat mengenai jalannya permainan tersebut?</p>",
+      "display_order": 24,
+      "points": 1,
+      "options": [
+        { "key": "A", "text": "Kwak (Pemain A) selalu dapat berstrategi untuk menang, terlepas dari bagaimana proses Kwik bermain.", "display_order": 1 },
+        { "key": "B", "text": "Kwik (Pemain B) selalu dapat berstrategi untuk menang, terlepas dari bagaimana proses Kwak bermain.", "display_order": 2 },
+        { "key": "C", "text": "Kwik (Pemain B) hanya akan menang jika pada langkah pertamanya ia melompat sejauh 2 batu.", "display_order": 3 },
+        { "key": "D", "text": "Permainan akan selalu berlangsung seri karena keduanya bisa saling memblokir jalan.", "display_order": 4 },
+        { "key": "E", "text": "Kwak (Pemain A) akan kalah jika dan hanya jika ia selalu melompat 1 batu pada setiap gilirannya.", "display_order": 5 }
+      ],
+      "answer_key": {
+        "correct_option_key": "A"
+      }
+    },
+    {
+      "code": "INF-B-GAME-3",
+      "question_type": "multiple_choice",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 23—25. Batu Loncatan</h3><p><em>Narasi berikut ini digunakan untuk menjawab soal nomor 23 hingga 25.</em></p><p>Kwak (Pemain A) dan Kwik (Pemain B) sedang bermain sebuah permainan bernama \"Batu Loncatan\". Terdapat sederet batu di atas sungai yang diberi nomor urut 1, 2, 3, dan seterusnya. Pada mulanya, Kwak dan Kwik masih berdiri bersama di tepi sungai (batu nomor 0).</p><p>Pada setiap gilirannya, seekor bebek bebas melompat maju sejauh <strong>maksimal 2 batu</strong> (artinya boleh melompat maju 1 batu atau 2 batu sekaligus). Mereka harus melompat secara bergantian, dan <strong>Kwik (Pemain B) selalu mendapat giliran melompat pertama.</strong></p><p>Permainan ini sangat menegangkan karena mereka berlomba-lomba untuk mencapai Batu Mahkota.</p><hr /><p><strong>Soal 25.</strong> Mari kita perumum permainan ini. Asumsikan seekor bebek bebas melompat maju sejauh <strong>maksimal Y batu</strong> pada setiap gilirannya. Kwik tetap menjadi pemain pertama, dan keduanya tetap bermain secara cerdas dan optimal.</p><p>Namun kali ini, posisi batu kemenangan (target) dirahasiakan dan <strong>ditentukan secara acak</strong> dari rentang bilangan yang sangat besar (semua batu memiliki peluang yang sama besar sebagai penentu). Berapakah peluang Kwik (Pemain B) untuk dapat memenangkan permainan tersebut?</p>",
+      "display_order": 25,
+      "points": 1,
+      "options": [
+        { "key": "A", "text": "$\\frac{Y - 1}{Y}$", "display_order": 1 },
+        { "key": "B", "text": "$\\frac{Y}{Y+1}$", "display_order": 2 },
+        { "key": "C", "text": "$\\frac{1}{Y + 1}$", "display_order": 3 },
+        { "key": "D", "text": "$\\frac{Y + 1}{Y + 2}$", "display_order": 4 },
+        { "key": "E", "text": "$\\frac{1}{2}$", "display_order": 5 }
+      ],
+      "answer_key": {
+        "correct_option_key": "B"
+      }
+    },
+    {
+      "code": "INF-C-PANGKAT-1",
+      "question_type": "short_text",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 26—28. Pangkat atau Logaritma?</h3><p><em>Potongan kode C++ berikut ini digunakan untuk soal nomor 26 hingga 28.</em></p><pre><code>int p(int a, int b) {\n  int res = 1;\n  for (int i = 0; i &lt; b; i++) {\n    res *= a;\n  }\n  return res;\n}</code></pre><p><strong>Soal 26.</strong> Berapa nilai kembalian dari pemanggilan <code>p(3, 5)</code>?</p><p><em>Tuliskan jawaban dalam bentuk ANGKA.</em></p>",
+      "display_order": 26,
+      "points": 1,
+      "short_answer_variants": [
+        "243"
+      ]
+    },
+    {
+      "code": "INF-C-PANGKAT-2",
+      "question_type": "multiple_choice",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 26—28. Pangkat atau Logaritma?</h3><p><em>Potongan kode C++ berikut ini digunakan untuk soal nomor 26 hingga 28.</em></p><pre><code>int p(int a, int b) {\n  int res = 1;\n  for (int i = 0; i &lt; b; i++) {\n    res *= a;\n  }\n  return res;\n}</code></pre><p><strong>Soal 27.</strong> Jika diketahui pemanggilan <code>p(a, b)</code> dengan nilai <code>a = 8</code> mengembalikan hasil akhir bernilai $2^{63}$, berapakah nilai dari <code>b</code>?</p>",
+      "display_order": 27,
+      "points": 1,
+      "options": [
+        { "key": "A", "text": "7", "display_order": 1 },
+        { "key": "B", "text": "8", "display_order": 2 },
+        { "key": "C", "text": "21", "display_order": 3 },
+        { "key": "D", "text": "24", "display_order": 4 },
+        { "key": "E", "text": "60", "display_order": 5 }
+      ],
+      "answer_key": {
+        "correct_option_key": "C"
+      }
+    },
+    {
+      "code": "INF-C-PANGKAT-3",
+      "question_type": "short_text",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 26—28. Pangkat atau Logaritma?</h3><p><em>Potongan kode C++ berikut ini digunakan untuk soal nomor 26 hingga 28.</em></p><pre><code>int p(int a, int b) {\n  int res = 1;\n  for (int i = 0; i &lt; b; i++) {\n    res *= a;\n  }\n  return res;\n}</code></pre><p><strong>Soal 28.</strong> Dari 100 pemanggilan fungsi secara berurutan, yaitu <code>p(1, 3)</code>, <code>p(2, 3)</code>, <code>p(3, 3)</code>, hingga <code>p(100, 3)</code>, berapa banyak pemanggilan di antaranya yang hasil kembaliannya habis dibagi oleh 128?</p><p><em>Tuliskan jawaban dalam bentuk ANGKA.</em></p>",
+      "display_order": 28,
+      "points": 1,
+      "short_answer_variants": [
+        "12"
+      ]
+    },
+    {
+      "code": "INF-C-MATRIKS-1",
+      "question_type": "multiple_choice",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 29—31. Operasi Matriks</h3><p><em>Potongan kode C++ berikut ini digunakan untuk soal nomor 29 hingga 31.</em></p><pre><code>void op(vector&lt;vector&lt;int&gt;&gt;&amp; a) {\n  int n = a.size();\n\n  for (int i = 0; i &lt; n; i++) {\n    for (int j = i + 1; j &lt; n; j++) {\n      swap(a[i][j], a[j][i]);\n    }\n  }\n\n  for (int i = 0; i &lt; n; i++) {\n    reverse(a[i].begin(), a[i].end());\n  }\n}</code></pre><hr /><p><strong>Soal 29.</strong> Jika diberikan <code>a = {{1, 2}, {3, 4}}</code>, apakah isi dari matriks <code>a</code> setelah dilakukan pemanggilan fungsi <code>op(a)</code>?</p>",
+      "display_order": 29,
+      "points": 1,
+      "options": [
+        { "key": "A", "text": "<code>{{1, 3}, {2, 4}}</code>", "display_order": 1 },
+        { "key": "B", "text": "<code>{{3, 4}, {1, 2}}</code>", "display_order": 2 },
+        { "key": "C", "text": "<code>{{2, 1}, {4, 3}}</code>", "display_order": 3 },
+        { "key": "D", "text": "<code>{{4, 3}, {2, 1}}</code>", "display_order": 4 },
+        { "key": "E", "text": "<code>{{3, 1}, {4, 2}}</code>", "display_order": 5 }
+      ],
+      "answer_key": {
+        "correct_option_key": "E"
+      }
+    },
+    {
+      "code": "INF-C-MATRIKS-2",
+      "question_type": "multiple_choice",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 29—31. Operasi Matriks</h3><p><em>Potongan kode C++ berikut ini digunakan untuk soal nomor 29 hingga 31.</em></p><pre><code>void op(vector&lt;vector&lt;int&gt;&gt;&amp; a) {\n  int n = a.size();\n\n  for (int i = 0; i &lt; n; i++) {\n    for (int j = i + 1; j &lt; n; j++) {\n      swap(a[i][j], a[j][i]);\n    }\n  }\n\n  for (int i = 0; i &lt; n; i++) {\n    reverse(a[i].begin(), a[i].end());\n  }\n}</code></pre><hr /><p><strong>Soal 30.</strong> Secara umum, operasi apakah yang dilakukan oleh fungsi <code>op()</code> terhadap matriks <code>a</code> berukuran <em>n</em>&times;<em>n</em>?</p>",
+      "display_order": 30,
+      "points": 1,
+      "options": [
+        { "key": "A", "text": "Pencerminan matriks terhadap sumbu <em>X</em>.", "display_order": 1 },
+        { "key": "B", "text": "Pencerminan matriks terhadap sumbu <em>Y</em>.", "display_order": 2 },
+        { "key": "C", "text": "Rotasi 90 derajat matriks <em>n</em>&times;<em>n</em> berlawanan arah jarum jam.", "display_order": 3 },
+        { "key": "D", "text": "Rotasi 90 derajat matriks <em>n</em>&times;<em>n</em> searah jarum jam.", "display_order": 4 },
+        { "key": "E", "text": "Transposisi matriks (Pertukaran baris menjadi kolom dan kolom menjadi baris).", "display_order": 5 }
+      ],
+      "answer_key": {
+        "correct_option_key": "D"
+      }
+    },
+    {
+      "code": "INF-C-MATRIKS-3",
+      "question_type": "short_text",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 29—31. Operasi Matriks</h3><p><em>Potongan kode C++ berikut ini digunakan untuk soal nomor 29 hingga 31.</em></p><pre><code>void op(vector&lt;vector&lt;int&gt;&gt;&amp; a) {\n  int n = a.size();\n\n  for (int i = 0; i &lt; n; i++) {\n    for (int j = i + 1; j &lt; n; j++) {\n      swap(a[i][j], a[j][i]);\n    }\n  }\n\n  for (int i = 0; i &lt; n; i++) {\n    reverse(a[i].begin(), a[i].end());\n  }\n}</code></pre><hr /><p><strong>Soal 31.</strong> Jika tepat di bawah baris <code>int n = a.size();</code> kita menambahkan baris kode baru <code>int m = a[0].size();</code> dengan $n\\ne m$, kemudian baris <code>for (int j = i + 1; j &lt; n; j++)</code> diganti menjadi <code>for (int j = i + 1; j &lt; m; j++)</code>, akankah kode kita tetap berhasil berjalan sebagaimana mestinya?</p><p><em>Tuliskan jawaban dalam bentuk kata \"YA\" atau \"TIDAK\" (tanpa tanda kutip).</em></p>",
+      "display_order": 31,
+      "points": 1,
+      "short_answer_variants": [
+        "TIDAK"
+      ]
+    },
+    {
+      "code": "INF-C-HITUNG-1",
+      "question_type": "short_text",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 32—34. Hitung</h3><p><em>Potongan kode C++ berikut ini digunakan untuk soal nomor 32 hingga 34.</em></p><pre><code>#include &lt;bits/stdc++.h&gt;\nusing namespace std;\n\nint hitung(int arr[], int n, int target) {\n    if (n == 0) return 0;\n    int sisa = hitung(arr, n - 1, target);\n    if (arr[n - 1] % target == 0)\n        return sisa + 1;\n    return sisa;\n}\n\nint main() {\n    int arr[] = {12, 7, 9, 4, 18, 5, 6};\n    int n = 7;\n    int target = 3;\n    cout &lt;&lt; hitung(arr, n, target) &lt;&lt; endl;\n    return 0;\n}</code></pre><p><strong>Soal 32.</strong> Apakah keluaran (<em>output</em>) yang dihasilkan oleh program di atas?</p><p><em>Tuliskan jawaban dalam bentuk ANGKA.</em></p>",
+      "display_order": 32,
+      "points": 1,
+      "short_answer_variants": [
+        "4"
+      ]
+    },
+    {
+      "code": "INF-C-HITUNG-2",
+      "question_type": "multiple_choice",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 32—34. Hitung</h3><p><em>Potongan kode C++ berikut ini digunakan untuk soal nomor 32 hingga 34.</em></p><pre><code>#include &lt;bits/stdc++.h&gt;\nusing namespace std;\n\nint hitung(int arr[], int n, int target) {\n    if (n == 0) return 0;\n    int sisa = hitung(arr, n - 1, target);\n    if (arr[n - 1] % target == 0)\n        return sisa + 1;\n    return sisa;\n}\n\nint main() {\n    int arr[] = {12, 7, 9, 4, 18, 5, 6};\n    int n = 7;\n    int target = 3;\n    cout &lt;&lt; hitung(arr, n, target) &lt;&lt; endl;\n    return 0;\n}</code></pre><p><strong>Soal 33.</strong> Berapa kali fungsi <code>hitung()</code> dipanggil secara total (termasuk pemanggilan awal dari <code>main()</code>) hingga program selesai dieksekusi?</p>",
+      "display_order": 33,
+      "points": 1,
+      "options": [
+        { "key": "A", "text": "5", "display_order": 1 },
+        { "key": "B", "text": "6", "display_order": 2 },
+        { "key": "C", "text": "6", "display_order": 3 },
+        { "key": "D", "text": "7", "display_order": 4 },
+        { "key": "E", "text": "8", "display_order": 5 }
+      ],
+      "answer_key": {
+        "correct_option_key": "E"
+      }
+    },
+    {
+      "code": "INF-C-HITUNG-3",
+      "question_type": "short_text",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 32—34. Hitung</h3><p><em>Potongan kode C++ berikut ini digunakan untuk soal nomor 32 hingga 34.</em></p><pre><code>#include &lt;bits/stdc++.h&gt;\nusing namespace std;\n\nint hitung(int arr[], int n, int target) {\n    if (n == 0) return 0;\n    int sisa = hitung(arr, n - 1, target);\n    if (arr[n - 1] % target == 0)\n        return sisa + 1;\n    return sisa;\n}\n\nint main() {\n    int arr[] = {12, 7, 9, 4, 18, 5, 6};\n    int n = 7;\n    int target = 3;\n    cout &lt;&lt; hitung(arr, n, target) &lt;&lt; endl;\n    return 0;\n}</code></pre><p><strong>Soal 34.</strong> Jika nilai variabel <code>target</code> pada fungsi <code>main()</code> diubah menjadi 1, apakah yang akan dicetak sebagai keluaran (<em>output</em>) program?</p><p><em>Tuliskan jawaban dalam bentuk ANGKA.</em></p>",
+      "display_order": 34,
+      "points": 1,
+      "short_answer_variants": [
+        "7"
+      ]
+    },
+    {
+      "code": "INF-C-CEK-1",
+      "question_type": "short_text",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 35—37. Cek Pengurutan</h3><p><em>potongan kode c++ berikut ini digunakan untuk soal nomor 35 hingga 37.</em></p><pre><code>void cek(vector&lt;int&gt;&amp; a) {\n    if (a.empty()) return;\n\n    vector&lt;pair&lt;int, int&gt;&gt; st;\n    st.push_back({0, a.size() - 1});\n\n    while (!st.empty()) {\n        auto [l, h] = st.back();\n        st.pop_back();\n\n        if (l &gt;= h) continue;\n\n        int p = a[h], i = l - 1;\n        for (int j = l; j &lt; h; j++) {\n            if (a[j] &lt; p) {\n                i++;\n                if (i != j) {\n                    swap(a[i], a[j]);\n                }\n            }\n        }\n\n        if (i + 1 != h) {\n            swap(a[i + 1], a[h]);\n        }\n\n        int m = i + 1;\n\n        st.push_back({l, m - 1});\n        st.push_back({m + 1, h});\n    }\n}</code></pre><p><strong>Soal 35.</strong> Diberikan <em>array</em> <code>a = {10, 14, 7, 8, 21, 9, 1, 5}</code>. Berapakah nilai elemen <strong>terakhir</strong> <em>array</em> <code>a</code> setelah fungsi <code>cek(a)</code> selesai dijalankan?</p><p><em>tuliskan jawaban dalam bentuk ANGKA.</em></p>",
+      "display_order": 35,
+      "points": 1,
+      "short_answer_variants": [
+        "21"
+      ]
+    },
+    {
+      "code": "INF-C-CEK-2",
+      "question_type": "multiple_choice",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 35—37. Cek Pengurutan</h3><p><em>potongan kode c++ berikut ini digunakan untuk soal nomor 35 hingga 37.</em></p><pre><code>void cek(vector&lt;int&gt;&amp; a) {\n    if (a.empty()) return;\n\n    vector&lt;pair&lt;int, int&gt;&gt; st;\n    st.push_back({0, a.size() - 1});\n\n    while (!st.empty()) {\n        auto [l, h] = st.back();\n        st.pop_back();\n\n        if (l &gt;= h) continue;\n\n        int p = a[h], i = l - 1;\n        for (int j = l; j &lt; h; j++) {\n            if (a[j] &lt; p) {\n                i++;\n                if (i != j) {\n                    swap(a[i], a[j]);\n                }\n            }\n        }\n\n        if (i + 1 != h) {\n            swap(a[i + 1], a[h]);\n        }\n\n        int m = i + 1;\n\n        st.push_back({l, m - 1});\n        st.push_back({m + 1, h});\n    }\n}</code></pre><p><strong>Soal 36.</strong> Diberikan <em>array</em> <code>a = {16, 3, 14, 5, 20, 1, 11}</code>. Selama eksekusi fungsi <code>cek(a)</code>, berapa banyak pasangan yang dikeluarkan (di-<em>pop</em>) dari <em>stack</em>?</p>",
+      "display_order": 36,
+      "points": 1,
+      "options": [
+        { "key": "A", "text": "9", "display_order": 1 },
+        { "key": "B", "text": "10", "display_order": 2 },
+        { "key": "C", "text": "11", "display_order": 3 },
+        { "key": "D", "text": "12", "display_order": 4 },
+        { "key": "E", "text": "13", "display_order": 5 }
+      ],
+      "answer_key": {
+        "correct_option_key": "A"
+      }
+    },
+    {
+      "code": "INF-C-CEK-3",
+      "question_type": "short_text",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 35—37. Cek Pengurutan</h3><p><em>Potongan kode C++ berikut ini digunakan untuk soal nomor 35 hingga 37.</em></p><pre><code>void cek(vector&lt;int&gt;&amp; a) {\n    if (a.empty()) return;\n\n    vector&lt;pair&lt;int, int&gt;&gt; st;\n    st.push_back({0, a.size() - 1});\n\n    while (!st.empty()) {\n        auto [l, h] = st.back();\n        st.pop_back();\n\n        if (l &gt;= h) continue;\n\n        int p = a[h], i = l - 1;\n        for (int j = l; j &lt; h; j++) {\n            if (a[j] &lt; p) {\n                i++;\n                if (i != j) {\n                    swap(a[i], a[j]);\n                }\n            }\n        }\n\n        if (i + 1 != h) {\n            swap(a[i + 1], a[h]);\n        }\n\n        int m = i + 1;\n\n        st.push_back({l, m - 1});\n        st.push_back({m + 1, h});\n    }\n}</code></pre><p><strong>Soal 37.</strong> Diberikan <em>array</em> <code>a</code> berisi 5 bilangan unik dari 1 sampai 5, kemudian fungsi <code>cek(a)</code> dijalankan. Dari seluruh kemungkinan permutasi <em>array</em> <code>a</code>, berapakah banyak maksimum operasi <em>swap</em> yang dapat terjadi?</p><p><em>Tuliskan jawaban dalam bentuk ANGKA.</em></p>",
+      "display_order": 37,
+      "points": 1,
+      "short_answer_variants": [
+        "13"
+      ]
+    },
+    {
+      "code": "INF-C-FUNGSI-F-1",
+      "question_type": "multiple_choice",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 38—40. Menelusuri Array</h3><p><em>Potongan kode C++ berikut ini digunakan untuk soal nomor 38 hingga 40.</em></p><pre><code>vector&lt;vector&lt;int&gt;&gt; f(vector&lt;int&gt;&amp; arr) {\n    vector&lt;vector&lt;int&gt;&gt; result = {{}};\n\n    for (int i : arr) {\n        int n = result.size();\n        \n        for (int j = 0; j &lt; n; j++) {\n            vector&lt;int&gt; cur = result[j];\n            cur.push_back(i);\n            result.push_back(cur);\n        }\n    }\n    \n    return result;\n}</code></pre><p><strong>Soal 38.</strong> Apakah tujuan utama dari pemanggilan fungsi <code>f()</code> pada potongan kode di atas?</p>",
+      "display_order": 38,
+      "points": 1,
+      "options": [
+        { "key": "A", "text": "Menghasilkan semua kemungkinan himpunan bagian (subset) dari array masukan.", "display_order": 1 },
+        { "key": "B", "text": "Menghasilkan semua kemungkinan permutasi dari array masukan.", "display_order": 2 },
+        { "key": "C", "text": "Mengurutkan elemen-elemen di dalam array dari nilai terkecil ke terbesar.", "display_order": 3 },
+        { "key": "D", "text": "Mengurutkan elemen-elemen di dalam array dari nilai terbesar ke terkecil.", "display_order": 4 },
+        { "key": "E", "text": "Menghapus elemen-elemen duplikat dari array masukan.", "display_order": 5 }
+      ],
+      "answer_key": {
+        "correct_option_key": "A"
+      }
+    },
+    {
+      "code": "INF-C-FUNGSI-F-2",
+      "question_type": "short_text",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 38—40. Menelusuri Array</h3><p><em>Potongan kode C++ berikut ini digunakan untuk soal nomor 38 hingga 40.</em></p><pre><code>vector&lt;vector&lt;int&gt;&gt; f(vector&lt;int&gt;&amp; arr) {\n    vector&lt;vector&lt;int&gt;&gt; result = {{}};\n\n    for (int i : arr) {\n        int n = result.size();\n        \n        for (int j = 0; j &lt; n; j++) {\n            vector&lt;int&gt; cur = result[j];\n            cur.push_back(i);\n            result.push_back(cur);\n        }\n    }\n    \n    return result;\n}</code></pre><p><strong>Soal 39.</strong> Jika <code>arr</code> yang diinputkan ke dalam fungsi memiliki ukuran 13 elemen, berapakah banyak elemen <code>vector</code> yang dikembalikan oleh fungsi <code>f()</code>?</p><p><em>Tuliskan jawaban dalam bentuk ANGKA.</em></p>",
+      "display_order": 39,
+      "points": 1,
+      "short_answer_variants": [
+        "8192"
+      ]
+    },
+    {
+      "code": "INF-C-FUNGSI-F-3",
+      "question_type": "multiple_choice",
+      "prompt_html": "<h3 style=\"font-weight: bold;\">Soal 38—40. Menelusuri Array</h3><p><em>Potongan kode C++ berikut ini digunakan untuk soal nomor 38 hingga 40.</em></p><pre><code>vector&lt;vector&lt;int&gt;&gt; f(vector&lt;int&gt;&amp; arr) {\n    vector&lt;vector&lt;int&gt;&gt; result = {{}};\n\n    for (int i : arr) {\n        int n = result.size();\n        \n        for (int j = 0; j &lt; n; j++) {\n            vector&lt;int&gt; cur = result[j];\n            cur.push_back(i);\n            result.push_back(cur);\n        }\n    }\n    \n    return result;\n}</code></pre><p><strong>Soal 40.</strong> Jika baris <code>vector&lt;vector&lt;int&gt;&gt; result = {{}};</code> pada kode di atas diubah menjadi <code>vector&lt;vector&lt;int&gt;&gt; result;</code>, apakah keluaran yang akan dikembalikan oleh fungsi tersebut?</p>",
+      "display_order": 40,
+      "points": 1,
+      "options": [
+        { "key": "A", "text": "Vector yang hanya berisi satu array kosong {{}}.", "display_order": 1 },
+        { "key": "B", "text": "Vector kosong (tidak memiliki elemen sama sekali).", "display_order": 2 },
+        { "key": "C", "text": "Vector yang berisi salinan elemen-elemen dari array arr.", "display_order": 3 },
+        { "key": "D", "text": "Program akan mengalami error.", "display_order": 4 },
+        { "key": "E", "text": "Program akan terjebak dalam perulangan tanpa henti (infinite loop).", "display_order": 5 }
+      ],
+      "answer_key": {
+        "correct_option_key": "B"
+      }
+    }
+  ]
+}

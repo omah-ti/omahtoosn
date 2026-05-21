@@ -13,9 +13,11 @@ import (
 
 // error
 var (
-	ErrUserNotFound    = errors.New("user not found")
-	ErrUserExists      = errors.New("email already registered")
-	ErrSessionNotFound = errors.New("session not found")
+	ErrUserNotFound              = errors.New("user not found")
+	ErrUserExists                = errors.New("email already registered")
+	ErrSessionNotFound           = errors.New("session not found")
+	ErrPasswordResetTokenInvalid = errors.New("password reset token is invalid")
+	ErrPasswordResetTokenExpired = errors.New("password reset token has expired")
 )
 
 // interface
@@ -32,6 +34,10 @@ type Repository interface {
 	RevokeSession(ctx context.Context, sessionID uuid.UUID) error
 	RevokeAllUserSessions(ctx context.Context, userID uuid.UUID) error
 	UpdateSessionLastUsed(ctx context.Context, sessionID uuid.UUID) error
+
+	// Password reset
+	CreatePasswordResetToken(ctx context.Context, token *PasswordResetToken) error
+	ResetPasswordWithToken(ctx context.Context, tokenHash string, passwordHash string) error
 }
 
 type repository struct {
@@ -175,4 +181,75 @@ func (r *repository) UpdateSessionLastUsed(ctx context.Context, sessionID uuid.U
 
 	_, err := r.pool.Exec(ctx, query, time.Now(), sessionID)
 	return err
+}
+
+func (r *repository) CreatePasswordResetToken(ctx context.Context, token *PasswordResetToken) error {
+	_, err := r.pool.Exec(ctx, `
+		UPDATE password_reset_tokens
+		SET used_at = NOW()
+		WHERE user_id = $1 AND used_at IS NULL`, token.UserID)
+	if err != nil {
+		return err
+	}
+
+	_, err = r.pool.Exec(ctx, `
+		INSERT INTO password_reset_tokens (id, user_id, token_hash, expires_at)
+		VALUES ($1, $2, $3, $4)`,
+		token.ID, token.UserID, token.TokenHash, token.ExpiresAt,
+	)
+	return err
+}
+
+func (r *repository) ResetPasswordWithToken(ctx context.Context, tokenHash string, passwordHash string) error {
+	tx, err := r.pool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer func() { _ = tx.Rollback(ctx) }()
+
+	var token PasswordResetToken
+	err = tx.QueryRow(ctx, `
+		SELECT id, user_id, token_hash, expires_at, used_at, created_at
+		FROM password_reset_tokens
+		WHERE token_hash = $1
+		FOR UPDATE`, tokenHash).Scan(
+		&token.ID, &token.UserID, &token.TokenHash, &token.ExpiresAt,
+		&token.UsedAt, &token.CreatedAt,
+	)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return ErrPasswordResetTokenInvalid
+		}
+		return err
+	}
+
+	if token.UsedAt != nil {
+		return ErrPasswordResetTokenInvalid
+	}
+	if time.Now().After(token.ExpiresAt) {
+		return ErrPasswordResetTokenExpired
+	}
+
+	if _, err = tx.Exec(ctx, `
+		UPDATE users
+		SET password_hash = $1
+		WHERE id = $2`, passwordHash, token.UserID); err != nil {
+		return err
+	}
+
+	if _, err = tx.Exec(ctx, `
+		UPDATE password_reset_tokens
+		SET used_at = NOW()
+		WHERE id = $1`, token.ID); err != nil {
+		return err
+	}
+
+	if _, err = tx.Exec(ctx, `
+		UPDATE auth_sessions
+		SET revoked_at = NOW()
+		WHERE user_id = $1 AND revoked_at IS NULL`, token.UserID); err != nil {
+		return err
+	}
+
+	return tx.Commit(ctx)
 }

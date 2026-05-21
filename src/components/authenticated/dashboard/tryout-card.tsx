@@ -1,4 +1,5 @@
 import Button from "@/components/ui/button";
+import Link from "next/link";
 
 type Variant = "before" | "after";
 
@@ -36,12 +37,23 @@ export default function TryOutCard({ variant = "before" }: Props) {
             : "Uji kemampuanmu melalui simulasi berbasis silabus OSN terbaru dengan sistem real-time"}
         </p>
 
-        <Button
-          variant={isAfter ? "disabled" : "primary"}
-          className="w-full max-w-[180px] mt-7 sm:w-1/2"
-        >
-          {isAfter ? "Sudah Mengerjakan" : "Mulai Sekarang!"}
-        </Button>
+        {isAfter ? (
+          <Button
+            variant="disabled"
+            className="w-full max-w-[180px] mt-7 sm:w-1/2"
+          >
+            Sudah Mengerjakan
+          </Button>
+        ) : (
+          <Link href="/tryout/intro">
+            <Button
+              variant="primary"
+              className="w-full max-w-[180px] mt-7 sm:w-1/2"
+            >
+              Mulai Sekarang!
+            </Button>
+          </Link>
+        )}
       </div>
 
       {/* IMAGE */}
