@@ -17,20 +17,20 @@ const Alumni = () => {
 
   const alumniData = [
     {
-      text: "Saya OSN Nasional sih biasa lah masuk sini ga kaget ok aja si isinya radak2 aneh aja tapi boleh lah buat kuliah jisjeindjbeb bxhjebdhbhb ubdhbehcbbhcbhcbh",
-      name: "Ayasha Rahmadinni",
-      track: "UTUL wkwk",
+      text: "Try-Out OSN sangat membantu saya melatih intuisi dalam memecahkan soal secara bertahap, sekaligus meningkatkan kecepatan dan ketepatan pengerjaan ",
+      name: "Fahmi Abdillah Z",
+      track: "SNBT",
       image: "/hero-character.webp"
     },
     {
-      text: "Saya OSN Nasional sih biasa lah masuk sini ga kaget ok aja si isinya radak2 aneh aja tapi boleh lah buat kuliah jisjeindjbeb bxhjebdhbhb ubdhbehcbbhcbhcbh",
-      name: "Maemunah",
-      track: "SNBP",
+      text: "Jujur, Try-Out OSN ini sangat berpengaruh bagi saya yang terbiasa belajar dari pengalaman. Lewat TO ini, saya bisa langsung latihan soal sekaligus menguji kecepatan pengerjaan.",
+      name: "Dhimas Putra S",
+      track: "SNBT",
       image: "/hero-character.webp"
     },
     {
-      text: "Saya OSN Nasional sih biasa lah masuk sini ga kaget ok aja si isinya radak2 aneh aja tapi boleh lah buat kuliah jisjeindjbeb bxhjebdhbhb ubdhbehcbbhcbhcbh",
-      name: "Bimo",
+      text: "Mengerjakan Try-Out ini sangat membantu persiapan OSN dan membawa dampak besar. Bahkan, pengalaman ini punya andil penting dalam menentukan pilihan jurusan kuliah saya saat ini",
+      name: "Kenji Ratanaputra",
       track: "SNBP",
       image: "/hero-character.webp"
     },
