@@ -424,6 +424,102 @@ func (r *Repository) BulkUpdateAnswerScores(ctx context.Context, db store.DBTX, 
 	return err
 }
 
+func (r *Repository) FinalizeAttemptWithScoring(ctx context.Context, db store.DBTX, attemptID, tryoutID, status string) (Attempt, error) {
+	query := `
+		WITH question_attempts AS (
+			SELECT
+				q.id AS question_id,
+				aa.id AS attempt_answer_id,
+				COALESCE(aa.is_flagged, FALSE) AS is_flagged,
+				CASE
+					WHEN aa.id IS NULL THEN FALSE
+					WHEN (aa.selected_option_key IS NOT NULL AND BTRIM(aa.selected_option_key) <> '')
+						OR (aa.normalized_answer IS NOT NULL AND BTRIM(aa.normalized_answer) <> '') THEN TRUE
+					ELSE FALSE
+				END AS is_answered,
+				CASE
+					WHEN aa.id IS NULL THEN NULL
+					WHEN NOT (
+						(aa.selected_option_key IS NOT NULL AND BTRIM(aa.selected_option_key) <> '')
+						OR (aa.normalized_answer IS NOT NULL AND BTRIM(aa.normalized_answer) <> '')
+					) THEN NULL
+					WHEN q.question_type = 'multiple_choice' THEN (
+						UPPER(BTRIM(COALESCE(aa.selected_option_key, ''))) = UPPER(BTRIM(COALESCE(qak.correct_option_key, '')))
+					)
+					WHEN q.question_type = 'short_text' THEN EXISTS (
+						SELECT 1
+						FROM question_short_answer_variants qsav
+						WHERE qsav.question_id = q.id
+							AND qsav.normalized_text = aa.normalized_answer
+					)
+					ELSE FALSE
+				END AS is_correct,
+				CASE
+					WHEN aa.id IS NULL THEN 0::numeric(10,2)
+					WHEN NOT (
+						(aa.selected_option_key IS NOT NULL AND BTRIM(aa.selected_option_key) <> '')
+						OR (aa.normalized_answer IS NOT NULL AND BTRIM(aa.normalized_answer) <> '')
+					) THEN 0::numeric(10,2)
+					WHEN q.question_type = 'multiple_choice'
+						AND UPPER(BTRIM(COALESCE(aa.selected_option_key, ''))) = UPPER(BTRIM(COALESCE(qak.correct_option_key, ''))) THEN q.points
+					WHEN q.question_type = 'short_text' AND EXISTS (
+						SELECT 1
+						FROM question_short_answer_variants qsav
+						WHERE qsav.question_id = q.id
+							AND qsav.normalized_text = aa.normalized_answer
+					) THEN q.points
+					ELSE 0::numeric(10,2)
+				END AS awarded_points
+			FROM questions q
+			LEFT JOIN attempt_answers aa ON aa.question_id = q.id AND aa.attempt_id = $1
+			LEFT JOIN question_answer_keys qak ON qak.question_id = q.id
+			WHERE q.tryout_id = $2
+		),
+		updated_answers AS (
+			UPDATE attempt_answers aa
+			SET
+				is_correct = CASE WHEN qa.is_answered THEN qa.is_correct ELSE NULL END,
+				awarded_points = CASE WHEN qa.is_answered THEN qa.awarded_points ELSE NULL END
+			FROM question_attempts qa
+			WHERE aa.id = qa.attempt_answer_id
+			RETURNING aa.id
+		),
+		touched AS (
+			SELECT COUNT(*)::int AS updated_rows
+			FROM updated_answers
+		),
+		aggregates AS (
+			SELECT
+				COUNT(*)::int AS total_questions,
+				COUNT(*) FILTER (WHERE is_answered)::int AS answered_questions,
+				COUNT(*) FILTER (WHERE is_answered AND is_correct IS TRUE)::int AS correct_count,
+				COUNT(*) FILTER (WHERE is_answered AND is_correct IS FALSE)::int AS wrong_count,
+				COUNT(*) FILTER (WHERE NOT is_answered)::int AS unanswered_count,
+				COUNT(*) FILTER (WHERE is_flagged)::int AS flagged_questions,
+				COALESCE(SUM(awarded_points), 0)::numeric(10,2) AS final_score
+			FROM question_attempts
+		)
+		UPDATE attempts a
+		SET
+			status = $3,
+			submitted_at = NOW(),
+			last_synced_at = NOW(),
+			version = a.version + 1,
+			total_questions = aggregates.total_questions,
+			answered_questions = aggregates.answered_questions,
+			flagged_questions = aggregates.flagged_questions,
+			correct_count = aggregates.correct_count,
+			wrong_count = aggregates.wrong_count,
+			unanswered_count = aggregates.unanswered_count,
+			final_score = aggregates.final_score
+		FROM aggregates, touched
+		WHERE a.id = $1
+		RETURNING a.id, a.user_id, a.tryout_id, a.status, a.started_at, a.expires_at, a.submitted_at, a.last_synced_at, a.version, a.total_questions, a.answered_questions, a.flagged_questions, a.correct_count, a.wrong_count, a.unanswered_count, a.final_score, a.created_at, a.updated_at
+	`
+
+	return scanAttempt(db.QueryRow(ctx, query, attemptID, tryoutID, status))
+}
+
 
 
 func (r *Repository) FinalizeAttempt(ctx context.Context, db store.DBTX, attemptID, status string, totalQuestions, answeredQuestions, correctCount, wrongCount, unansweredCount int, finalScore float64) (Attempt, error) {

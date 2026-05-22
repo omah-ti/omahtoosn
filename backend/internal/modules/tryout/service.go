@@ -3,7 +3,6 @@ package tryout
 import (
 	"context"
 	"errors"
-	"math"
 	"sort"
 	"strings"
 	"time"
@@ -422,66 +421,15 @@ func (s *Service) syncExpiredAttempt(ctx context.Context, userID, tryoutID strin
 }
 
 func (s *Service) finalizeAttemptTx(ctx context.Context, tx pgx.Tx, attempt Attempt, auto bool) (Attempt, error) {
-	questions, err := s.repo.GetScoringQuestions(ctx, tx, attempt.TryoutID)
-	if err != nil {
-		return Attempt{}, httpx.Internal("failed to fetch scoring questions")
-	}
-	answers, err := s.repo.GetScoringAnswers(ctx, tx, attempt.ID)
-	if err != nil {
-		return Attempt{}, httpx.Internal("failed to fetch scoring answers")
-	}
-	answeredQuestions := 0
-	correctCount := 0
-	wrongCount := 0
-	unansweredCount := 0
-	finalScore := 0.0
-
-	scores := make(map[string]struct {
-		IsCorrect     *bool
-		AwardedPoints float64
-	})
-
-	for _, question := range questions {
-		answer, exists := answers[question.ID]
-		if !exists || isBlankAnswer(answer) {
-			unansweredCount++
-			continue
-		}
-		answeredQuestions++
-		isCorrect := false
-		switch question.QuestionType {
-		case "multiple_choice":
-			isCorrect = answer.SelectedOptionKey != nil && strings.EqualFold(strings.TrimSpace(*answer.SelectedOptionKey), strings.TrimSpace(question.CorrectOptionKey))
-		case "short_text":
-			isCorrect = answer.NormalizedAnswer != nil && question.Variants[*answer.NormalizedAnswer]
-		}
-		if isCorrect {
-			correctCount++
-			finalScore += question.Points
-			flag := true
-			scores[question.ID] = struct {
-				IsCorrect     *bool
-				AwardedPoints float64
-			}{IsCorrect: &flag, AwardedPoints: question.Points}
-		} else {
-			wrongCount++
-			flag := false
-			scores[question.ID] = struct {
-				IsCorrect     *bool
-				AwardedPoints float64
-			}{IsCorrect: &flag, AwardedPoints: 0}
-		}
-	}
-
-	if err := s.repo.BulkUpdateAnswerScores(ctx, tx, attempt.ID, scores); err != nil {
-		return Attempt{}, httpx.Internal("failed to update answer scores")
-	}
-
 	status := "submitted"
 	if auto {
 		status = "auto_submitted"
 	}
-	return s.repo.FinalizeAttempt(ctx, tx, attempt.ID, status, len(questions), answeredQuestions, correctCount, wrongCount, unansweredCount, math.Round(finalScore*100)/100)
+	attempt, err := s.repo.FinalizeAttemptWithScoring(ctx, tx, attempt.ID, attempt.TryoutID, status)
+	if err != nil {
+		return Attempt{}, httpx.Internal("failed to finalize attempt")
+	}
+	return attempt, nil
 }
 
 func compactAttempt(attempt Attempt) map[string]any {
@@ -630,6 +578,3 @@ func buildNavigator(questions []Question, answers []AttemptAnswer) []map[string]
 	return navigator
 }
 
-func isBlankAnswer(answer ScoringAnswer) bool {
-	return (answer.SelectedOptionKey == nil || strings.TrimSpace(*answer.SelectedOptionKey) == "") && (answer.NormalizedAnswer == nil || strings.TrimSpace(*answer.NormalizedAnswer) == "")
-}
