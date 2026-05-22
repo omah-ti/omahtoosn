@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Grid, ChevronLeft, ChevronRight, CheckSquare, Square, X } from "lucide-react";
 import Container from "@/components/ui/container";
@@ -61,6 +61,71 @@ export default function TryoutPage() {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showTimeoutModal, setShowTimeoutModal] = useState(false);
   const [showDaftarSoal, setShowDaftarSoal] = useState(false);
+
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pendingSaveRef = useRef<{ index: number; value: string; isFlagged: boolean } | null>(null);
+
+  const saveAnswer = useCallback(async (index: number, value: string, isFlagged: boolean) => {
+    const question = questions[index];
+    if (!question || !attempt) return;
+
+    const isShortText = question.question_type === "short_text";
+    const res = await fetch("/api/v1/attempts/current/answers", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        attempt_version: attempt.version,
+        answers: [
+          {
+            question_id: question.id,
+            selected_option_key: isShortText || value === "" ? null : value,
+            answer_text: isShortText && value !== "" ? value : null,
+            is_flagged: isFlagged,
+            client_updated_at: new Date().toISOString(),
+          },
+        ],
+      }),
+    });
+
+    if (res.ok) {
+      const payload = (await res.json().catch(() => null)) as ApiEnvelope<{ attempt: Attempt }> | null;
+      if (payload?.data?.attempt) {
+        setAttempt(payload.data.attempt);
+      }
+    }
+  }, [questions, attempt]);
+
+  const flushSave = useCallback(() => {
+    if (saveTimerRef.current) {
+      clearTimeout(saveTimerRef.current);
+      saveTimerRef.current = null;
+    }
+    if (pendingSaveRef.current) {
+      const { index, value, isFlagged } = pendingSaveRef.current;
+      pendingSaveRef.current = null;
+      void saveAnswer(index, value, isFlagged);
+    }
+  }, [saveAnswer]);
+
+  const scheduleSave = useCallback((index: number, value: string, isFlagged: boolean) => {
+    pendingSaveRef.current = { index, value, isFlagged };
+    if (saveTimerRef.current) {
+      clearTimeout(saveTimerRef.current);
+    }
+    saveTimerRef.current = setTimeout(() => {
+      saveTimerRef.current = null;
+      pendingSaveRef.current = null;
+      void saveAnswer(index, value, isFlagged);
+    }, 800);
+  }, [saveAnswer]);
+
+  useEffect(() => {
+    return () => {
+      flushSave();
+    };
+  }, [flushSave]);
 
   const loadAttempt = useCallback(async () => {
     setLoading(true);
@@ -143,54 +208,30 @@ export default function TryoutPage() {
   const currentSoal = questions[currentIndex];
 
   const handleNext = () => {
+    flushSave();
     if (currentIndex < questions.length - 1) setCurrentIndex(currentIndex + 1);
   };
 
   const handlePrev = () => {
+    flushSave();
     if (currentIndex > 0) setCurrentIndex(currentIndex - 1);
-  };
-
-  const saveAnswer = async (index: number, value: string, isFlagged: boolean) => {
-    const question = questions[index];
-    if (!question || !attempt) return;
-
-    const isShortText = question.question_type === "short_text";
-    const res = await fetch("/api/v1/attempts/current/answers", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        attempt_version: attempt.version,
-        answers: [
-          {
-            question_id: question.id,
-            selected_option_key: isShortText || value === "" ? null : value,
-            answer_text: isShortText && value !== "" ? value : null,
-            is_flagged: isFlagged,
-            client_updated_at: new Date().toISOString(),
-          },
-        ],
-      }),
-    });
-
-    if (res.ok) {
-      const payload = (await res.json().catch(() => null)) as ApiEnvelope<{ attempt: Attempt }> | null;
-      if (payload?.data?.attempt) {
-        setAttempt(payload.data.attempt);
-      }
-    }
   };
 
   const handleSelectOption = (value: string) => {
     setAnswers(prev => ({ ...prev, [currentIndex]: value }));
-    saveAnswer(currentIndex, value, raguRagu[currentIndex] === true);
+    const isShortText = questions[currentIndex]?.question_type === "short_text";
+    if (isShortText) {
+      scheduleSave(currentIndex, value, raguRagu[currentIndex] === true);
+    } else {
+      void saveAnswer(currentIndex, value, raguRagu[currentIndex] === true);
+    }
   };
 
   const handleToggleRagu = () => {
+    flushSave();
     const nextFlag = !raguRagu[currentIndex];
     setRaguRagu(prev => ({ ...prev, [currentIndex]: nextFlag }));
-    saveAnswer(currentIndex, answers[currentIndex] || "", nextFlag);
+    void saveAnswer(currentIndex, answers[currentIndex] || "", nextFlag);
   };
 
   const handleSubmitClick = () => {
@@ -203,6 +244,7 @@ export default function TryoutPage() {
   };
 
   const handleFinalSubmit = () => {
+    flushSave();
     if (!attempt) return;
     fetch("/api/v1/attempts/current/submit", {
       method: "POST",
@@ -305,6 +347,7 @@ export default function TryoutPage() {
                     <button
                       key={idx}
                       onClick={() => {
+                        flushSave();
                         setCurrentIndex(idx);
                         setShowDaftarSoal(false);
                       }}
