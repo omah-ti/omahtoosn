@@ -401,11 +401,11 @@ func (r *Repository) BatchUpdateAnswerScores(ctx context.Context, db store.DBTX,
 	}
 	query := `
 		UPDATE attempt_answers AS target
-		SET is_correct = source.is_correct,
-		    awarded_points = source.awarded_points
-		FROM unnest($2::text[], $3::bool[], $4::float8[])
-			AS source(question_id, is_correct, awarded_points)
-		WHERE target.attempt_id = $1 AND target.question_id = source.question_id
+		SET is_correct = src.correct,
+		    awarded_points = src.points
+		FROM unnest($2::text[], $3::bool[], $4::numeric[])
+			AS src(qid, correct, points)
+		WHERE target.attempt_id = $1 AND target.question_id = src.qid
 	`
 	_, err := db.Exec(ctx, query, attemptID, questionIDs, isCorrects, awardedPoints)
 	return err
