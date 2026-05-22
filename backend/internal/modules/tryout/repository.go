@@ -381,35 +381,7 @@ func (r *Repository) UpdateAnswerScore(ctx context.Context, db store.DBTX, attem
 	return err
 }
 
-type AnswerScore struct {
-	QuestionID    string
-	IsCorrect     bool
-	AwardedPoints float64
-}
 
-func (r *Repository) BatchUpdateAnswerScores(ctx context.Context, db store.DBTX, attemptID string, scores []AnswerScore) error {
-	if len(scores) == 0 {
-		return nil
-	}
-	questionIDs := make([]string, len(scores))
-	isCorrects := make([]bool, len(scores))
-	awardedPoints := make([]float64, len(scores))
-	for i, s := range scores {
-		questionIDs[i] = s.QuestionID
-		isCorrects[i] = s.IsCorrect
-		awardedPoints[i] = s.AwardedPoints
-	}
-	query := `
-		UPDATE attempt_answers AS target
-		SET is_correct = src.correct,
-		    awarded_points = src.points
-		FROM unnest($2::text[], $3::bool[], $4::numeric[])
-			AS src(qid, correct, points)
-		WHERE target.attempt_id = $1 AND target.question_id = src.qid
-	`
-	_, err := db.Exec(ctx, query, attemptID, questionIDs, isCorrects, awardedPoints)
-	return err
-}
 
 func (r *Repository) FinalizeAttempt(ctx context.Context, db store.DBTX, attemptID, status string, totalQuestions, answeredQuestions, correctCount, wrongCount, unansweredCount int, finalScore float64) (Attempt, error) {
 	query := `
