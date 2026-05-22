@@ -12,16 +12,18 @@ import (
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
 
+	"github.com/omah-ti/omahtoosn/backend/internal/platform/cache"
 	"github.com/omah-ti/omahtoosn/backend/internal/platform/httpx"
 )
 
 type Service struct {
-	pool *pgxpool.Pool
-	repo *Repository
+	pool  *pgxpool.Pool
+	repo  *Repository
+	cache cache.Cache
 }
 
-func NewService(pool *pgxpool.Pool, repo *Repository) *Service {
-	return &Service{pool: pool, repo: repo}
+func NewService(pool *pgxpool.Pool, repo *Repository, cacheClient cache.Cache) *Service {
+	return &Service{pool: pool, repo: repo, cache: cacheClient}
 }
 
 func (s *Service) GetCurrentTryout(ctx context.Context, userID string) (map[string]any, error) {
@@ -130,9 +132,20 @@ func (s *Service) GetCurrentAttempt(ctx context.Context, userID string) (map[str
 	if attempt.Status != "ongoing" {
 		return nil, httpx.Conflict("attempt is not active")
 	}
-	questions, err := s.repo.ListQuestions(ctx, s.pool, tryout.ID)
-	if err != nil {
-		return nil, httpx.Internal("failed to fetch questions")
+	var questions []Question
+	cacheKey := "tryout:questions:" + tryout.ID
+	if err := s.cache.Get(ctx, cacheKey, &questions); err != nil {
+		if errors.Is(err, cache.ErrNotFound) {
+			questions, err = s.repo.ListQuestions(ctx, s.pool, tryout.ID)
+			if err != nil {
+				return nil, httpx.Internal("failed to fetch questions")
+			}
+			if err := s.cache.Set(ctx, cacheKey, questions, 1*time.Hour); err != nil {
+				// Log cache error but don't fail the request
+			}
+		} else {
+			return nil, httpx.Internal("failed to fetch questions")
+		}
 	}
 	answers, err := s.repo.ListAnswers(ctx, s.pool, attempt.ID)
 	if err != nil {
@@ -306,6 +319,7 @@ func (s *Service) SubmitCurrentAttempt(ctx context.Context, userID string, req S
 	if err := tx.Commit(ctx); err != nil {
 		return nil, httpx.Internal("failed to commit submit transaction")
 	}
+	_ = s.cache.Del(ctx, "tryout:questions:"+tryout.ID)
 	result, err := s.repo.GetResultByUserTryout(ctx, s.pool, userID, tryout.ID)
 	if err != nil {
 		return nil, httpx.Internal("failed to fetch result")

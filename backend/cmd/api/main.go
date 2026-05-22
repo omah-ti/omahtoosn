@@ -17,6 +17,7 @@ import (
 	docs "github.com/omah-ti/omahtoosn/backend/docs"
 	"github.com/omah-ti/omahtoosn/backend/internal/modules/auth"
 	"github.com/omah-ti/omahtoosn/backend/internal/modules/tryout"
+	"github.com/omah-ti/omahtoosn/backend/internal/platform/cache"
 	"github.com/omah-ti/omahtoosn/backend/internal/platform/config"
 	"github.com/omah-ti/omahtoosn/backend/internal/platform/db"
 	"github.com/omah-ti/omahtoosn/backend/internal/platform/email"
@@ -52,6 +53,13 @@ func main() {
 	}
 	defer pool.Close()
 
+	// cache connection
+	cacheClient, err := cache.New(cfg.RedisURL)
+	if err != nil {
+		log.Fatalf("cache open failed: %v", err)
+	}
+	defer cacheClient.Close()
+
 	// security (jwt)
 	tokenConfig := security.TokenConfig{
 		AccessSecret:    cfg.JWTSecret,
@@ -81,7 +89,7 @@ func main() {
 
 	// tryout module
 	tryoutRepo := tryout.NewRepository()
-	tryoutService := tryout.NewService(pool, tryoutRepo)
+	tryoutService := tryout.NewService(pool, tryoutRepo, cacheClient)
 	tryoutHandler := tryout.NewHandler(tryoutService)
 
 	// app init

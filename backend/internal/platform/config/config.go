@@ -15,6 +15,7 @@ type Config struct {
 	AppPort           string
 	AppVersion        string
 	DatabaseURL       string
+	RedisURL          string
 	JWTSecret         string
 	AccessTokenTTL    time.Duration
 	RefreshTokenTTL   time.Duration
@@ -39,6 +40,7 @@ func Load() *Config {
 		AppPort:           getString("APP_PORT", getString("PORT", "8081")),
 		AppVersion:        getString("APP_VERSION", "dev"),
 		DatabaseURL:       getString("DATABASE_URL", "postgres://postgres:postgres@localhost:5433/to_osn?sslmode=disable"),
+		RedisURL:          getString("REDIS_URL", ""),
 		JWTSecret:         getString("JWT_SECRET", "change-this-secret"),
 		AccessTokenTTL:    time.Duration(getInt("ACCESS_TOKEN_TTL_MINUTES", 15)) * time.Minute,
 		RefreshTokenTTL:   time.Duration(getInt("REFRESH_TOKEN_TTL_HOURS", 168)) * time.Hour,
