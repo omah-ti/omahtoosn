@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/jackc/pgx/v5"
@@ -378,6 +379,48 @@ func (r *Repository) UpdateAnswerScore(ctx context.Context, db store.DBTX, attem
 		WHERE attempt_id = $1 AND question_id = $2
 	`
 	_, err := db.Exec(ctx, query, attemptID, questionID, isCorrect, awardedPoints)
+	return err
+}
+
+func (r *Repository) BulkUpdateAnswerScores(ctx context.Context, db store.DBTX, attemptID string, scores map[string]struct {
+	IsCorrect    *bool
+	AwardedPoints float64
+}) error {
+	if len(scores) == 0 {
+		return nil
+	}
+
+	var queryBuilder strings.Builder
+	queryBuilder.WriteString(`
+		UPDATE attempt_answers
+		SET
+			is_correct = CASE question_id`)
+	
+	args := []any{attemptID}
+	argIndex := 2
+	
+	questionIDs := make([]string, 0, len(scores))
+	for qid := range scores {
+		questionIDs = append(questionIDs, qid)
+	}
+	
+	for _, qid := range questionIDs {
+		score := scores[qid]
+		fmt.Fprintf(&queryBuilder, " WHEN $%d THEN $%d", argIndex, argIndex+1)
+		args = append(args, qid, score.IsCorrect)
+		argIndex += 2
+	}
+	queryBuilder.WriteString(" END, awarded_points = CASE question_id")
+	
+	for _, qid := range questionIDs {
+		score := scores[qid]
+		fmt.Fprintf(&queryBuilder, " WHEN $%d THEN $%d", argIndex, argIndex+1)
+		args = append(args, qid, score.AwardedPoints)
+		argIndex += 2
+	}
+	queryBuilder.WriteString(" END WHERE attempt_id = $1")
+	
+	_, err := db.Exec(ctx, queryBuilder.String(), args...)
 	return err
 }
 

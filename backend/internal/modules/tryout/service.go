@@ -436,6 +436,11 @@ func (s *Service) finalizeAttemptTx(ctx context.Context, tx pgx.Tx, attempt Atte
 	unansweredCount := 0
 	finalScore := 0.0
 
+	scores := make(map[string]struct {
+		IsCorrect     *bool
+		AwardedPoints float64
+	})
+
 	for _, question := range questions {
 		answer, exists := answers[question.ID]
 		if !exists || isBlankAnswer(answer) {
@@ -454,17 +459,24 @@ func (s *Service) finalizeAttemptTx(ctx context.Context, tx pgx.Tx, attempt Atte
 			correctCount++
 			finalScore += question.Points
 			flag := true
-			if err := s.repo.UpdateAnswerScore(ctx, tx, attempt.ID, question.ID, &flag, question.Points); err != nil {
-				return Attempt{}, httpx.Internal("failed to update answer score")
-			}
+			scores[question.ID] = struct {
+				IsCorrect     *bool
+				AwardedPoints float64
+			}{IsCorrect: &flag, AwardedPoints: question.Points}
 		} else {
 			wrongCount++
 			flag := false
-			if err := s.repo.UpdateAnswerScore(ctx, tx, attempt.ID, question.ID, &flag, 0); err != nil {
-				return Attempt{}, httpx.Internal("failed to update answer score")
-			}
+			scores[question.ID] = struct {
+				IsCorrect     *bool
+				AwardedPoints float64
+			}{IsCorrect: &flag, AwardedPoints: 0}
 		}
 	}
+
+	if err := s.repo.BulkUpdateAnswerScores(ctx, tx, attempt.ID, scores); err != nil {
+		return Attempt{}, httpx.Internal("failed to update answer scores")
+	}
+
 	status := "submitted"
 	if auto {
 		status = "auto_submitted"
