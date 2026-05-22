@@ -25,8 +25,26 @@ func NewService(pool *pgxpool.Pool, repo *Repository, cacheClient cache.Cache) *
 	return &Service{pool: pool, repo: repo, cache: cacheClient}
 }
 
+func (s *Service) getCurrentTryoutCached(ctx context.Context) (Tryout, error) {
+	var tryout Tryout
+	cacheKey := "tryout:current"
+	if err := s.cache.Get(ctx, cacheKey, &tryout); err != nil {
+		if errors.Is(err, cache.ErrNotFound) {
+			var err error
+			tryout, err = s.repo.GetCurrentTryout(ctx, s.pool)
+			if err != nil {
+				return Tryout{}, err
+			}
+			_ = s.cache.Set(ctx, cacheKey, tryout, 24*time.Hour)
+		} else {
+			return Tryout{}, err
+		}
+	}
+	return tryout, nil
+}
+
 func (s *Service) GetCurrentTryout(ctx context.Context, userID string) (map[string]any, error) {
-	tryout, err := s.repo.GetCurrentTryout(ctx, s.pool)
+	tryout, err := s.getCurrentTryoutCached(ctx)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, httpx.NotFound("no ongoing tryout")
@@ -51,7 +69,7 @@ func (s *Service) GetCurrentTryout(ctx context.Context, userID string) (map[stri
 }
 
 func (s *Service) StartCurrentTryout(ctx context.Context, userID string) (map[string]any, error) {
-	tryout, err := s.repo.GetCurrentTryout(ctx, s.pool)
+	tryout, err := s.getCurrentTryoutCached(ctx)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, httpx.NotFound("no ongoing tryout")
@@ -111,7 +129,7 @@ func (s *Service) StartCurrentTryout(ctx context.Context, userID string) (map[st
 }
 
 func (s *Service) GetCurrentAttempt(ctx context.Context, userID string) (map[string]any, error) {
-	tryout, err := s.repo.GetCurrentTryout(ctx, s.pool)
+	tryout, err := s.getCurrentTryoutCached(ctx)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, httpx.NotFound("no ongoing tryout")
@@ -164,7 +182,7 @@ func (s *Service) SaveCurrentAnswers(ctx context.Context, userID string, req Sav
 	if len(req.Answers) == 0 {
 		return nil, httpx.BadRequest("answers payload is required")
 	}
-	tryout, err := s.repo.GetCurrentTryout(ctx, s.pool)
+	tryout, err := s.getCurrentTryoutCached(ctx)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, httpx.NotFound("no ongoing tryout")
@@ -240,7 +258,7 @@ func (s *Service) SaveCurrentAnswers(ctx context.Context, userID string, req Sav
 }
 
 func (s *Service) SubmitCurrentAttempt(ctx context.Context, userID string, req SubmitAttemptRequest) (map[string]any, error) {
-	tryout, err := s.repo.GetCurrentTryout(ctx, s.pool)
+	tryout, err := s.getCurrentTryoutCached(ctx)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, httpx.NotFound("no ongoing tryout")
@@ -331,7 +349,7 @@ func (s *Service) SubmitCurrentAttempt(ctx context.Context, userID string, req S
 }
 
 func (s *Service) GetCurrentResult(ctx context.Context, userID string) (map[string]any, error) {
-	tryout, err := s.repo.GetCurrentTryout(ctx, s.pool)
+	tryout, err := s.getCurrentTryoutCached(ctx)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, httpx.NotFound("no ongoing tryout")
@@ -356,7 +374,7 @@ func (s *Service) GetCurrentResult(ctx context.Context, userID string) (map[stri
 }
 
 func (s *Service) GetCurrentLeaderboard(ctx context.Context, userID string, limit, offset int) (map[string]any, error) {
-	tryout, err := s.repo.GetCurrentTryout(ctx, s.pool)
+	tryout, err := s.getCurrentTryoutCached(ctx)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, httpx.NotFound("no ongoing tryout")
@@ -396,12 +414,7 @@ func (s *Service) GetCurrentLeaderboard(ctx context.Context, userID string, limi
 }
 
 func (s *Service) syncExpiredAttempt(ctx context.Context, userID, tryoutID string) error {
-	tx, err := s.repo.Begin(ctx, s.pool)
-	if err != nil {
-		return httpx.Internal("failed to start expiry transaction")
-	}
-	defer tx.Rollback(ctx)
-	attempt, err := s.repo.LockAttemptByUserTryout(ctx, tx, userID, tryoutID)
+	attempt, err := s.repo.GetAttemptByUserTryout(ctx, s.pool, userID, tryoutID)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil
@@ -409,8 +422,13 @@ func (s *Service) syncExpiredAttempt(ctx context.Context, userID, tryoutID strin
 		return httpx.Internal("failed to fetch attempt state")
 	}
 	if attempt.Status != "ongoing" || !time.Now().UTC().After(attempt.ExpiresAt) {
-		return tx.Commit(ctx)
+		return nil
 	}
+	tx, err := s.repo.Begin(ctx, s.pool)
+	if err != nil {
+		return httpx.Internal("failed to start expiry transaction")
+	}
+	defer tx.Rollback(ctx)
 	if _, err := s.finalizeAttemptTx(ctx, tx, attempt, true); err != nil {
 		return err
 	}
