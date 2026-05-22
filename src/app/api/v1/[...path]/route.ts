@@ -23,6 +23,32 @@ const HOP_BY_HOP_HEADERS = new Set([
 async function proxy(request: NextRequest, context: RouteContext) {
   const { path } = await context.params;
   const targetPath = `/api/v1/${path.join("/")}`;
+  const body = await cloneRequestBody(request);
+
+  let backendResponse = await forward(request, targetPath, body);
+
+  if (backendResponse.status === 401 && targetPath !== "/api/v1/auth/refresh") {
+    const refreshResponse = await forward(request, "/api/v1/auth/refresh", undefined);
+    if (refreshResponse.ok) {
+      const refreshedCookies = extractSetCookies(refreshResponse.headers);
+      backendResponse = await forward(request, targetPath, body, refreshedCookies);
+      const response = buildResponse(backendResponse, request);
+      for (const cookie of refreshedCookies) {
+        response.headers.append("set-cookie", normalizeSetCookie(cookie, request));
+      }
+      return response;
+    }
+  }
+
+  return buildResponse(backendResponse, request);
+}
+
+async function forward(
+  request: NextRequest,
+  targetPath: string,
+  body: ArrayBuffer | undefined,
+  overrideCookies?: string[]
+) {
   const targetUrl = new URL(`${backendBaseUrl()}${targetPath}`);
   targetUrl.search = request.nextUrl.search;
 
@@ -42,15 +68,20 @@ async function proxy(request: NextRequest, context: RouteContext) {
     }
   });
 
-  const hasBody = request.method !== "GET" && request.method !== "HEAD";
-  const backendResponse = await fetch(targetUrl, {
+  if (overrideCookies && overrideCookies.length > 0) {
+    headers.set("cookie", overrideCookies.join("; "));
+  }
+
+  return fetch(targetUrl, {
     method: request.method,
     headers,
-    body: hasBody ? await request.arrayBuffer() : undefined,
+    body,
     cache: "no-store",
     redirect: "manual",
   });
+}
 
+function buildResponse(backendResponse: Response, request: NextRequest) {
   const responseHeaders = new Headers();
   backendResponse.headers.forEach((value, key) => {
     if (!HOP_BY_HOP_HEADERS.has(key.toLowerCase()) && key.toLowerCase() !== "set-cookie") {
@@ -69,6 +100,17 @@ async function proxy(request: NextRequest, context: RouteContext) {
   }
 
   return response;
+}
+
+function extractSetCookies(headers: Headers) {
+  return getSetCookies(headers);
+}
+
+async function cloneRequestBody(request: NextRequest) {
+  if (request.method === "GET" || request.method === "HEAD") {
+    return undefined;
+  }
+  return request.arrayBuffer();
 }
 
 export const GET = proxy;

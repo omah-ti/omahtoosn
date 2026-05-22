@@ -6,8 +6,9 @@ const AUTH_ROUTES = ["/login", "/signup", "/forgot-password"];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const accessToken = request.cookies.get("access_token")?.value;
-  const isLoggedIn = !!accessToken;
+  const hasAccessToken = !!request.cookies.get("access_token")?.value;
+  const hasRefreshToken = !!request.cookies.get("refresh_token")?.value;
+  const isLoggedIn = hasAccessToken || hasRefreshToken;
 
   const isProtected = PROTECTED_PREFIXES.some(
     (prefix) => pathname === prefix || pathname.startsWith(prefix + "/")
