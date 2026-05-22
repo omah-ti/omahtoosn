@@ -26,10 +26,21 @@ async function proxy(request: NextRequest, context: RouteContext) {
   const targetUrl = new URL(`${backendBaseUrl()}${targetPath}`);
   targetUrl.search = request.nextUrl.search;
 
-  const headers = new Headers(request.headers);
-  for (const header of HOP_BY_HOP_HEADERS) {
-    headers.delete(header);
-  }
+  const allowedHeaders = new Set([
+    "content-type",
+    "accept",
+    "authorization",
+    "cookie",
+    "origin",
+    "x-device-id",
+  ]);
+
+  const headers = new Headers();
+  request.headers.forEach((value, key) => {
+    if (allowedHeaders.has(key.toLowerCase())) {
+      headers.set(key, value);
+    }
+  });
 
   const hasBody = request.method !== "GET" && request.method !== "HEAD";
   const backendResponse = await fetch(targetUrl, {

@@ -89,6 +89,7 @@ func main() {
 		AppName:               cfg.AppName,
 		DisableStartupMessage: true,
 		ErrorHandler:          httpx.ErrorHandler,
+		ReadBufferSize:        16384,
 	})
 
 	// middleware
