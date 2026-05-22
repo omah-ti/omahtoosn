@@ -61,6 +61,7 @@ export default function TryoutPage() {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showTimeoutModal, setShowTimeoutModal] = useState(false);
   const [showDaftarSoal, setShowDaftarSoal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pendingSaveRef = useRef<{ index: number; value: string; isFlagged: boolean } | null>(null);
@@ -97,7 +98,7 @@ export default function TryoutPage() {
     }
   }, [questions, attempt]);
 
-  const flushSave = useCallback(() => {
+  const flushSave = useCallback(async () => {
     if (saveTimerRef.current) {
       clearTimeout(saveTimerRef.current);
       saveTimerRef.current = null;
@@ -105,7 +106,7 @@ export default function TryoutPage() {
     if (pendingSaveRef.current) {
       const { index, value, isFlagged } = pendingSaveRef.current;
       pendingSaveRef.current = null;
-      void saveAnswer(index, value, isFlagged);
+      await saveAnswer(index, value, isFlagged);
     }
   }, [saveAnswer]);
 
@@ -123,7 +124,7 @@ export default function TryoutPage() {
 
   useEffect(() => {
     return () => {
-      flushSave();
+      void flushSave();
     };
   }, [flushSave]);
 
@@ -208,12 +209,12 @@ export default function TryoutPage() {
   const currentSoal = questions[currentIndex];
 
   const handleNext = () => {
-    flushSave();
+    void flushSave();
     if (currentIndex < questions.length - 1) setCurrentIndex(currentIndex + 1);
   };
 
   const handlePrev = () => {
-    flushSave();
+    void flushSave();
     if (currentIndex > 0) setCurrentIndex(currentIndex - 1);
   };
 
@@ -228,7 +229,7 @@ export default function TryoutPage() {
   };
 
   const handleToggleRagu = () => {
-    flushSave();
+    void flushSave();
     const nextFlag = !raguRagu[currentIndex];
     setRaguRagu(prev => ({ ...prev, [currentIndex]: nextFlag }));
     void saveAnswer(currentIndex, answers[currentIndex] || "", nextFlag);
@@ -243,9 +244,14 @@ export default function TryoutPage() {
     }
   };
 
-  const handleFinalSubmit = () => {
-    flushSave();
-    if (!attempt) return;
+  const handleFinalSubmit = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    await flushSave();
+    if (!attempt) {
+      setIsSubmitting(false);
+      return;
+    }
     fetch("/api/v1/attempts/current/submit", {
       method: "POST",
       headers: {
@@ -253,18 +259,9 @@ export default function TryoutPage() {
       },
       body: JSON.stringify({
         attempt_version: attempt.version,
-        final_answers: questions.map((question, index) => {
-          const value = answers[index] || "";
-          const isShortText = question.question_type === "short_text";
-          return {
-            question_id: question.id,
-            selected_option_key: isShortText || value === "" ? null : value,
-            answer_text: isShortText && value !== "" ? value : null,
-            is_flagged: raguRagu[index] === true,
-          };
-        }),
       }),
     }).then(async (res) => {
+      setIsSubmitting(false);
       if (!res.ok) {
         const payload = await res.json().catch(() => null);
         alert(payload?.message || "Gagal mengirim jawaban");
@@ -273,6 +270,9 @@ export default function TryoutPage() {
       setShowConfirmModal(false);
       setShowTimeoutModal(false);
       router.push("/dashboard");
+    }).catch(() => {
+      setIsSubmitting(false);
+      alert("Gagal mengirim jawaban");
     });
   };
 
@@ -347,7 +347,7 @@ export default function TryoutPage() {
                     <button
                       key={idx}
                       onClick={() => {
-                        flushSave();
+                        void flushSave();
                         setCurrentIndex(idx);
                         setShowDaftarSoal(false);
                       }}
@@ -410,9 +410,10 @@ export default function TryoutPage() {
               <Button 
                 onClick={handleFinalSubmit}
                 variant="primary"
-                className="flex-1 h-10 bg-[#2563EB] text-white font-semibold hover:bg-blue-700"
+                disabled={isSubmitting}
+                className={`flex-1 h-10 bg-[#2563EB] text-white font-semibold hover:bg-blue-700 ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
               >
-                Kirim Sekarang
+                {isSubmitting ? 'Mengirim...' : 'Kirim Sekarang'}
               </Button>
             </div>
           </div>
@@ -431,9 +432,10 @@ export default function TryoutPage() {
               <Button 
                 onClick={handleFinalSubmit}
                 variant="primary"
-                className="w-full h-10 bg-[#2563EB] text-white font-semibold hover:bg-blue-700"
+                disabled={isSubmitting}
+                className={`w-full h-10 bg-[#2563EB] text-white font-semibold hover:bg-blue-700 ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
               >
-                Kirim Sekarang
+                {isSubmitting ? 'Mengirim...' : 'Kirim Sekarang'}
               </Button>
             </div>
           </div>

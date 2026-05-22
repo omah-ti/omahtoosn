@@ -436,6 +436,7 @@ func (s *Service) finalizeAttemptTx(ctx context.Context, tx pgx.Tx, attempt Atte
 	unansweredCount := 0
 	finalScore := 0.0
 
+	scores := make([]AnswerScore, 0, len(questions))
 	for _, question := range questions {
 		answer, exists := answers[question.ID]
 		if !exists || isBlankAnswer(answer) {
@@ -453,16 +454,15 @@ func (s *Service) finalizeAttemptTx(ctx context.Context, tx pgx.Tx, attempt Atte
 		if isCorrect {
 			correctCount++
 			finalScore += question.Points
-			flag := true
-			if err := s.repo.UpdateAnswerScore(ctx, tx, attempt.ID, question.ID, &flag, question.Points); err != nil {
-				return Attempt{}, httpx.Internal("failed to update answer score")
-			}
+			scores = append(scores, AnswerScore{QuestionID: question.ID, IsCorrect: true, AwardedPoints: question.Points})
 		} else {
 			wrongCount++
-			flag := false
-			if err := s.repo.UpdateAnswerScore(ctx, tx, attempt.ID, question.ID, &flag, 0); err != nil {
-				return Attempt{}, httpx.Internal("failed to update answer score")
-			}
+			scores = append(scores, AnswerScore{QuestionID: question.ID, IsCorrect: false, AwardedPoints: 0})
+		}
+	}
+	if len(scores) > 0 {
+		if err := s.repo.BatchUpdateAnswerScores(ctx, tx, attempt.ID, scores); err != nil {
+			return Attempt{}, httpx.Internal("failed to update answer scores")
 		}
 	}
 	status := "submitted"
