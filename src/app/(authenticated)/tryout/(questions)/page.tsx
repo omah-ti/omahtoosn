@@ -5,12 +5,7 @@ import { useRouter } from "next/navigation";
 import { Grid, ChevronLeft, ChevronRight, CheckSquare, Square, X } from "lucide-react";
 import Container from "@/components/ui/container";
 import Button from "@/components/ui/button";
-
-type ApiEnvelope<T> = {
-  success: boolean;
-  message: string;
-  data?: T;
-};
+import { apiFetch } from "@/lib/api-client";
 
 type TryoutQuestion = {
   id: string;
@@ -71,11 +66,8 @@ export default function TryoutPage() {
     if (!question || !attempt) return;
 
     const isShortText = question.question_type === "short_text";
-    const res = await fetch("/api/v1/attempts/current/answers", {
+    const result = await apiFetch<{ attempt: Attempt }>("/api/v1/attempts/current/answers", {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify({
         attempt_version: attempt.version,
         answers: [
@@ -90,11 +82,8 @@ export default function TryoutPage() {
       }),
     });
 
-    if (res.ok) {
-      const payload = (await res.json().catch(() => null)) as ApiEnvelope<{ attempt: Attempt }> | null;
-      if (payload?.data?.attempt) {
-        setAttempt(payload.data.attempt);
-      }
+    if (result.ok && result.data.attempt) {
+      setAttempt(result.data.attempt);
     }
   }, [questions, attempt]);
 
@@ -132,44 +121,38 @@ export default function TryoutPage() {
     setLoading(true);
     setLoadError("");
 
-    let res = await fetch("/api/v1/attempts/current", { cache: "no-store" });
-    if (res.status === 404) {
-      const startRes = await fetch("/api/v1/tryouts/current/start", { method: "POST" });
-      if (startRes.status === 401) {
-        router.push("/login");
-        return;
-      }
-      if (!startRes.ok) {
-        const payload = await startRes.json().catch(() => null);
-        setLoadError(payload?.message || "Gagal memulai tryout");
+    let result = await apiFetch<AttemptPayload>("/api/v1/attempts/current", {
+      cache: "no-store",
+    });
+
+    if (!result.ok && result.status === 404) {
+      const startResult = await apiFetch("/api/v1/tryouts/current/start", {
+        method: "POST",
+      });
+
+      if (!startResult.ok) {
+        setLoadError(startResult.message || "Gagal memulai tryout");
         setLoading(false);
         return;
       }
-      res = await fetch("/api/v1/attempts/current", { cache: "no-store" });
+
+      result = await apiFetch<AttemptPayload>("/api/v1/attempts/current", {
+        cache: "no-store",
+      });
     }
 
-    if (res.status === 401) {
-      router.push("/login");
-      return;
-    }
-    if (!res.ok) {
-      const payload = await res.json().catch(() => null);
-      setLoadError(payload?.message || "Gagal memuat tryout");
+    if (!result.ok) {
+      setLoadError(result.message || "Gagal memuat tryout");
       setLoading(false);
       return;
     }
 
-    const payload = (await res.json()) as ApiEnvelope<AttemptPayload>;
-    if (!payload.success || !payload.data) {
-      setLoadError(payload.message || "Gagal memuat tryout");
-      setLoading(false);
-      return;
-    }
+    const payload = result.data;
 
-    const answerByQuestion = new Map(payload.data.answers.map((answer) => [answer.question_id, answer]));
+    const answerByQuestion = new Map(payload.answers.map((answer) => [answer.question_id, answer]));
     const nextAnswers: Record<number, string> = {};
     const nextFlags: Record<number, boolean> = {};
-    payload.data.questions.forEach((question, index) => {
+    payload.questions.forEach((question, index) => {
       const answer = answerByQuestion.get(question.id);
       if (!answer) return;
       if (answer.selected_option_key) nextAnswers[index] = answer.selected_option_key;
@@ -177,13 +160,13 @@ export default function TryoutPage() {
       if (answer.is_flagged) nextFlags[index] = true;
     });
 
-    setQuestions(payload.data.questions);
-    setAttempt(payload.data.attempt);
+    setQuestions(payload.questions);
+    setAttempt(payload.attempt);
     setAnswers(nextAnswers);
     setRaguRagu(nextFlags);
-    setTimeLeft(Math.max(0, Math.floor((new Date(payload.data.attempt.expires_at).getTime() - Date.now()) / 1000)));
+    setTimeLeft(Math.max(0, Math.floor((new Date(payload.attempt.expires_at).getTime() - Date.now()) / 1000)));
     setLoading(false);
-  }, [router]);
+  }, []);
 
   useEffect(() => {
     void Promise.resolve().then(loadAttempt);
@@ -252,28 +235,22 @@ export default function TryoutPage() {
       setIsSubmitting(false);
       return;
     }
-    fetch("/api/v1/attempts/current/submit", {
+
+    const result = await apiFetch("/api/v1/attempts/current/submit", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify({
         attempt_version: attempt.version,
       }),
-    }).then(async (res) => {
-      setIsSubmitting(false);
-      if (!res.ok) {
-        const payload = await res.json().catch(() => null);
-        alert(payload?.message || "Gagal mengirim jawaban");
-        return;
-      }
-      setShowConfirmModal(false);
-      setShowTimeoutModal(false);
-      router.push("/dashboard");
-    }).catch(() => {
-      setIsSubmitting(false);
-      alert("Gagal mengirim jawaban");
     });
+
+    setIsSubmitting(false);
+    if (!result.ok) {
+      alert(result.message || "Gagal mengirim jawaban");
+      return;
+    }
+    setShowConfirmModal(false);
+    setShowTimeoutModal(false);
+    router.push("/dashboard");
   };
 
   const formatTime = (seconds: number) => {

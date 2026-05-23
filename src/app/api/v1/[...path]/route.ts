@@ -20,6 +20,33 @@ const HOP_BY_HOP_HEADERS = new Set([
   "upgrade",
 ]);
 
+/**
+ * Refresh mutex — mencegah race condition ketika banyak request 401 barengan.
+ * Hanya 1 refresh yang jalan; yang lain menunggu hasilnya.
+ */
+let refreshPromise: Promise<{ setCookies: string[]; mergedCookie: string } | null> | null = null;
+
+async function acquireRefresh(
+  request: NextRequest,
+): Promise<{ setCookies: string[]; mergedCookie: string } | null> {
+  if (refreshPromise) return refreshPromise;
+
+  refreshPromise = (async () => {
+    try {
+      const refreshResponse = await forward(request, "/api/v1/auth/refresh", undefined);
+      if (!refreshResponse.ok) return null;
+
+      const setCookies = getSetCookies(refreshResponse.headers);
+      const mergedCookie = mergeCookies(request.headers.get("cookie") || "", setCookies);
+      return { setCookies, mergedCookie };
+    } finally {
+      refreshPromise = null;
+    }
+  })();
+
+  return refreshPromise;
+}
+
 async function proxy(request: NextRequest, context: RouteContext) {
   const { path } = await context.params;
   const targetPath = `/api/v1/${path.join("/")}`;
@@ -28,13 +55,12 @@ async function proxy(request: NextRequest, context: RouteContext) {
   let backendResponse = await forward(request, targetPath, body);
 
   if (backendResponse.status === 401 && targetPath !== "/api/v1/auth/refresh") {
-    const refreshResponse = await forward(request, "/api/v1/auth/refresh", undefined);
-    if (refreshResponse.ok) {
-      const refreshedSetCookies = getSetCookies(refreshResponse.headers);
-      const mergedCookieHeader = mergeCookies(request.headers.get("cookie") || "", refreshedSetCookies);
-      backendResponse = await forward(request, targetPath, body, mergedCookieHeader);
+    const refreshResult = await acquireRefresh(request);
+
+    if (refreshResult) {
+      backendResponse = await forward(request, targetPath, body, refreshResult.mergedCookie);
       const response = buildResponse(backendResponse, request);
-      for (const cookie of refreshedSetCookies) {
+      for (const cookie of refreshResult.setCookies) {
         response.headers.append("set-cookie", normalizeSetCookie(cookie, request));
       }
       return response;
