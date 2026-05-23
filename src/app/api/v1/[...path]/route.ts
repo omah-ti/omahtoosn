@@ -33,11 +33,25 @@ async function acquireRefresh(
 
   refreshPromise = (async () => {
     try {
+      const incomingCookies = request.headers.get("cookie") || "";
+      console.log("[refresh] incoming cookies:", incomingCookies);
+
       const refreshResponse = await forward(request, "/api/v1/auth/refresh", undefined);
-      if (!refreshResponse.ok) return null;
+      console.log("[refresh] response status:", refreshResponse.status);
+
+      if (!refreshResponse.ok) {
+        const body = await refreshResponse.text().catch(() => "");
+        console.log("[refresh] failed body:", body);
+        return null;
+      }
 
       const setCookies = getSetCookies(refreshResponse.headers);
-      const mergedCookie = mergeCookies(request.headers.get("cookie") || "", setCookies);
+      console.log("[refresh] set-cookie count:", setCookies.length);
+      console.log("[refresh] set-cookie values:", setCookies);
+
+      const mergedCookie = mergeCookies(incomingCookies, setCookies);
+      console.log("[refresh] merged cookie:", mergedCookie);
+
       return { setCookies, mergedCookie };
     } finally {
       refreshPromise = null;
@@ -65,6 +79,11 @@ async function proxy(request: NextRequest, context: RouteContext) {
       }
       return response;
     }
+
+    const response = buildResponse(backendResponse, request);
+    response.headers.append("set-cookie", "access_token=; Path=/; Max-Age=0; HttpOnly");
+    response.headers.append("set-cookie", "refresh_token=; Path=/; Max-Age=0; HttpOnly");
+    return response;
   }
 
   return buildResponse(backendResponse, request);
@@ -189,5 +208,10 @@ function normalizeSetCookie(cookie: string, request: NextRequest) {
       .replace(/;\s*Secure/gi, "")
       .replace(/;\s*SameSite=None/gi, "; SameSite=Lax");
   }
+
+  if (!/;\s*Path=/i.test(nextCookie)) {
+    nextCookie += "; Path=/";
+  }
+
   return nextCookie;
 }
