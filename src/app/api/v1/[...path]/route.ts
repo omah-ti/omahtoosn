@@ -34,23 +34,16 @@ async function acquireRefresh(
   refreshPromise = (async () => {
     try {
       const incomingCookies = request.headers.get("cookie") || "";
-      console.log("[refresh] incoming cookies:", incomingCookies);
-
-      const refreshResponse = await forward(request, "/api/v1/auth/refresh", undefined);
-      console.log("[refresh] response status:", refreshResponse.status);
+      const refreshResponse = await forward(request, "/api/v1/auth/refresh", {
+        method: "POST",
+      });
 
       if (!refreshResponse.ok) {
-        const body = await refreshResponse.text().catch(() => "");
-        console.log("[refresh] failed body:", body);
         return null;
       }
 
       const setCookies = getSetCookies(refreshResponse.headers);
-      console.log("[refresh] set-cookie count:", setCookies.length);
-      console.log("[refresh] set-cookie values:", setCookies);
-
       const mergedCookie = mergeCookies(incomingCookies, setCookies);
-      console.log("[refresh] merged cookie:", mergedCookie);
 
       return { setCookies, mergedCookie };
     } finally {
@@ -66,13 +59,16 @@ async function proxy(request: NextRequest, context: RouteContext) {
   const targetPath = `/api/v1/${path.join("/")}`;
   const body = await cloneRequestBody(request);
 
-  let backendResponse = await forward(request, targetPath, body);
+  let backendResponse = await forward(request, targetPath, { body });
 
   if (backendResponse.status === 401 && targetPath !== "/api/v1/auth/refresh") {
     const refreshResult = await acquireRefresh(request);
 
     if (refreshResult) {
-      backendResponse = await forward(request, targetPath, body, refreshResult.mergedCookie);
+      backendResponse = await forward(request, targetPath, {
+        body,
+        cookieHeader: refreshResult.mergedCookie,
+      });
       const response = buildResponse(backendResponse, request);
       for (const cookie of refreshResult.setCookies) {
         response.headers.append("set-cookie", normalizeSetCookie(cookie, request));
@@ -92,8 +88,11 @@ async function proxy(request: NextRequest, context: RouteContext) {
 async function forward(
   request: NextRequest,
   targetPath: string,
-  body: ArrayBuffer | undefined,
-  cookieHeader?: string
+  options: {
+    body?: ArrayBuffer;
+    cookieHeader?: string;
+    method?: string;
+  } = {},
 ) {
   const targetUrl = new URL(`${backendBaseUrl()}${targetPath}`);
   targetUrl.search = request.nextUrl.search;
@@ -113,12 +112,12 @@ async function forward(
     }
   });
 
-  headers.set("cookie", cookieHeader ?? (request.headers.get("cookie") ?? ""));
+  headers.set("cookie", options.cookieHeader ?? (request.headers.get("cookie") ?? ""));
 
   return fetch(targetUrl, {
-    method: request.method,
+    method: options.method ?? request.method,
     headers,
-    body,
+    body: options.body,
     cache: "no-store",
     redirect: "manual",
   });
