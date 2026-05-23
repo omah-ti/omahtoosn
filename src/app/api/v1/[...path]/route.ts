@@ -30,10 +30,11 @@ async function proxy(request: NextRequest, context: RouteContext) {
   if (backendResponse.status === 401 && targetPath !== "/api/v1/auth/refresh") {
     const refreshResponse = await forward(request, "/api/v1/auth/refresh", undefined);
     if (refreshResponse.ok) {
-      const refreshedCookies = extractSetCookies(refreshResponse.headers);
-      backendResponse = await forward(request, targetPath, body, refreshedCookies);
+      const refreshedSetCookies = getSetCookies(refreshResponse.headers);
+      const mergedCookieHeader = mergeCookies(request.headers.get("cookie") || "", refreshedSetCookies);
+      backendResponse = await forward(request, targetPath, body, mergedCookieHeader);
       const response = buildResponse(backendResponse, request);
-      for (const cookie of refreshedCookies) {
+      for (const cookie of refreshedSetCookies) {
         response.headers.append("set-cookie", normalizeSetCookie(cookie, request));
       }
       return response;
@@ -47,7 +48,7 @@ async function forward(
   request: NextRequest,
   targetPath: string,
   body: ArrayBuffer | undefined,
-  overrideCookies?: string[]
+  cookieHeader?: string
 ) {
   const targetUrl = new URL(`${backendBaseUrl()}${targetPath}`);
   targetUrl.search = request.nextUrl.search;
@@ -56,7 +57,6 @@ async function forward(
     "content-type",
     "accept",
     "authorization",
-    "cookie",
     "origin",
     "x-device-id",
   ]);
@@ -68,9 +68,7 @@ async function forward(
     }
   });
 
-  if (overrideCookies && overrideCookies.length > 0) {
-    headers.set("cookie", overrideCookies.join("; "));
-  }
+  headers.set("cookie", cookieHeader ?? (request.headers.get("cookie") ?? ""));
 
   return fetch(targetUrl, {
     method: request.method,
@@ -102,8 +100,33 @@ function buildResponse(backendResponse: Response, request: NextRequest) {
   return response;
 }
 
-function extractSetCookies(headers: Headers) {
-  return getSetCookies(headers);
+function mergeCookies(originalCookieHeader: string, setCookieStrings: string[]): string {
+  const cookies = parseCookieHeader(originalCookieHeader);
+  for (const str of setCookieStrings) {
+    const firstSemi = str.indexOf(";");
+    const nv = firstSemi >= 0 ? str.substring(0, firstSemi).trim() : str.trim();
+    const eq = nv.indexOf("=");
+    if (eq > 0) {
+      cookies.set(nv.substring(0, eq).trim(), nv.substring(eq + 1).trim());
+    }
+  }
+  return Array.from(cookies.entries())
+    .map(([name, value]) => `${name}=${value}`)
+    .join("; ");
+}
+
+function parseCookieHeader(cookieHeader: string): Map<string, string> {
+  const map = new Map<string, string>();
+  if (!cookieHeader) return map;
+  cookieHeader.split(";").forEach((part) => {
+    const trimmed = part.trim();
+    if (!trimmed) return;
+    const eq = trimmed.indexOf("=");
+    if (eq > 0) {
+      map.set(trimmed.substring(0, eq).trim(), trimmed.substring(eq + 1).trim());
+    }
+  });
+  return map;
 }
 
 async function cloneRequestBody(request: NextRequest) {
