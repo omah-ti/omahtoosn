@@ -39,7 +39,11 @@ type AttemptPayload = {
   attempt: Attempt;
   questions: TryoutQuestion[];
   answers: AttemptAnswer[];
-  server_time: string;
+};
+
+const getRemainingSeconds = () => {
+  const end = new Date("2026-05-31T11:30:00+07:00").getTime();
+  return Math.max(0, Math.floor((end - Date.now()) / 1000));
 };
 
 export default function TryoutPage() {
@@ -52,7 +56,7 @@ export default function TryoutPage() {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
 
-  const [timeLeft, setTimeLeft] = useState(9000);
+  const [timeLeft, setTimeLeft] = useState(() => getRemainingSeconds());
   const [showToast, setShowToast] = useState(false);
   const [showRaguModal, setShowRaguModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -62,6 +66,7 @@ export default function TryoutPage() {
 
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pendingSaveRef = useRef<{ index: number; value: string; isFlagged: boolean } | null>(null);
+  const toastShownRef = useRef(false);
 
   const saveAnswer = useCallback(async (index: number, value: string, isFlagged: boolean) => {
     const question = questions[index];
@@ -123,6 +128,17 @@ export default function TryoutPage() {
     setLoading(true);
     setLoadError("");
 
+    // Time slot gate for accessing the tryout
+    const start = new Date("2026-05-31T09:00:00+07:00").getTime();
+    const end = new Date("2026-05-31T11:30:00+07:00").getTime();
+    const now = Date.now();
+
+    if (now < start || now > end) {
+      setLoadError("Tryout tidak aktif saat ini. Sesi hanya tersedia pada 31 Mei 2026, pukul 09:00 - 11:30 WIB.");
+      setLoading(false);
+      return;
+    }
+
     let result = await apiFetch<AttemptPayload>("/api/v1/attempts/current", {
       cache: "no-store",
     });
@@ -166,15 +182,7 @@ export default function TryoutPage() {
     setAttempt(payload.attempt);
     setAnswers(nextAnswers);
     setRaguRagu(nextFlags);
-
-    const serverTime = new Date(payload.server_time).getTime();
-    const localTime = Date.now();
-    const drift = serverTime - localTime;
-
-    const expiresAt = new Date(payload.attempt.expires_at).getTime();
-    const adjustedNow = Date.now() + drift;
-    const secondsLeft = Math.max(0, Math.floor((expiresAt - adjustedNow) / 1000));
-    setTimeLeft(secondsLeft);
+    setTimeLeft(getRemainingSeconds());
     setLoading(false);
   }, []);
 
@@ -183,21 +191,19 @@ export default function TryoutPage() {
   }, [loadAttempt]);
 
   useEffect(() => {
-    if (timeLeft <= 0) {
-      return;
-    }
+    const updateTimer = () => {
+      const remaining = getRemainingSeconds();
+      setTimeLeft(remaining);
+      if (remaining <= 600 && remaining > 0 && !toastShownRef.current) {
+        setShowToast(true);
+        toastShownRef.current = true;
+      }
+    };
 
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev === 601) {
-          setShowToast(true);
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
+    updateTimer();
+    const timer = setInterval(updateTimer, 1000);
     return () => clearInterval(timer);
-  }, [timeLeft]);
+  }, []);
 
   const currentSoal = questions[currentIndex];
 

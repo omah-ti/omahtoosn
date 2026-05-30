@@ -90,7 +90,7 @@ func (s *Service) StartCurrentTryout(ctx context.Context, userID string) (map[st
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			expiresAt := time.Now().UTC().Add(time.Duration(tryout.DurationMinutes) * time.Minute)
-			if tryout.EndsAt != nil {
+			if tryout.EndsAt != nil && tryout.EndsAt.Before(expiresAt) {
 				expiresAt = *tryout.EndsAt
 			}
 			attempt, err = s.repo.CreateAttempt(ctx, tx, userID, tryout.ID, expiresAt, tryout.QuestionCount)
