@@ -1,5 +1,3 @@
-import React from 'react'
-
 const KonfirmasiCard = () => {
     return (
         <div className='bg-primary-background box-border flex flex-col w-full w-max-[398px] h-[190px] md:w-[264px] md:h-[294px] rounded-[20px] shadow-[0_2px_10px_0_rgba(0,0,0,0.25)] justify-center p-6 gap-3'>
@@ -8,8 +6,8 @@ const KonfirmasiCard = () => {
             <div className='flex-col gap-px'>
                 <p className='text-base font-normal'>Waktu Tes</p>
                 <div className='flex justify-between'>
-                    <p className='text-base font-bold'>06/03/2026</p>
-                    <p className='text-base font-bold'>09:00 WIB</p>
+                    <p className='text-base font-bold'>31/05/2026</p>
+                    <p className='text-base font-bold'>09:00 - 11:30 WIB</p>
                 </div>
             </div>
             <div className='flex flex-row justify-between md:flex-col gap-3'>

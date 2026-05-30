@@ -6,6 +6,7 @@ import { Grid, ChevronLeft, ChevronRight, CheckSquare, Square, X } from "lucide-
 import Container from "@/components/ui/container";
 import Button from "@/components/ui/button";
 import { apiFetch } from "@/lib/api-client";
+import Latex from "@/components/ui/latex";
 
 type TryoutQuestion = {
   id: string;
@@ -50,7 +51,7 @@ export default function TryoutPage() {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
 
-  const [timeLeft, setTimeLeft] = useState(601);
+  const [timeLeft, setTimeLeft] = useState(9000);
   const [showToast, setShowToast] = useState(false);
   const [showRaguModal, setShowRaguModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -306,7 +307,7 @@ export default function TryoutPage() {
               </button>
             </div>
             <div className="p-10">
-              <div className="grid grid-cols-10 max-w-[640px] w-full gap-3 md:gap-4 justify-center items-center">
+              <div className="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 max-w-[640px] w-full gap-3 md:gap-4 justify-center items-center justify-items-center">
                 {questions.map((soal, idx) => {
                   const isRagu = raguRagu[idx];
                   const isAnswered = answers[idx] !== undefined && answers[idx] !== '';
@@ -437,10 +438,10 @@ export default function TryoutPage() {
           </div>
 
           <div className="flex flex-col lg:flex-row gap-6">
-            <div className="flex-1 bg-white rounded-xl p-6 md:p-8 shadow-sm min-h-[400px] max-h-[60vh] overflow-y-auto">
-              <div
-                className="text-neutral-800 leading-relaxed text-sm md:text-base text-justify whitespace-pre-line"
-                dangerouslySetInnerHTML={{ __html: currentSoal.prompt_html }}
+            <div className="flex-1 bg-white rounded-xl p-6 md:p-8 shadow-sm min-h-[250px] lg:min-h-[400px] max-h-[60vh] overflow-y-auto">
+              <Latex
+                className="text-neutral-800 leading-relaxed text-sm md:text-base text-justify block whitespace-pre-line"
+                text={currentSoal.prompt_html}
               />
             </div>
 
@@ -462,18 +463,18 @@ export default function TryoutPage() {
                     />
                   ) : (
                     currentSoal.options?.map((opt, idx) => (
-                      <label key={idx} className="flex items-center gap-3 cursor-pointer group">
+                      <label key={idx} className="flex items-start gap-3 cursor-pointer group">
                         <input 
                           type="radio" 
                           name={`answer-${currentIndex}`} 
-                          className="w-4 h-4 accent-neutral-1000 cursor-pointer" 
+                          className="w-4 h-4 mt-1 accent-neutral-1000 cursor-pointer" 
                           checked={answers[currentIndex] === opt.key}
                           onChange={() => handleSelectOption(opt.key)}
                         />
-                        <span
-                          className="text-sm md:text-base text-neutral-800 group-hover:text-neutral-1000 transition-colors"
-                          dangerouslySetInnerHTML={{ __html: `${opt.key}. ${opt.text}` }}
-                        />
+                        <span className="text-sm md:text-base text-neutral-800 group-hover:text-neutral-1000 transition-colors flex items-start gap-1">
+                          <span className="font-bold">{opt.key}.</span>
+                          <Latex text={opt.text} />
+                        </span>
                       </label>
                     ))
                   )}
@@ -482,36 +483,36 @@ export default function TryoutPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
+          <div className="grid grid-cols-3 gap-2 md:gap-4 mt-2">
             <button 
               onClick={handlePrev}
               disabled={currentIndex === 0}
-              className={`w-full py-3 rounded-xl border border-primary-600 bg-transparent flex items-center justify-center gap-2 text-primary-600 font-semibold transition-colors cursor-pointer ${currentIndex === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-100'}`}
+              className={`w-full py-2.5 px-1 sm:py-3 sm:px-4 rounded-xl border border-primary-600 bg-transparent flex items-center justify-center gap-1 sm:gap-2 text-primary-600 text-xs sm:text-base font-semibold transition-colors cursor-pointer ${currentIndex === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-100'}`}
             >
-              <ChevronLeft className="w-5 h-5" />
+              <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
               Sebelumnya
             </button>
             <button 
               onClick={handleToggleRagu}
-              className={`w-full py-3 rounded-xl flex items-center justify-center gap-2 font-semibold transition-colors cursor-pointer ${raguRagu[currentIndex] ? 'bg-yellow-500 text-neutral-1000' : 'bg-[#FCD34D] text-neutral-1000 hover:bg-yellow-400'}`}
+              className={`w-full py-2.5 px-1 sm:py-3 sm:px-4 rounded-xl flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-base font-semibold transition-colors cursor-pointer ${raguRagu[currentIndex] ? 'bg-yellow-500 text-neutral-1000' : 'bg-[#FCD34D] text-neutral-1000 hover:bg-yellow-400'}`}
             >
-              {raguRagu[currentIndex] ? <CheckSquare className="w-5 h-5" /> : <Square className="w-5 h-5" />}
+              {raguRagu[currentIndex] ? <CheckSquare className="w-4 h-4 sm:w-5 sm:h-5" /> : <Square className="w-4 h-4 sm:w-5 sm:h-5" />}
               Ragu-ragu
             </button>
             {currentIndex === questions.length - 1 ? (
               <button 
                 onClick={handleSubmitClick}
-                className="w-full py-3 rounded-xl bg-[#2563EB] flex items-center justify-center gap-2 text-white font-semibold hover:bg-blue-700 transition-colors cursor-pointer"
+                className="w-full py-2.5 px-1 sm:py-3 sm:px-4 rounded-xl bg-[#2563EB] flex items-center justify-center gap-1 sm:gap-2 text-white text-xs sm:text-base font-semibold hover:bg-blue-700 transition-colors cursor-pointer"
               >
                 Submit
               </button>
             ) : (
               <button 
                 onClick={handleNext}
-                className="w-full py-3 rounded-xl bg-[#2563EB] flex items-center justify-center gap-2 text-white font-semibold hover:bg-blue-700 transition-colors cursor-pointer"
+                className="w-full py-2.5 px-1 sm:py-3 sm:px-4 rounded-xl bg-[#2563EB] flex items-center justify-center gap-1 sm:gap-2 text-white text-xs sm:text-base font-semibold hover:bg-blue-700 transition-colors cursor-pointer"
               >
                 Berikutnya
-                <ChevronRight className="w-5 h-5" />
+                <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
             )}
           </div>

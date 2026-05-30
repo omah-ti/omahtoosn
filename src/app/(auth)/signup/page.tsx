@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import type { FormEvent } from "react";
+import { ChevronLeft } from "lucide-react";
 
 export default function Signup() {
   const router = useRouter();
@@ -32,20 +33,14 @@ export default function Signup() {
   }
 
   return (
-    <main className="flex w-full min-h-screen items-center justify-center bg-gradient-to-t from-primary-900 to-primary-1000 text-black font-(Plus Jakarta Sans) px-4 py-16">
+    <main className="flex w-full min-h-screen items-center justify-center bg-linear-to-t from-primary-900 to-primary-1000 text-black font-(Plus Jakarta Sans) px-4 py-16">
 
       <button
         type="button"
         onClick={() => router.back()}
-        className="flex items-center gap-1 absolute left-10 top-15 sm:left-8 sm:top-8 rounded-lg bg-primary-600 px-3 py-2.5 sm:px-3 sm:py-2.5 text-sm font-medium text-white transition-colors"
+        className="flex items-center gap-1 absolute left-10 top-15 sm:left-8 sm:top-8 rounded-lg bg-primary-600 px-3 py-2 sm:px-3 sm:py-2 text-sm font-medium text-white transition-colors cursor-pointer"
       >
-        <Image
-          src="/images/arrow_1x.webp"
-          alt="Back arrow"
-          width={13}
-          height={13}
-          className="object-contain"
-        />
+        <ChevronLeft className="w-4 h-4 text-white" />
         <span>Kembali</span>
       </button>
 	  
@@ -53,7 +48,7 @@ export default function Signup() {
 
         <div className="flex flex-col items-center gap-3">
           <Image
-            src="/images/omahti-dark_2x.webp"
+            src="/logo/omahti-dark.webp"
             alt="Omahti Logo"
             width={72}
             height={72}

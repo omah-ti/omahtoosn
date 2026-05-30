@@ -8,30 +8,33 @@ async function getUser() {
   return backendJson<BackendUser>("/api/v1/me").catch(() => null);
 }
 
-async function getDummyLeaderboard() {
-  return [
-    { rank: 1, name: "Ayasha Rahmadinni", score: 100 },
-    { rank: 2, name: "Ayasha Rahmadinni", score: 99 },
-    { rank: 3, name: "Ayasha Rahmadinni", score: 100 },
-    { rank: 4, name: "Ayasha Rahmadinni", score: 90 },
-    { rank: 5, name: "Ayasha Rahmadinni", score: 90, isCurrentUser: true },
-    { rank: 6, name: "Ayasha Rahmadinni", score: 90 },
-    { rank: 7, name: "Ayasha Rahmadinni", score: 90 },
-    { rank: 8, name: "Ayasha Rahmadinni", score: 90 },
-    { rank: 8, name: "Ayasha Rahmadinni", score: 90 },
-    { rank: 8, name: "Ayasha Rahmadinni", score: 90 },
-  ] as LeaderboardEntry[];
+interface BackendLeaderboardResponse {
+  entries: {
+    rank: number;
+    user_id: string;
+    full_name: string;
+    final_score: number;
+    submitted_at?: string;
+  }[];
+}
+
+async function getLeaderboard() {
+  return backendJson<BackendLeaderboardResponse>("/api/v1/leaderboard/current?limit=100").catch(() => null);
 }
 
 export default async function ResultPage() {
-  const [user, leaderboard] = await Promise.all([getUser(), getDummyLeaderboard()]);
+  const [user, leaderboardData] = await Promise.all([getUser(), getLeaderboard()]);
 
-  const updatedLeaderboard = leaderboard.map((entry) => {
-    if (entry.isCurrentUser && user) {
-      return { ...entry, name: displayName(user) };
-    }
-    return entry;
-  });
+  const entries = leaderboardData?.entries || [];
+
+  const updatedLeaderboard = entries.map((entry) => {
+    return {
+      rank: entry.rank,
+      name: entry.full_name,
+      score: entry.final_score,
+      isCurrentUser: user ? entry.user_id === user.id : false,
+    };
+  }) as LeaderboardEntry[];
 
   const top3 = updatedLeaderboard.slice(0, 3);
   const otherParticipants = updatedLeaderboard.slice(3);

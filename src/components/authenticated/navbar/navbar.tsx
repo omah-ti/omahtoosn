@@ -19,7 +19,7 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="bg-primary-1000 z-10 h-16 fixed w-full px-4 sm:px-6 md:px-10 flex items-center justify-between text-white border-b border-white/10">
+    <nav className="bg-primary-1000 z-9999 h-16 fixed w-full px-4 sm:px-6 md:px-10 flex items-center justify-between text-white border-b border-white/10">
       {/* Logo */}
       <Logo />
 
