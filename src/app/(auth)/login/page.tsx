@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import type { FormEvent } from "react";
 
-export default function Signup() {
+export default function Register() {
   const router = useRouter();
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -96,7 +96,7 @@ export default function Signup() {
 
           <p className="text-neutral-1000 text-xs font-normal text-center">
             Sudah punya akun?{" "}
-            <a href="/signup" className="text-neutral-900 font-normal hover:underline">
+            <a href="/register" className="text-neutral-900 font-normal hover:underline">
               Daftar
             </a>
           </p>

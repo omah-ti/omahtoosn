@@ -39,6 +39,7 @@ type AttemptPayload = {
   attempt: Attempt;
   questions: TryoutQuestion[];
   answers: AttemptAnswer[];
+  server_time: string;
 };
 
 export default function TryoutPage() {
@@ -165,7 +166,15 @@ export default function TryoutPage() {
     setAttempt(payload.attempt);
     setAnswers(nextAnswers);
     setRaguRagu(nextFlags);
-    setTimeLeft(Math.max(0, Math.floor((new Date(payload.attempt.expires_at).getTime() - Date.now()) / 1000)));
+
+    const serverTime = new Date(payload.server_time).getTime();
+    const localTime = Date.now();
+    const drift = serverTime - localTime;
+
+    const expiresAt = new Date(payload.attempt.expires_at).getTime();
+    const adjustedNow = Date.now() + drift;
+    const secondsLeft = Math.max(0, Math.floor((expiresAt - adjustedNow) / 1000));
+    setTimeLeft(secondsLeft);
     setLoading(false);
   }, []);
 

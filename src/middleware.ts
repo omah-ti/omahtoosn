@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 const PROTECTED_PREFIXES = ["/dashboard", "/result", "/tryout"];
-const AUTH_ROUTES = ["/login", "/signup", "/forgot-password"];
+const AUTH_ROUTES = ["/login", "/register", "/forgot-password"];
 const DEFAULT_BACKEND_URL = "https://omahtoosn-production-7e28.up.railway.app";
 const ACCESS_TOKEN_REFRESH_SKEW_MS = 30_000;
 
@@ -182,7 +182,7 @@ export const config = {
     "/result/:path*",
     "/tryout/:path*",
     "/login",
-    "/signup",
+    "/register",
     "/forgot-password",
   ],
 };

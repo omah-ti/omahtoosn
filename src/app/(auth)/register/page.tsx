@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import type { FormEvent } from "react";
 import { ChevronLeft } from "lucide-react";
 
-export default function Signup() {
+export default function Register() {
   const router = useRouter();
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {

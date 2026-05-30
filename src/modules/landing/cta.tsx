@@ -1,6 +1,7 @@
 import Container from "@/components/ui/container";
 import Image from "next/image";
 import Button from "@/components/ui/button";
+import Link from "next/link";
 
 const CTA = () => {
   return (
@@ -28,9 +29,11 @@ const CTA = () => {
                 </p>
 
                 <div className="w-full flex justify-center md:justify-start mt-6 md:mt-8">
-                  <Button className="w-full md:w-fit">
-                    Coba Try Out
-                  </Button>
+                  <Link href="/tryout">
+                    <Button className="w-full md:w-fit">
+                      Coba Try Out
+                    </Button>
+                  </Link>
                 </div>
               </div>
               

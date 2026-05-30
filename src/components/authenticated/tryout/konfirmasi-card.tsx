@@ -5,7 +5,7 @@ const KonfirmasiCard = () => {
             <hr className='w-full h-px bg-neutral-100'/>
             <div className='flex-col gap-px'>
                 <p className='text-base font-normal'>Waktu Tes</p>
-                <div className='flex justify-between'>
+                <div className='flex flex-col'>
                     <p className='text-base font-bold'>31/05/2026</p>
                     <p className='text-base font-bold'>09:00 - 11:30 WIB</p>
                 </div>

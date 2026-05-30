@@ -66,7 +66,7 @@ export default async function ResultPage() {
               </p>
             </div>
             <div className="flex justify-end">
-              <Button size="sm" className="w-full sm:w-auto lg:min-w-32">
+              <Button variant="disabled" size="sm" className="w-full sm:w-auto lg:min-w-32">
                 Akses Pembahasan
               </Button>
             </div>

@@ -1,4 +1,5 @@
 import Button from "@/components/ui/button";
+import Link from "next/link";
 
 type Variant = "before" | "after";
 
@@ -30,13 +31,14 @@ export default function ResultCard({ variant = "before" }: Props) {
             ? "Ketahui peringkatmu dan pahami solusi dari setiap soal"
             : "Ketahui peringkatmu dan pahami solusi dari setiap soal"}
         </p>
-
-        <Button
-          variant={isAfter ? "primary" : "primary"}
-          className="w-full mt-23 max-w-[180px]"
-        >
-          {isAfter ? "Lihat Hasil" : "Lihat Hasil"}
-        </Button>
+        <Link href="/result">
+          <Button
+            variant={isAfter ? "primary" : "primary"}
+            className="w-full mt-23 max-w-[180px]"
+          >
+            {isAfter ? "Lihat Hasil" : "Lihat Hasil"}
+          </Button>
+        </Link>
       </div>
 
       <img
