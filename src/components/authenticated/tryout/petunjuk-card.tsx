@@ -8,8 +8,8 @@ const PetunjukCard = () => {
   const [isLocked, setIsLocked] = useState(true);
 
   useEffect(() => {
-    const start = new Date("2026-05-31T09:00:00+07:00").getTime();
-    const end = new Date("2026-05-31T11:30:00+07:00").getTime();
+    const start = new Date("2026-06-07T09:00:00+07:00").getTime();
+    const end = new Date("2026-06-07T11:30:00+07:00").getTime();
 
     const checkTime = () => {
       const now = Date.now();

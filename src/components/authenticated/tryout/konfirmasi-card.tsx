@@ -6,7 +6,7 @@ const KonfirmasiCard = () => {
             <div className='flex-col gap-px'>
                 <p className='text-base font-normal'>Waktu Tes</p>
                 <div className='flex flex-col'>
-                    <p className='text-base font-bold'>31/05/2026</p>
+                    <p className='text-base font-bold'>07/06/2026</p>
                     <p className='text-base font-bold'>09:00 - 11:30 WIB</p>
                 </div>
             </div>

@@ -42,7 +42,7 @@ type AttemptPayload = {
 };
 
 const getRemainingSeconds = () => {
-  const end = new Date("2026-05-31T11:30:00+07:00").getTime();
+  const end = new Date("2026-06-07T11:30:00+07:00").getTime();
   return Math.max(0, Math.floor((end - Date.now()) / 1000));
 };
 
@@ -129,8 +129,8 @@ export default function TryoutPage() {
     setLoadError("");
 
     // Time slot gate for accessing the tryout
-    const start = new Date("2026-05-31T09:00:00+07:00").getTime();
-    const end = new Date("2026-05-31T11:30:00+07:00").getTime();
+    const start = new Date("2026-06-07T09:00:00+07:00").getTime();
+    const end = new Date("2026-06-07T11:30:00+07:00").getTime();
     const now = Date.now();
 
     if (now < start || now > end) {
